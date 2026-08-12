@@ -42,18 +42,17 @@ import {
   HiOutlineExternalLink,
   HiOutlineLink,
 } from "react-icons/hi";
+import { FaAws, FaLinkedin } from "react-icons/fa6";
 import { IoIosGitBranch } from "react-icons/io";
 import {
-  SiAmazonwebservices,
   SiAngular,
   SiBootstrap,
-  SiCss3,
+  SiCss,
   SiExpress,
   SiGmail,
   SiGraphql,
   SiHtml5,
   SiJavascript,
-  SiLinkedin,
   SiMongodb,
   SiMui,
   SiMysql,
@@ -105,10 +104,10 @@ export const Icons = {
   link: HiOutlineLink,
   externalLink: HiOutlineExternalLink,
   star: AiFillStar,
-  amazonaws: SiAmazonwebservices,
+  amazonaws: FaAws,
   angular: SiAngular,
   bootstrap: SiBootstrap,
-  css3: SiCss3,
+  css3: SiCss,
   express: SiExpress,
   graphql: SiGraphql,
   html5: SiHtml5,
@@ -127,7 +126,7 @@ export const Icons = {
   typescript: SiTypescript,
   gmail: SiGmail,
   twitter: SiX,
-  linkedin: SiLinkedin,
+  linkedin: FaLinkedin,
   userFill: BiSolidUser,
   work: HiBriefcase,
   gitHub: ({ ...props }: LucideProps) => (

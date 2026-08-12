@@ -32,10 +32,11 @@ https://github.com/user-attachments/assets/fc071310-9d1c-4832-877f-23f9569893d7
 ## 🛠️ Tech Stack
 
 - **Framework**: [Next.js 16](https://nextjs.org/) with Turbopack
-- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Language**: [TypeScript 6](https://www.typescriptlang.org/)
 - **UI Library**: [React 19](https://react.dev/)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/)
-- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/)
+- **Animations**: [Motion](https://motion.dev/)
+- **Validation**: [zod 4](https://zod.dev/) + [react-hook-form](https://react-hook-form.com/)
 - **Form Handling**: Server actions with validation
 - **Analytics**: Google Analytics + Vercel Analytics
 - **Deployment**: [Vercel](https://vercel.com)

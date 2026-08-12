@@ -1,9 +1,10 @@
 "use client";
 
+import { Icons } from "@/components/common/icons";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { ExternalLink, Github, Heart } from "lucide-react";
+import { ExternalLink, Heart } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -30,7 +31,7 @@ export default function GithubRedirectCard() {
         <p className="mt-2 mb-10 font-heading text-lg text-muted-foreground">
           It&#39;s open source. Explore and contribute on GitHub.
         </p>
-        <Github className="w-10 h-10 text-muted-foreground mb-5" />
+        <Icons.gitHub className="w-10 h-10 text-muted-foreground mb-5" />
       </CardContent>
       <CardFooter className="px-8 pb-8 pt-0">
         <Link

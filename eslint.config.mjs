@@ -17,7 +17,7 @@ export default [
       "react/react-in-jsx-scope": "off",
       "react/prop-types": "off",
     },
-    settings: { react: { version: "detect" } },
+    settings: { react: { version: "19.2.8" } },
   },
   { ignores: [".next/*", "node_modules/*"] },
 ];

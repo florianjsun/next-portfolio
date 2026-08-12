@@ -18,8 +18,6 @@ interface ProjectPageProps {
   }>;
 }
 
-const githubUsername = "namanbarkiya";
-
 export default async function Project({ params }: ProjectPageProps) {
   const { projectId } = await params;
   let project = Projects.find((val) => val.id === projectId);
@@ -73,18 +71,18 @@ export default async function Project({ params }: ProjectPageProps) {
           >
             <Image
               src={profileImg}
-              alt={"naman"}
+              alt={siteConfig.username}
               width={42}
               height={42}
               className="rounded-full bg-background"
             />
 
             <div className="flex-1 text-left leading-tight">
-              <p className="font-medium">{"Naman Barkiya"}</p>
+              <p className="font-medium">Florian Sun</p>
               <p className="text-[12px] text-muted-foreground">
                 @{siteConfig.username}
               </p>
-            </div>
+            </div>  
           </Link>
         </div>
       </div>
@@ -100,14 +98,14 @@ export default async function Project({ params }: ProjectPageProps) {
 
       <div className="mb-7 ">
         <h2 className="inline-block font-heading text-3xl leading-tight lg:text-3xl mb-2">
-          Tech Stack
+          技术栈
         </h2>
         <ChipContainer textArr={project.techStack} />
       </div>
 
       <div className="mb-7 ">
         <h2 className="inline-block font-heading text-3xl leading-tight lg:text-3xl mb-2">
-          Description
+          项目描述
         </h2>
         {/* {<project.descriptionComponent />} */}
         <ProjectDescription
@@ -118,7 +116,7 @@ export default async function Project({ params }: ProjectPageProps) {
 
       <div className="mb-7 ">
         <h2 className="inline-block font-heading text-3xl leading-tight lg:text-3xl mb-5">
-          Page Info
+          页面信息
         </h2>
         {project.pagesInfoArr.map((page, ind) => (
           <div key={ind}>

@@ -29,14 +29,14 @@ export interface ProjectInterface {
 
 export const Projects: ProjectInterface[] = [
   {
-    id: "portfolio-template",
-    companyName: "Portfolio Website (130+ GitHub stars)",
+    id: "next-portfolio",
+    companyName: "next-portfolio",
     type: "Personal",
     category: ["Web Dev", "Frontend", "UI/UX"],
     shortDescription:
-      "Open-source Next.js portfolio template recognized and forked by developers worldwide, optimized for SEO/AEO and performance.",
+      "开源 Next.js 个人网站，基于 namanbarkiya 的 minimal-next-portfolio 进行二次开发，针对 SEO/AEO 与性能进行了优化",
     websiteLink: "https://nbarkiya.xyz",
-    githubLink: "https://github.com/namanbarkiya/minimal-next-portfolio",
+    githubLink: "https://github.com/florianjsun/next-portfolio",
     techStack: [
       "Next.js",
       "React",
@@ -45,8 +45,8 @@ export const Projects: ProjectInterface[] = [
       "Framer Motion",
       "Vercel",
     ],
-    startDate: new Date("2024-01-01"),
-    endDate: new Date("2025-12-01"),
+    startDate: new Date("2026-08-12"),
+    endDate: new Date("2026-08-31"),
     companyLogoImg: "/projects/portfolio/logo.png",
     pagesInfoArr: [
       {

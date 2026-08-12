@@ -18,7 +18,15 @@
 - [analytics.tsx](file://components/common/analytics.tsx)
 - [github-star-badge.tsx](file://components/common/github-star-badge.tsx)
 - [icons.tsx](file://components/common/icons.tsx)
+- [site.ts](file://config/site.ts)
+- [layout.tsx](file://app/(root)/layout.tsx)
 </cite>
+
+## 更新摘要
+**已进行的更改**
+- 更新了 GitHubStarBadge 组件的标签文本从 'Template' 到 'Github'，更好地反映其实际功能
+- 增强了组件的可访问性支持，提供更清晰的语义化标签
+- 优化了用户界面文本的一致性
 
 ## 目录
 1. [简介](#简介)
@@ -36,7 +44,7 @@
 本章节面向通用组件（common）的设计原则与复用策略，覆盖主题提供者、导航组件、页脚组件、动画组件等核心功能。文档将说明各组件的 props 接口、事件处理、状态管理、可访问性支持、响应式设计实现与性能优化技巧，并提供具体使用示例与自定义扩展方法，帮助读者快速集成与二次开发。
 
 ## 项目结构
-common 目录下的组件围绕“主题切换”“导航”“页面容器与头部”“动画与滚动效果”“站点工具”五大职责组织，形成高内聚、低耦合的通用能力集合：
+common 目录下的组件围绕"主题切换""导航""页面容器与头部""动画与滚动效果""站点工具"五大职责组织，形成高内聚、低耦合的通用能力集合：
 - 主题与模式：ThemeProvider、ModeToggle
 - 导航：MainNav、MobileNav
 - 页面容器与头部：PageContainer、ClientPageWrapper、PageHeader
@@ -80,7 +88,7 @@ GSB --> IC
 MN --> IC
 ```
 
-图表来源
+**图表来源**
 - [theme-provider.tsx:1-8](file://components/common/theme-provider.tsx#L1-L8)
 - [mode-toggle.tsx:1-71](file://components/common/mode-toggle.tsx#L1-L71)
 - [main-nav.tsx:1-105](file://components/common/main-nav.tsx#L1-L105)
@@ -93,7 +101,7 @@ MN --> IC
 - [github-star-badge.tsx:1-63](file://components/common/github-star-badge.tsx#L1-L63)
 - [icons.tsx:1-180](file://components/common/icons.tsx#L1-L180)
 
-章节来源
+**章节来源**
 - [theme-provider.tsx:1-8](file://components/common/theme-provider.tsx#L1-L8)
 - [main-nav.tsx:1-105](file://components/common/main-nav.tsx#L1-L105)
 - [mobile-nav.tsx:1-55](file://components/common/mobile-nav.tsx#L1-L55)
@@ -118,7 +126,7 @@ MN --> IC
 - 动画组件 AnimatedLink/AnimatedPageTransition/AnimatedSection/AnimatedText/ScrollAnimation：提供丰富的入场、悬停、滚动驱动动画，兼顾性能与可访问性。
 - 站点工具 SiteFooter/Analytics/GitHubStarBadge/Icons：聚合社交链接、站点统计、徽章与图标资源，便于跨页面复用。
 
-章节来源
+**章节来源**
 - [theme-provider.tsx:1-8](file://components/common/theme-provider.tsx#L1-L8)
 - [mode-toggle.tsx:1-71](file://components/common/mode-toggle.tsx#L1-L71)
 - [main-nav.tsx:1-105](file://components/common/main-nav.tsx#L1-L105)
@@ -137,7 +145,7 @@ MN --> IC
 - [icons.tsx:1-180](file://components/common/icons.tsx#L1-L180)
 
 ## 架构总览
-通用组件以“主题上下文 + 导航 + 页面容器 + 动画 + 工具”分层协作：
+通用组件以"主题上下文 + 导航 + 页面容器 + 动画 + 工具"分层协作：
 - 主题层：ThemeProvider 提供主题状态，ModeToggle 触发主题变更。
 - 导航层：MainNav 负责桌面导航与移动端菜单开关，MobileNav 渲染移动端菜单并锁定滚动。
 - 页面层：PageContainer 组合 ClientPageWrapper（客户端动画）与 PageHeader（标题与描述）。
@@ -166,7 +174,7 @@ CPW->>PH : 渲染标题与描述
 PH-->>U : 展示页面头部
 ```
 
-图表来源
+**图表来源**
 - [mode-toggle.tsx:1-71](file://components/common/mode-toggle.tsx#L1-L71)
 - [theme-provider.tsx:1-8](file://components/common/theme-provider.tsx#L1-L8)
 - [main-nav.tsx:1-105](file://components/common/main-nav.tsx#L1-L105)
@@ -194,11 +202,11 @@ class ModeToggle {
 ThemeProvider <.. ModeToggle : "提供主题上下文"
 ```
 
-图表来源
+**图表来源**
 - [theme-provider.tsx:1-8](file://components/common/theme-provider.tsx#L1-L8)
 - [mode-toggle.tsx:1-71](file://components/common/mode-toggle.tsx#L1-L71)
 
-章节来源
+**章节来源**
 - [theme-provider.tsx:1-8](file://components/common/theme-provider.tsx#L1-L8)
 - [mode-toggle.tsx:1-71](file://components/common/mode-toggle.tsx#L1-L71)
 
@@ -224,11 +232,11 @@ ShowMenu --> LockScroll["锁定页面滚动"]
 HideMenu --> UnlockScroll["恢复滚动"]
 ```
 
-图表来源
+**图表来源**
 - [main-nav.tsx:1-105](file://components/common/main-nav.tsx#L1-L105)
 - [mobile-nav.tsx:1-55](file://components/common/mobile-nav.tsx#L1-L55)
 
-章节来源
+**章节来源**
 - [main-nav.tsx:1-105](file://components/common/main-nav.tsx#L1-L105)
 - [mobile-nav.tsx:1-55](file://components/common/mobile-nav.tsx#L1-L55)
 
@@ -250,12 +258,12 @@ PC->>PH : 渲染标题与描述
 PH-->>P : 返回头部区域
 ```
 
-图表来源
+**图表来源**
 - [page-container.tsx:1-27](file://components/common/page-container.tsx#L1-L27)
 - [client-page-wrapper.tsx:1-37](file://components/common/client-page-wrapper.tsx#L1-L37)
 - [page-header.tsx:1-21](file://components/common/page-header.tsx#L1-L21)
 
-章节来源
+**章节来源**
 - [page-container.tsx:1-27](file://components/common/page-container.tsx#L1-L27)
 - [client-page-wrapper.tsx:1-37](file://components/common/client-page-wrapper.tsx#L1-L37)
 - [page-header.tsx:1-21](file://components/common/page-header.tsx#L1-L21)
@@ -275,14 +283,14 @@ E --> R["应用到 motion.div 样式"]
 R --> V["视图更新"]
 ```
 
-图表来源
+**图表来源**
 - [scroll-animation.tsx:1-51](file://components/common/scroll-animation.tsx#L1-L51)
 - [animated-section.tsx:1-51](file://components/common/animated-section.tsx#L1-L51)
 - [animated-text.tsx:1-49](file://components/common/animated-text.tsx#L1-L49)
 - [animated-page-transition.tsx:1-48](file://components/common/animated-page-transition.tsx#L1-L48)
 - [animated-link.tsx:1-42](file://components/common/animated-link.tsx#L1-L42)
 
-章节来源
+**章节来源**
 - [animated-link.tsx:1-42](file://components/common/animated-link.tsx#L1-L42)
 - [animated-page-transition.tsx:1-48](file://components/common/animated-page-transition.tsx#L1-L48)
 - [animated-section.tsx:1-51](file://components/common/animated-section.tsx#L1-L51)
@@ -292,7 +300,7 @@ R --> V["视图更新"]
 ### 站点工具（SiteFooter / Analytics / GitHubStarBadge / Icons）
 - SiteFooter：遍历社交链接配置，使用 Tooltip 与图标渲染外链按钮。
 - Analytics：注入 Vercel Analytics 用于站点统计。
-- GitHubStarBadge：异步请求后端 API 获取星标数，提供无障碍标签与格式化数字。
+- GitHubStarBadge：异步请求后端 API 获取星标数，提供无障碍标签与格式化数字。**已更新** 标签文本从 'Template' 更新为 'Github'，更好地反映实际功能。
 - Icons：集中图标资源，包括第三方库图标与自定义 SVG。
 
 ```mermaid
@@ -305,17 +313,52 @@ API-->>GB : 返回 stars
 GB->>UI : 渲染徽章与数字
 ```
 
-图表来源
+**图表来源**
 - [github-star-badge.tsx:1-63](file://components/common/github-star-badge.tsx#L1-L63)
 - [analytics.tsx:1-8](file://components/common/analytics.tsx#L1-L8)
 - [site-footer.tsx:1-34](file://components/common/site-footer.tsx#L1-L34)
 - [icons.tsx:1-180](file://components/common/icons.tsx#L1-L180)
 
-章节来源
+**章节来源**
 - [site-footer.tsx:1-34](file://components/common/site-footer.tsx#L1-L34)
 - [analytics.tsx:1-8](file://components/common/analytics.tsx#L1-L8)
 - [github-star-badge.tsx:1-63](file://components/common/github-star-badge.tsx#L1-L63)
 - [icons.tsx:1-180](file://components/common/icons.tsx#L1-L180)
+
+### GitHubStarBadge 组件详解
+GitHubStarBadge 组件是一个专门用于展示 GitHub 仓库星标数的徽章组件，具有以下特性：
+
+**功能特性**
+- 异步获取 GitHub 仓库星标数，使用 no-store 缓存策略确保数据新鲜度
+- 提供完整的无障碍支持，包含 aria-label 和屏幕阅读器友好文本
+- 响应式设计，在不同屏幕尺寸下自适应显示
+- 优雅的加载状态处理，避免布局抖动
+
+**更新内容**
+- **标签文本优化**：将显示文本从 'Template' 更新为 'Github'，更准确地反映组件功能
+- **可访问性增强**：改进 aria-label 文本，提供更好的用户体验
+- **视觉一致性**：保持与其他组件一致的样式风格
+
+**使用示例**
+```tsx
+// 基础用法
+<GitHubStarBadge />
+
+// 自定义样式
+<GitHubStarBadge className="w-full justify-center" />
+```
+
+**组件结构**
+- 外层 Link 组件：指向模板仓库地址，支持新窗口打开
+- GitHub 图标：使用自定义 SVG 图标
+- 文本标签：显示 "Github" 文本
+- 星标数量：动态显示或默认显示 "Star"
+- 装饰性分隔符：使用点号分隔不同元素
+
+**章节来源**
+- [github-star-badge.tsx:14-62](file://components/common/github-star-badge.tsx#L14-L62)
+- [site.ts:8-12](file://config/site.ts#L8-L12)
+- [layout.tsx:1-33](file://app/(root)/layout.tsx#L1-L33)
 
 ## 依赖关系分析
 - 主题与模式：ThemeProvider 依赖 next-themes；ModeToggle 依赖 useTheme 与 UI 组件。
@@ -339,7 +382,7 @@ APT["AnimatedPageTransition"] --> MOT
 AL["AnimatedLink"] --> MOT
 ```
 
-图表来源
+**图表来源**
 - [theme-provider.tsx:1-8](file://components/common/theme-provider.tsx#L1-L8)
 - [mode-toggle.tsx:1-71](file://components/common/mode-toggle.tsx#L1-L71)
 - [main-nav.tsx:1-105](file://components/common/main-nav.tsx#L1-L105)
@@ -355,7 +398,7 @@ AL["AnimatedLink"] --> MOT
 - [animated-page-transition.tsx:1-48](file://components/common/animated-page-transition.tsx#L1-L48)
 - [animated-link.tsx:1-42](file://components/common/animated-link.tsx#L1-L42)
 
-章节来源
+**章节来源**
 - [theme-provider.tsx:1-8](file://components/common/theme-provider.tsx#L1-L8)
 - [mode-toggle.tsx:1-71](file://components/common/mode-toggle.tsx#L1-L71)
 - [main-nav.tsx:1-105](file://components/common/main-nav.tsx#L1-L105)
@@ -382,11 +425,10 @@ AL["AnimatedLink"] --> MOT
 - 可访问性与交互：
   - 主题切换按钮包含 sr-only 文本，提升屏幕阅读器体验。
   - 导航项支持 disabled 态与键盘不可用样式，避免误操作。
+  - **更新** GitHubStarBadge 组件改进了无障碍标签，提供更清晰的语义化文本。
 - 响应式：
   - 通过条件类名与媒体查询断点控制不同设备上的布局与动画表现。
   - 移动端菜单锁定滚动，防止背景滚动干扰。
-
-[本节为通用指导，不直接分析具体文件]
 
 ## 故障排查指南
 - 主题切换无效：
@@ -404,8 +446,11 @@ AL["AnimatedLink"] --> MOT
 - 星标数不显示：
   - 检查 /api/github-stars 路由是否可用且返回格式正确。
   - 查看控制台是否有网络错误。
+- **新增** GitHubStarBadge 文本显示问题：
+  - 确认 siteConfig.links.templateRepo 配置正确。
+  - 检查组件是否正确渲染 "Github" 文本而非 "Template"。
 
-章节来源
+**章节来源**
 - [theme-provider.tsx:1-8](file://components/common/theme-provider.tsx#L1-L8)
 - [mode-toggle.tsx:1-71](file://components/common/mode-toggle.tsx#L1-L71)
 - [main-nav.tsx:1-105](file://components/common/main-nav.tsx#L1-L105)
@@ -416,7 +461,7 @@ AL["AnimatedLink"] --> MOT
 ## 结论
 common 目录下的通用组件以清晰的分层与职责划分，提供了主题、导航、页面容器、动画与站点工具等关键能力。通过合理的 props 设计、事件处理、状态管理与可访问性支持，这些组件具备良好的复用性与可扩展性。结合响应式设计与性能优化策略，可在不同设备上提供一致的体验。建议在新页面或功能中优先复用这些组件，并通过扩展 props 与组合方式满足个性化需求。
 
-[本节为总结性内容，不直接分析具体文件]
+**更新总结**：GitHubStarBadge 组件的标签文本已从 'Template' 更新为 'Github'，更好地反映了组件的实际功能，提升了用户体验和无障碍支持。
 
 ## 附录：使用示例与扩展方法
 - 主题与模式
@@ -437,10 +482,10 @@ common 目录下的通用组件以清晰的分层与职责划分，提供了主�
 - 站点工具
   - 在页面底部加入 SiteFooter，自动渲染社交链接。
   - 在应用根节点加入 Analytics，启用站点统计。
-  - 使用 GitHubStarBadge 展示模板仓库星标数。
+  - **更新** 使用 GitHubStarBadge 展示 GitHub 仓库星标数，标签文本现已准确显示为 "Github"。
   - 通过 Icons 统一管理图标，保持风格一致。
 
-章节来源
+**章节来源**
 - [theme-provider.tsx:1-8](file://components/common/theme-provider.tsx#L1-L8)
 - [mode-toggle.tsx:1-71](file://components/common/mode-toggle.tsx#L1-L71)
 - [main-nav.tsx:1-105](file://components/common/main-nav.tsx#L1-L105)

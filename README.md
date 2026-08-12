@@ -54,23 +54,16 @@ To get started with your own portfolio website:
 
 2. Copy the contents of `.env.copy` to a new `.env` file and fill in the required information.
 
-3. Install dependencies:
+3. Install dependencies with pnpm (the required version is declared in
+   `package.json`):
 
    ```bash
-   npm install
-   # or
-   yarn install
-   # or
    pnpm install
    ```
 
 4. Start the development server:
 
    ```bash
-   npm run dev
-   # or
-   yarn dev
-   # or
    pnpm dev
    ```
 

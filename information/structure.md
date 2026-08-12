@@ -102,7 +102,8 @@ This is the folder structure of the whole application
 │ └── utils.ts
 ├── next-env.d.ts
 ├── next.config.js
-├── package-lock.json
+├── pnpm-lock.yaml
+├── pnpm-workspace.yaml
 ├── package.json
 ├── postcss.config.js
 ├── providers

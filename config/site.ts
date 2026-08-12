@@ -1,7 +1,7 @@
 export const siteConfig = {
   name: "Sun Jing - Java & AI应用工程师",
   authorName: "Sun Jing",
-  username: "Sun Jing",
+  username: "florianjsun",
   description:
     "Sun Jing - 全栈 & AI应用工程师，正在探索如何用AI为传统业务提速。欢迎浏览我的项目、经历与贡献",
   url: "https://nbarkiya.xyz",
@@ -24,12 +24,10 @@ export const siteConfig = {
     "Full Stack Developer",
     "Machine Learning",
     "Data Engineering",
-    "UBS",
     "Python Developer",
     "React Developer",
     "Next.js Developer",
     "TypeScript",
-    "Databricks",
     "AI Startups",
     "Software Development",
     "Web Developer",

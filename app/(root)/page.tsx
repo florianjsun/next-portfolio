@@ -106,7 +106,8 @@ export default function IndexPage() {
           </AnimatedText>
           <div className="mt-4 max-w-[42rem] text-center">
             <p className="leading-normal text-muted-foreground text-sm sm:text-base">
-              全栈 & AI应用工程师，正在探索如何用AI为传统业务提速。欢迎浏览我的项目、经历与贡献。
+              全栈 &
+              AI应用工程师，正在探索如何用AI为传统业务提速。欢迎浏览我的项目、经历与贡献。
             </p>
           </div>
 
@@ -163,7 +164,7 @@ export default function IndexPage() {
           </AnimatedText>
         </div>
         <div className="w-full">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full items-stretch">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 w-full items-stretch">
             {featuredProjects.map((exp, index) => (
               <AnimatedSection
                 key={exp.id}

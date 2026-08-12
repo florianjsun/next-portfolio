@@ -82,7 +82,7 @@ export default async function Project({ params }: ProjectPageProps) {
               <p className="text-[12px] text-muted-foreground">
                 @{siteConfig.username}
               </p>
-            </div>  
+            </div>
           </Link>
         </div>
       </div>
@@ -92,7 +92,7 @@ export default async function Project({ params }: ProjectPageProps) {
         alt={project.companyName}
         width={720}
         height={405}
-        className="my-8 rounded-md border bg-muted transition-colors"
+        className="my-8 h-auto w-full rounded-md border bg-muted object-contain transition-colors"
         priority
       />
 
@@ -118,26 +118,60 @@ export default async function Project({ params }: ProjectPageProps) {
         <h2 className="inline-block font-heading text-3xl leading-tight lg:text-3xl mb-5">
           页面信息
         </h2>
-        {project.pagesInfoArr.map((page, ind) => (
-          <div key={ind}>
+        {project.pagesInfoArr.map((page) => (
+          <section className="mb-10 last:mb-0" key={page.title}>
             <h3 className="flex items-center font-heading text-xl leading-tight lg:text-xl mt-3">
               <Icons.star className="h-5 w-5 mr-2" /> {page.title}
             </h3>
-            <div>
-              <p>{page.description}</p>
-              {page.imgArr.map((img, ind) => (
-                <Image
-                  src={img}
-                  key={ind}
-                  alt={img}
-                  width={720}
-                  height={405}
-                  className="my-4 rounded-md border bg-muted transition-colors"
-                  priority
-                />
+            <p>{page.description}</p>
+            {page.source && (
+              <p className="mt-2 text-sm text-muted-foreground">
+                图片来源：
+                <Link
+                  className="underline underline-offset-4 hover:text-foreground"
+                  href={page.source.href}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {page.source.label}
+                </Link>
+              </p>
+            )}
+            <div
+              className={cn(
+                "mt-4 grid min-w-0 gap-4",
+                page.layout === "grid"
+                  ? "sm:grid-cols-2 lg:grid-cols-3"
+                  : "grid-cols-1"
+              )}
+            >
+              {page.images.map((image) => (
+                <figure
+                  className={cn(
+                    "min-w-0",
+                    image.display === "compact" && "mx-auto w-full max-w-sm"
+                  )}
+                  key={image.src}
+                >
+                  <Image
+                    src={image.src}
+                    alt={image.alt}
+                    width={image.width}
+                    height={image.height}
+                    sizes={
+                      page.layout === "grid"
+                        ? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 240px"
+                        : "(max-width: 768px) 100vw, 720px"
+                    }
+                    className="h-auto w-full rounded-md border bg-muted object-contain transition-colors"
+                  />
+                  <figcaption className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {image.alt}
+                  </figcaption>
+                </figure>
               ))}
             </div>
-          </div>
+          </section>
         ))}
       </div>
 

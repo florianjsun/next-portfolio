@@ -1,15 +1,51 @@
 import { ValidCategory, ValidExpType, ValidSkills } from "./constants";
 
+interface ProjectImageInterface {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  display?: "full" | "compact";
+}
+
 interface PagesInfoInterface {
   title: string;
-  imgArr: string[];
+  images: ProjectImageInterface[];
   description?: string;
+  layout?: "stack" | "grid";
+  source?: {
+    label: string;
+    href: string;
+  };
 }
 
 interface DescriptionDetailsInterface {
   paragraphs: string[];
   bullets: string[];
 }
+
+type ProjectTechnology =
+  | ValidSkills
+  | "Spring Cloud Alibaba"
+  | "Nacos"
+  | "RabbitMQ"
+  | "Netty"
+  | "Elasticsearch"
+  | "InfluxDB"
+  | "WebSocket"
+  | "Spring AI"
+  | "MCP"
+  | "Canal"
+  | "Qwen3"
+  | "Kafka"
+  | "MinIO"
+  | "高德 SDK"
+  | "SLS"
+  | "OSS"
+  | "Motion"
+  | "Radix UI"
+  | "Zod"
+  | "Markdown";
 
 export interface ProjectInterface {
   id: string;
@@ -19,7 +55,7 @@ export interface ProjectInterface {
   shortDescription: string;
   websiteLink?: string;
   githubLink?: string;
-  techStack: ValidSkills[];
+  techStack: ProjectTechnology[];
   startDate: Date;
   endDate: Date;
   companyLogoImg: any;
@@ -32,564 +68,354 @@ export const Projects: ProjectInterface[] = [
     id: "next-portfolio",
     companyName: "next-portfolio",
     type: "Personal",
-    category: ["Web Dev", "Frontend", "UI/UX"],
+    category: ["Full Stack", "Web Dev", "UI/UX"],
     shortDescription:
-      "开源 Next.js 个人网站，基于 namanbarkiya 的 minimal-next-portfolio 进行二次开发，针对 SEO/AEO 与性能进行了优化",
-    websiteLink: "https://nbarkiya.xyz",
+      "基于 minimal-next-portfolio 二次开发的开源个人网站，完成中文化、内容重构、响应式项目图库与 SEO 增强。",
     githubLink: "https://github.com/florianjsun/next-portfolio",
     techStack: [
       "Next.js",
       "React",
       "Typescript",
       "Tailwind CSS",
-      "Framer Motion",
+      "Motion",
+      "Radix UI",
+      "Zod",
+      "Markdown",
       "Vercel",
     ],
     startDate: new Date("2026-08-12"),
-    endDate: new Date("2026-08-31"),
-    companyLogoImg: "/projects/portfolio/logo.png",
+    endDate: new Date("2026-08-12"),
+    companyLogoImg: "/projects/portfolio/home-hero.png",
     pagesInfoArr: [
       {
-        title: "Landing & Sections",
+        title: "项目浏览与内容组织",
         description:
-          "A clean, minimal landing page with sections for skills, projects, contributions, and experience.",
-        imgArr: ["/profile-img.jpg"],
+          "项目数据由 TypeScript 配置统一管理，列表页支持全部、个人与职业项目筛选，并以响应式卡片呈现四个项目。",
+        images: [
+          {
+            src: "/projects/portfolio/projects-showcase.png",
+            alt: "next-portfolio 项目列表与分类筛选界面",
+            width: 1425,
+            height: 891,
+          },
+        ],
+      },
+      {
+        title: "动态项目详情与图片画廊",
+        description:
+          "动态路由根据项目配置生成详情页，统一展示技术栈、项目说明、图片来源、说明文字和响应式多图画廊。",
+        images: [
+          {
+            src: "/projects/portfolio/project-detail-gallery.png",
+            alt: "next-portfolio 动态项目详情与响应式图片画廊",
+            width: 1425,
+            height: 891,
+          },
+        ],
+      },
+      {
+        title: "移动端适配",
+        description:
+          "导航、筛选器、项目卡片和详情图库会随屏幕宽度调整信息层级，在手机端切换为单列浏览。",
+        images: [
+          {
+            src: "/projects/portfolio/projects-mobile.png",
+            alt: "next-portfolio 手机端项目列表",
+            width: 375,
+            height: 812,
+            display: "compact",
+          },
+        ],
+      },
+      {
+        title: "多主题视觉系统",
+        description:
+          "基于 next-themes 与 CSS 变量实现 Light、Dark、Retro、Cyberpunk、Paper、Aurora 和 Synthwave 七套主题，并支持跟随系统设置。",
+        images: [
+          {
+            src: "/projects/portfolio/theme-system.png",
+            alt: "next-portfolio Aurora 主题与主题切换菜单",
+            width: 1425,
+            height: 891,
+          },
+        ],
       },
     ],
     descriptionDetails: {
       paragraphs: [
-        "I created an open-source Next.js portfolio template to help developers ship a modern, responsive portfolio quickly.",
-        "The project focuses heavily on performance, clean typography, and strong SEO/AEO foundations, and it has been adopted and forked by developers globally.",
+        "next-portfolio 是我基于 namanbarkiya 的 minimal-next-portfolio 进行二次开发的开源个人网站。项目使用 Next.js App Router 构建，围绕中文个人品牌展示重新整理了导航、首页内容、项目数据和站点配置。",
+        "网站集中呈现个人简介、项目、工作经历、技能、开源贡献、技术博客和联系方式。项目、经历与技能由 TypeScript 配置驱动，博客则由 Markdown 文件生成，便于持续维护和扩展内容。",
+        "在展示层之外，我还补充了多主题系统、页面动效、响应式项目图库、联系表单、分析工具和完整的 SEO 元数据，使网站同时具备作品展示、内容发布与个人检索入口三类能力。",
       ],
       bullets: [
-        "Created an open-source Next.js portfolio template recognized and forked by developers worldwide.",
-        "Ranked #1 on ChatGPT search for “best Next.js portfolio template GitHub” through AEO/GEO optimization.",
-        "Maintained a fast, responsive UI with a minimal, themeable design system.",
+        "基于 Next.js 16、React 19、TypeScript 6 与 Tailwind CSS 4 完成 App Router 架构升级，并使用 pnpm 管理依赖与构建流程。",
+        "将项目、工作经历、技能和开源贡献抽离为类型化配置，减少页面组件与个人内容之间的耦合。",
+        "重构项目模块，支持项目分类筛选、动态详情路由、多段说明、图片来源标注和响应式多图画廊。",
+        "使用 gray-matter 与 remark 解析 Markdown/GFM 博客，生成文章列表、静态详情路由、标签和阅读信息。",
+        "通过 Motion 提供页面和滚动动效，并基于 next-themes 实现七套视觉主题及系统主题模式。",
+        "完善 canonical、Open Graph、Twitter Card、robots、动态 sitemap，以及 Person、SoftwareApplication、BlogPosting 和 BreadcrumbList JSON-LD。",
+        "使用 React Hook Form 与 Zod 校验联系表单，并通过 Next.js Route Handler 将内容提交到可配置的 Google Form。",
+        "集成 Vercel Analytics、可选 Google Analytics、GitHub Star 缓存接口和站内 AI 对话组件。",
       ],
     },
   },
   {
-    id: "convot",
-    companyName: "Convot",
-    type: "Personal",
-    category: ["Full Stack", "Backend", "Web Dev"],
+    id: "taishan-yiting",
+    companyName: "泰山易停",
+    type: "Professional",
+    category: ["Backend", "Web Dev"],
     shortDescription:
-      "Production-ready AI chatbot platform that crawls, indexes, and embeds knowledge from PDFs/URLs/text to deliver source-grounded answers via a one-line widget.",
-    techStack: ["Next.js", "React", "Node.js", "Typescript", "Python"],
-    startDate: new Date("2024-04-01"),
-    endDate: new Date("2024-10-01"),
-    companyLogoImg: "/projects/convot/logo.png",
-    pagesInfoArr: [
-      {
-        title: "Ingestion & Retrieval",
-        description:
-          "Designed ingestion and retrieval pipelines supporting multiple content sources with secure tenant isolation.",
-        imgArr: ["/logo.png"],
-      },
-    ],
-    descriptionDetails: {
-      paragraphs: [
-        "Convot is a production-ready AI chatbot platform designed to be embedded on any website with a single line widget.",
-        "It supports crawling and indexing knowledge from PDFs, URLs, and plain text, and it returns context-aware, source-grounded answers with integrated analytics.",
-      ],
-      bullets: [
-        "Built a production-ready AI chatbot platform with integrated analytics and a one-line embed widget.",
-        "Designed ingestion and retrieval pipelines to support multiple sources (PDFs, URLs, text) with tenant isolation.",
-        "Focused on reliability, security, and traceable answers by grounding responses in retrieved sources.",
-      ],
-    },
-  },
-  {
-    id: "niya-saas-template",
-    companyName: "Niya SaaS Template (30+ GitHub stars)",
-    type: "Personal",
-    category: ["Full Stack", "Web Dev", "UI/UX"],
-    shortDescription:
-      "Production-ready Next.js 15 template for developers and AI startups. Includes authentication, state management, beautiful UI components, and everything needed to build scalable SaaS applications.",
-    websiteLink: "https://niya.nbarkiya.xyz",
-    githubLink: "https://github.com/namanbarkiya/niya-saas-template",
-    techStack: ["Next.js", "React", "Typescript", "Supabase", "Tailwind CSS"],
-    startDate: new Date("2024-08-01"),
-    endDate: new Date("2025-01-01"),
-    companyLogoImg: "/projects/niya/logo.png",
-    pagesInfoArr: [
-      {
-        title: "Landing Page",
-        description:
-          "Modern landing page showcasing the template features, tech stack, and pricing options.",
-        imgArr: ["/logo.png"],
-      },
-      {
-        title: "Authentication System",
-        description:
-          "Complete authentication system with Supabase, protected routes, and role-based access control.",
-        imgArr: ["/logo.png"],
-      },
-      {
-        title: "Dashboard & Components",
-        description:
-          "Beautiful UI components with Magic UI, Radix primitives, and comprehensive dashboard templates.",
-        imgArr: ["/logo.png"],
-      },
-    ],
-    descriptionDetails: {
-      paragraphs: [
-        "Niya is a production-ready Next.js 15 template designed for developers and AI startups. Built with modern best practices, it includes everything needed to build scalable SaaS applications.",
-        "The template features a complete authentication system with Supabase, beautiful UI components with Magic UI and Radix primitives, state management with Zustand and React Query, and full TypeScript support with Zod validation.",
-        "It's optimized for performance, includes SEO-friendly metadata, and provides a solid foundation for rapid prototyping and production deployment.",
-      ],
-      bullets: [
-        "Created a production-ready Next.js 15 template with complete authentication system and protected routes.",
-        "Integrated Supabase for database, authentication, and real-time features with full TypeScript support.",
-        "Built comprehensive UI component library with Magic UI, Radix primitives, and Tailwind CSS styling.",
-        "Implemented state management with Zustand for client state and React Query for server state management.",
-        "Designed for developers and AI startups with all essential features to start building SaaS products.",
-        "Achieved 30+ GitHub stars and recognition as a comprehensive starter template for modern web applications.",
-      ],
-    },
-  },
-  {
-    id: "portfolio-card",
-    companyName: "Portfolio Card",
-    type: "Personal",
-    category: ["Web Dev", "Frontend", "3D Modeling"],
-    shortDescription:
-      "Forged an immersive 3D Portfolio Card utilizing the prowess of Three.js and Blender, where art and technology converge in an interactive masterpiece.",
-    websiteLink: "https://card.namanbarkiya.xyz/",
-    githubLink: "https://github.com/namanbarkiya/3d-portfolio-card",
-    techStack: ["React", "Javascript", "HTML 5", "CSS 3"],
-    startDate: new Date("2022-03-01"),
-    endDate: new Date("2022-07-01"),
-    companyLogoImg: "/projects/card/logo.png",
-    pagesInfoArr: [
-      {
-        title: "Card Views",
-        description: "Front and back views of the interactive 3D card",
-        imgArr: ["/projects/card/card_2.webp", "/projects/card/card_3.webp"],
-      },
-      {
-        title: "Interactive Elements",
-        description:
-          "Custom links embedded in the 3D model with interactive animations",
-        imgArr: ["/projects/card/card_1.webp"],
-      },
-      {
-        title: "3D Model Development",
-        description: "Blender project showcasing the model creation process",
-        imgArr: ["/projects/card/card_4.webp"],
-      },
-    ],
-    descriptionDetails: {
-      paragraphs: [
-        "In my personal, I've ventured into the world of creativity, fashioning a distinctive portfolio card through the utilization of Three.js.",
-        "This portfolio card transcends convention; it emerges as a captivating 3D model, adorned with meticulous lighting arrangements that conjure a spellbinding visual journey.",
-        "To materialize this concept, I've harnessed the combined potential of Three.js and Blender, orchestrating a meticulous crafting of the central 3D model that serves as the cornerstone of the card's allure.",
-        "Yet, the allure extends beyond aesthetics. I've ingeniously interwoven custom links directly into the fabric of Three.js components. Through the creation and seamless integration of novel components, these additions elegantly rest upon the card's surface, mirroring its rotations and delivering an interactive dimension to my portfolio.",
-        "The portfolio card itself is an opus of motion, perpetually swaying in an auto-rotational dance that unfurls its multifaceted essence. As an enhancement, I've introduced an instinctive user interaction element. A simple, intuitive drag of the card in specific directions grants viewers a comprehensive vantage, enabling exploration from every conceivable angle.",
-        "At its core, my personal epitomizes technical finesse, artistic expression, and interactive design. The amalgamation of Three.js, Blender's prowess, and the innovation of component integration has birthed not only a portfolio card, but a dynamic encounter leaving an indelible imprint on all who partake.",
-      ],
-      bullets: [
-        "Conceptualized and realized a distinct portfolio card using Three.js, highlighting creative exploration.",
-        "Crafted a mesmerizing 3D model enhanced by thoughtful lighting arrangements, resulting in a captivating visual voyage.",
-        "Leveraged the synergy of Three.js and Blender to meticulously sculpt and refine the central 3D model, embodying meticulous attention to detail.",
-        "Innovatively integrated custom links within Three.js components, introducing an interactive layer via seamlessly incorporated new elements.",
-        "Enabled an auto-rotating feature for the portfolio card, perpetually showcasing its various facets to observers.",
-        "Introduced an instinctual user interaction mechanism, allowing viewers to comprehensively explore the card's dimensions through simple, intuitive dragging motions.",
-        "Represented a fusion of technical prowess, artistic ingenuity, and interactive design in a project that reshapes the boundaries of conventional portfolio representation.",
-      ],
-    },
-  },
-  {
-    id: "the-super-focus",
-    companyName: "TheSuperFocus",
-    type: "Personal",
-    category: ["Full Stack", "Web Dev", "UI/UX"],
-    shortDescription:
-      "Pomodoro-inspired productivity web app with real-time sessions and recurring payments.",
+      "面向泰安市城市级停车业务的综合管理平台，覆盖路外停车、路内停车、汽车充电与电动车充电。",
+    websiteLink: "https://www.dongxinzhilian.com/scheme/show/partplatform",
     techStack: [
-      "Next.js",
-      "React",
-      "Node.js",
-      "Socket.io",
-      "Typescript",
-      "MongoDB",
+      "Java",
+      "Spring Cloud Alibaba",
+      "Nacos",
+      "Redis",
+      "RabbitMQ",
+      "Netty",
+      "MySQL",
+      "Elasticsearch",
+      "InfluxDB",
+      "WebSocket",
+      "Spring AI",
+      "MCP",
+      "Canal",
+      "Qwen3",
     ],
-    startDate: new Date("2023-06-01"),
-    endDate: new Date("2023-12-01"),
-    companyLogoImg: "/logo.png",
-    pagesInfoArr: [
-      {
-        title: "Realtime Focus Sessions",
-        description:
-          "Built real-time focus sessions using sockets to help people stay accountable and productive.",
-        imgArr: ["/logo.png"],
-      },
-    ],
+    startDate: new Date("2023-07-01"),
+    endDate: new Date("2025-06-30"),
+    companyLogoImg: "/projects/taishan-yiting/cover.png",
     descriptionDetails: {
       paragraphs: [
-        "TheSuperFocus is a productivity web app inspired by the Pomodoro technique, built to help users stay focused and complete deep-work sessions.",
-        "It includes real-time session support and a paid tier with recurring billing.",
+        "泰山易停（含小停泊车）是面向泰安市城市级停车业务数字化转型打造的综合停车管理平台，覆盖停车场管理、订单处理、设备接入与数据分析等核心业务。",
+        "我以 Java 开发工程师身份参与订单检索、智能停车助手、物联网设备接入、路内停车和支付超时处理等模块的需求分析、方案设计与功能开发。",
+        "平台已接入 200 余家停车场，拥有 200 万注册用户，日均订单量约 5 万。",
       ],
       bullets: [
-        "Built a Pomodoro-inspired productivity web app using real-time sockets.",
-        "Integrated Razorpay for recurring payments, securing 10+ premium users.",
+        "采用线程池处理订单数据同步，并结合 Canal 监听 Binlog，实现 Elasticsearch 与 MySQL 的增量数据一致性。",
+        "通过门面模式统一多类型订单查询接口，结合 Elasticsearch 分词检索提升查询灵活性与响应速度。",
+        "基于 Spring AI、MCP 与 Qwen3 构建智能停车助手，支持停车场余位、营收和路线等智能问答。",
+        "使用 Netty 接入 TCP、UDP、MQTT 等协议，支持数千台多品牌、多类型硬件设备同时在线。",
+        "参与路内停车子系统设计，基于车位相机实现车位状态实时采集与自动计费。",
+        "基于 RabbitMQ 延迟交换机实现支付超时订单自动处理，提升订单处理自动化水平。",
       ],
     },
+    pagesInfoArr: [
+      {
+        title: "平台能力总览",
+        description:
+          "覆盖实时监控、车场管理、无感支付、余位展示、电子发票与停充一体等能力，支撑城市停车资源统一管理。",
+        images: [
+          {
+            src: "/projects/taishan-yiting/cover.png",
+            alt: "泰山易停智慧停车运营能力总览",
+            width: 2400,
+            height: 1038,
+          },
+        ],
+      },
+      {
+        title: "用户端核心界面",
+        description:
+          "从地图找车位到停车缴费、充电导航，用户可以在统一入口完成停车与充电服务。",
+        layout: "grid",
+        source: {
+          label: "泰山易停官网",
+          href: "https://www.dongxinzhilian.com/scheme/show/partplatform",
+        },
+        images: [
+          {
+            src: "/projects/taishan-yiting/app-home.png",
+            alt: "泰山易停首页与附近停车场地图",
+            width: 546,
+            height: 1084,
+          },
+          {
+            src: "/projects/taishan-yiting/nearby-parking.png",
+            alt: "泰山易停附近停车场与余位列表",
+            width: 548,
+            height: 1084,
+          },
+          {
+            src: "/projects/taishan-yiting/charging-map.png",
+            alt: "泰山易停充电地图与充电车位列表",
+            width: 548,
+            height: 1084,
+          },
+        ],
+      },
+    ],
   },
   {
-    id: "built-design",
-    companyName: "Builtdesign",
+    id: "taishan-yixing",
+    companyName: "泰山易行",
     type: "Professional",
-    category: ["Web Dev", "Full Stack", "UI/UX"],
+    category: ["Backend", "Web Dev"],
     shortDescription:
-      "Developed and optimized a high-performing website catering to over 4000 users, emphasizing efficiency and maintainability.",
-    websiteLink: "https://builtdesign.in",
+      "泰安市共享电单车运营平台，统一管理多品牌车辆、订单、调度、运维与监管数据上报。",
+    websiteLink: "https://www.dongxinzhilian.com/scheme/show/ebike",
     techStack: [
-      "Next.js",
-      "React",
-      "Node.js",
-      "MongoDB",
-      "GraphQL",
-      "Nest.js",
-      "Typescript",
+      "Java",
+      "Spring Cloud Alibaba",
+      "Nacos",
+      "Redis",
+      "MySQL",
+      "Netty",
+      "Kafka",
+      "MinIO",
+      "Elasticsearch",
+      "高德 SDK",
+      "SLS",
+      "OSS",
+      "Kubernetes",
     ],
-    startDate: new Date("2021-07-01"),
-    endDate: new Date("2022-07-01"),
-    companyLogoImg: "/projects/builtdesign/logo.png",
-    pagesInfoArr: [
-      {
-        title: "Landing Page",
-        description:
-          "Modern and responsive landing page showcasing company services and portfolio",
-        imgArr: [
-          "/projects/builtdesign/landing_1.webp",
-          "/projects/builtdesign/landing_3.webp",
-          "/projects/builtdesign/landing_5.webp",
-          "/projects/builtdesign/landing_6.webp",
-          "/projects/builtdesign/landing_2.webp",
-          "/projects/builtdesign/landing_4.webp",
-        ],
-      },
-      {
-        title: "Custom PDF Reader and optimizer",
-        description:
-          "Specialized PDF viewer with optimization features for improved performance and user experience",
-        imgArr: ["/projects/builtdesign/pdf_opt.webp"],
-      },
-      {
-        title: "Clients Dashboard",
-        description:
-          "Comprehensive client portal with project tracking, document management, and communication tools",
-        imgArr: [
-          "/projects/builtdesign/cli_dashboard_1.webp",
-          "/projects/builtdesign/cli_dashboard_2.webp",
-          "/projects/builtdesign/cli_dashboard_3.webp",
-        ],
-      },
-      {
-        title: "Admin Dashboard",
-        description:
-          "Powerful administrative interface for managing users, projects, and system settings",
-        imgArr: ["/projects/builtdesign/logo.png"],
-      },
-    ],
+    startDate: new Date("2023-07-01"),
+    endDate: new Date("2025-06-30"),
+    companyLogoImg: "/projects/taishan-yixing/cover.png",
     descriptionDetails: {
       paragraphs: [
-        "During my time at Builtdesign, I had the opportunity to work on a dynamic and user-focused project that involved designing and optimizing a website catering to a user base of over 4000 individuals. My role as a full-stack web developer was to ensure a seamless experience for users by creating an efficient and maintainable platform.",
-        "I collaborated closely with the product team to integrate cutting-edge features, employing technologies like Next.js and React with TypeScript for captivating front-end experiences. Additionally, I contributed significantly to the backend by utilizing Node.js, MongoDB, and GraphQL to design robust APIs and ensure smooth system functionality.",
-        "This experience allowed me to enhance my skills in various areas of web development and deliver a high-quality product. I gained proficiency in front-end technologies such as Material UI and Tailwind CSS, as well as backend technologies including Nest.js and MySQL. The project's success in catering to a large user base and providing an intuitive user interface has further motivated me to pursue excellence in web development.",
+        "泰山易行是泰安市共享电单车运营平台，提供车辆调度、订单管理、运维管理和数据上报等核心能力，并以 DDD 架构支持多品牌设备统一管理与业务扩展。",
+        "我以 Java 开发工程师身份维护设备网关、对接市级监管平台、建设日志采集与运维支持模块，并参与中控协议和车辆运营工具开发。",
+        "平台统一管理两大品牌、2000 余辆共享电单车，车辆日均在线率超过 95%。",
       ],
       bullets: [
-        "Developed and optimized a high-performing website catering to over 4000 users.",
-        "Collaborated closely with the product team to implement cutting-edge features.",
-        "Created an intuitive admin dashboard to efficiently manage and announce contest winners.",
-        "Leveraged Next.js, React with TypeScript for captivating front-end experiences.",
-        "Utilized Node.js, MongoDB, and GraphQL to design and manage databases.",
+        "维护并优化设备网关，支持多品牌电单车中控设备统一接入、管理和自动切换。",
+        "对接市级监管平台，日均实时同步车辆、订单与运维数据超过 5 万条。",
+        "建设日志采集模块，支撑每日百万级设备、运维和操作日志归集分析，问题定位时效提升 50%。",
+        "参与小安中控协议对接，支持打卡、清洁车、摆车等任务，日均线上任务处理量超过 500 单。",
+        "实现车辆二维码批量生成工具，累计生成二维码 5 万余个，提升车辆部署与运营效率。",
       ],
     },
+    pagesInfoArr: [
+      {
+        title: "多端协同平台",
+        description:
+          "通过用户端、运营后台和设备网关协同，实现车辆实时监控、智能调度与精细化运营。",
+        images: [
+          {
+            src: "/projects/taishan-yixing/cover.png",
+            alt: "泰山易行运营后台与用户端界面总览",
+            width: 1624,
+            height: 920,
+          },
+        ],
+      },
+      {
+        title: "产品落地与运营场景",
+        description:
+          "车辆投放、现场维护、平台监控、路面运营与电池充电共同构成共享电单车的完整运营闭环。",
+        layout: "grid",
+        source: {
+          label: "泰安日报社公开报道",
+          href: "https://taian.iqilu.com/taianminsheng/2026/0518/5914734.shtml",
+        },
+        images: [
+          {
+            src: "/projects/taishan-yixing/vehicle-fleet.jpg",
+            alt: "泰山易行新国标共享电单车投放场景",
+            width: 1084,
+            height: 1466,
+          },
+          {
+            src: "/projects/taishan-yixing/vehicle-maintenance.jpg",
+            alt: "泰山易行共享电单车现场维护场景",
+            width: 1084,
+            height: 1416,
+          },
+          {
+            src: "/projects/taishan-yixing/platform-operations.jpg",
+            alt: "泰山易行蓝牙嗅探与监管平台技术运维场景",
+            width: 1084,
+            height: 1910,
+          },
+          {
+            src: "/projects/taishan-yixing/roadside-operation.jpg",
+            alt: "泰山易行绿 T 识别规范停车场景",
+            width: 1080,
+            height: 1920,
+          },
+          {
+            src: "/projects/taishan-yixing/battery-charging.jpg",
+            alt: "依托泰山易停资源建设的分布式电池充电柜",
+            width: 1279,
+            height: 1770,
+          },
+        ],
+      },
+    ],
   },
   {
-    id: "the-super-quotes",
-    companyName: "The Super Quotes",
+    id: "taifa-smart-park",
+    companyName: "泰发展智慧园区",
     type: "Professional",
-    category: ["Mobile Dev", "Full Stack", "UI/UX"],
+    category: ["Backend", "Web Dev"],
     shortDescription:
-      "Elevated The Super Quotes app with JavaScript, React Native, APIs, Redux magic, and Google Play Store debut.",
-    websiteLink:
-      "https://play.google.com/store/apps/details?id=com.thesuperlife",
-    techStack: ["React Native", "Node.js", "MongoDB", "Javascript"],
-    startDate: new Date("2021-07-01"),
-    endDate: new Date("2022-07-01"),
-    companyLogoImg: "/projects/superquotes/logo.png",
+      "面向企业园区的数字化管理平台，整合餐厨、停车与物联设备管理，提升园区运营效率。",
+    websiteLink: "https://www.dongxinzhilian.com/scheme/show/park",
+    techStack: ["Java", "Spring Boot", "Redis", "MySQL", "Netty", "Socket.io"],
+    startDate: new Date("2023-07-01"),
+    endDate: new Date("2025-06-30"),
+    companyLogoImg: "/projects/taifa-smart-park/cover.png",
+    descriptionDetails: {
+      paragraphs: [
+        "泰发展智慧园区面向企业园区数字化管理需求，整合餐厨管理、停车管理与物联设备管理三大模块，实现园区资源统一展示和智能化运营。",
+        "我以 Java 开发工程师身份参与小程序身份管理、餐厨数据归集、厨房监控、访客车位预约以及物联设备统一管理等模块的需求分析与功能设计。",
+        "项目已统一接入 100 余个物联终端，并为园区 1000 余人次的日常就餐登记与多维统计提供支持。",
+      ],
+      bullets: [
+        "参与小程序快捷登录与手机号验证流程，完善园区用户身份管理。",
+        "对接餐厨管理模块，归集人脸识别就餐记录并支持周、月度报表导出。",
+        "参与餐厨可视化建设，餐厨大屏可实时展示每日 20 路厨房监控视频流。",
+        "梳理来访车辆、车位预约与状态展示流程，高峰期支持每小时 500 余起预约，车位使用率提升 20%。",
+        "参与物联设备统一管理和监控大屏设计，实现 100 余个终端的状态采集与展示，运维效率提升 30%。",
+      ],
+    },
     pagesInfoArr: [
       {
-        title: "Quotes View Page",
+        title: "园区数字孪生与移动端",
         description:
-          "Elegantly designed quotes display with customizable themes and sharing options",
-        imgArr: ["/projects/superquotes/app_2.webp"],
-      },
-      {
-        title: "Quotes Download Component",
-        description:
-          "Feature allowing users to download quotes as beautiful images for social media sharing",
-        imgArr: [
-          "/projects/superquotes/app_4.webp",
-          "/projects/superquotes/app_7.webp",
+          "以园区可视化大屏和移动端为入口，统一呈现安防、停车、餐厨与物联设备运行状态。",
+        images: [
+          {
+            src: "/projects/taifa-smart-park/cover.png",
+            alt: "泰发展智慧园区数字孪生大屏与移动端界面",
+            width: 1624,
+            height: 920,
+          },
         ],
       },
       {
-        title: "Account Management",
+        title: "建设背景",
         description:
-          "User profile management with favorites, history, and personalization settings",
-        imgArr: ["/projects/superquotes/app_6.webp"],
-      },
-      {
-        title: "Interest Selection and Update Page",
-        description:
-          "Interactive interface for users to select and update their quote preferences and interests",
-        imgArr: [
-          "/projects/superquotes/app_1.webp",
-          "/projects/superquotes/app_3.webp",
-        ],
-      },
-      {
-        title: "Responsiveness",
-        description:
-          "Adaptive design ensuring optimal user experience across various device sizes and orientations",
-        imgArr: ["/projects/superquotes/app_5.webp"],
-      },
-    ],
-    descriptionDetails: {
-      paragraphs: [
-        `Venturing into the world of creativity at The Super Quotes was an exhilarating journey. As a passionate developer, I led the charge in crafting a compelling application from inception to completion, using the dynamic duo of JavaScript and React Native.`,
-        `The heart of my achievement lay in the seamless integration of APIs, threading a tapestry of data flow that propelled the application's functionality to new heights.`,
-        `With the wizardry of Redux, I choreographed a symphony of state management and performance optimization, orchestrating a ballet of responsiveness that wowed users with every interaction.`,
-        `A crescendo awaited as I unveiled the culmination of my work on the grand stage of the Google Play Store. The app's debut marked an epoch, opening doors to an expansive audience eager to embrace the charm of The Super Quotes.`,
-      ],
-      bullets: [
-        "Led the end-to-end development of a captivating application using JavaScript and React Native.",
-        "Championed the integration of APIs, harmonizing data flow and enhancing application functionality.",
-        "Conducted Redux magic to ensure state management and optimize performance, delivering a mesmerizing user experience.",
-        "Premiered the application on the Google Play Store, capturing hearts and expanding its user base.",
-      ],
-    },
-  },
-  {
-    id: "apex-shopping",
-    companyName: "Apex Shopping App",
-    type: "Personal",
-    category: ["Mobile Dev", "Full Stack", "UI/UX"],
-    shortDescription:
-      "Developed a feature-rich mobile shopping application with admin panel, user authentication, and seamless product management using React Native and Firebase.",
-    githubLink: "https://github.com/namanbarkiya/apex-shopping-app",
-    techStack: ["React Native", "Javascript", "Redux", "Node.js", "express.js"],
-    startDate: new Date("2021-07-14"),
-    endDate: new Date("2022-07-01"),
-    companyLogoImg: "/projects/apex/logo.png",
-    pagesInfoArr: [
-      {
-        title: "Splash Screen",
-        description: "Custom animated splash screen with app branding",
-        imgArr: ["/projects/apex/app_7.webp"],
-      },
-      {
-        title: "Login/Signup Authentication",
-        description: "Secure user authentication system with Firebase",
-        imgArr: ["/projects/apex/app_1.webp"],
-      },
-      {
-        title: "All Products Explore Screen",
-        description: "Interactive product browsing with categories and filters",
-        imgArr: ["/projects/apex/app_3.webp"],
-      },
-      {
-        title: "Admin Panel",
-        description:
-          "Comprehensive admin dashboard for product and order management",
-        imgArr: ["/projects/apex/app_4.webp", "/projects/apex/app_6.webp"],
-      },
-      {
-        title: "Sidenav Navigation",
-        description: "Intuitive side navigation for easy app navigation",
-        imgArr: ["/projects/apex/app_5.webp"],
-      },
-      {
-        title: "Firebase Database",
-        description:
-          "Real-time database structure for efficient data management",
-        imgArr: ["/projects/apex/db.webp"],
-      },
-    ],
-    descriptionDetails: {
-      paragraphs: [
-        "The Apex Shopping App represents a comprehensive mobile e-commerce solution that I developed from the ground up using React Native and Firebase. This project showcases my ability to create a full-featured shopping application with both user and admin functionalities.",
-        "The application features a robust authentication system, allowing users to securely sign up and log in. The product exploration interface is designed with user experience in mind, incorporating smooth navigation and intuitive filtering options.",
-        "One of the key highlights is the admin panel, which provides complete control over product management, order processing, and inventory tracking. The integration with Firebase ensures real-time data synchronization and reliable data persistence.",
-        "The app's architecture emphasizes scalability and performance, utilizing Redux for state management and following best practices for mobile app development. The UI/UX design focuses on providing a seamless shopping experience across different device sizes.",
-      ],
-      bullets: [
-        "Implemented secure user authentication and authorization using Firebase",
-        "Designed and developed an intuitive product browsing and shopping cart system",
-        "Created a comprehensive admin panel for product and order management",
-        "Integrated real-time data synchronization using Firebase Database",
-        "Implemented state management using Redux for optimal performance",
-        "Designed responsive UI components following mobile-first principles",
-        "Incorporated smooth animations and transitions for enhanced user experience",
-      ],
-    },
-  },
-  {
-    id: "builtdesign-blogs",
-    companyName: "Builtdesign Blogs",
-    type: "Professional",
-    category: ["Web Dev", "Full Stack", "UI/UX"],
-    shortDescription:
-      "Crafted Builtdesign's vibrant Blogs Website using Netlify CMS and React for engaging content experiences.",
-    websiteLink: "https://blog.builtdesign.in",
-    techStack: ["Next.js", "React", "Node.js", "MongoDB", "Typescript"],
-    startDate: new Date("2022-03-01"),
-    endDate: new Date("2022-07-01"),
-    companyLogoImg: "/projects/builtdesign-blogs/logo.png",
-    pagesInfoArr: [
-      {
-        title: "Blog Landing Page",
-        description:
-          "Modern and responsive landing page showcasing featured articles",
-        imgArr: ["/projects/builtdesign-blogs/blog_2.webp"],
-      },
-      {
-        title: "Blog Listing",
-        description:
-          "Organized display of all blog posts with search and filtering",
-        imgArr: ["/projects/builtdesign-blogs/blog_3.webp"],
-      },
-      {
-        title: "Category Navigation",
-        description: "Intuitive category-based navigation system",
-        imgArr: ["/projects/builtdesign-blogs/blog_1.webp"],
-      },
-      {
-        title: "Article View",
-        description:
-          "Clean and readable article layout with rich media support",
-        imgArr: [
-          "/projects/builtdesign-blogs/blog_4.webp",
-          "/projects/builtdesign-blogs/blog_5.webp",
+          "项目围绕数字中国、城市数字化与国有企业数字化转型要求，建设统一、可视、可持续演进的智慧园区能力。",
+        source: {
+          label: "泰发展智慧园区官网",
+          href: "https://www.dongxinzhilian.com/scheme/show/park",
+        },
+        images: [
+          {
+            src: "/projects/taifa-smart-park/digital-china-policy.png",
+            alt: "智慧园区建设背景：数字中国建设整体布局规划",
+            width: 804,
+            height: 552,
+          },
+          {
+            src: "/projects/taifa-smart-park/five-year-plan.png",
+            alt: "智慧园区建设背景：十四五规划和 2035 年远景目标",
+            width: 804,
+            height: 552,
+          },
+          {
+            src: "/projects/taifa-smart-park/enterprise-digitalization.png",
+            alt: "智慧园区建设背景：国有企业数字化转型",
+            width: 804,
+            height: 552,
+          },
         ],
       },
     ],
-    descriptionDetails: {
-      paragraphs: [
-        "As part of the Builtdesign platform, I developed a sophisticated blog website that serves as a content hub for the company's thought leadership and industry insights. The project leveraged Next.js and React to create a fast, SEO-friendly platform.",
-        "The blog platform features a modern, responsive design that prioritizes readability and user engagement. I implemented a robust content management system using Netlify CMS, enabling the content team to easily publish and manage blog posts.",
-        "The architecture includes server-side rendering for optimal performance and SEO, while MongoDB provides flexible content storage. TypeScript ensures code reliability and maintainability throughout the application.",
-        "Key features include category-based navigation, search functionality, and a rich text editor for content creation. The platform supports various content types including images, code snippets, and embedded media.",
-      ],
-      bullets: [
-        "Developed a modern blog platform using Next.js and React with TypeScript",
-        "Implemented Netlify CMS for efficient content management",
-        "Created a responsive design that prioritizes readability and user engagement",
-        "Built server-side rendering for optimal performance and SEO",
-        "Integrated MongoDB for flexible content storage and management",
-        "Developed category-based navigation and search functionality",
-        "Implemented rich text editing capabilities for content creation",
-      ],
-    },
-  },
-
-  {
-    id: "cirql-dashboard",
-    companyName: "Cirql Dashboard",
-    type: "Personal",
-    category: ["Web Dev", "Frontend", "UI/UX"],
-    shortDescription:
-      "Created a dashboard project using React and Tailwind CSS, focusing on UI design and routing implementation.",
-    websiteLink: "https://cirql-ui.namanbarkiya.xyz/",
-    techStack: ["React", "Tailwind CSS", "Google Auth"],
-    startDate: new Date("2023-01-01"),
-    endDate: new Date("2023-02-15"),
-    companyLogoImg: "/projects/cirql/logo.png",
-    pagesInfoArr: [
-      {
-        title: "Dashboard Home",
-        description:
-          "Main dashboard view with analytics widgets and data visualization",
-        imgArr: ["/projects/cirql/web_1.png", "/projects/cirql/web_2.png"],
-      },
-      {
-        title: "Profile Page",
-        description:
-          "User profile management interface with customization options",
-        imgArr: ["/projects/cirql/web_3.png", "/projects/cirql/web_4.png"],
-      },
-    ],
-    descriptionDetails: {
-      paragraphs: [
-        "For the 'Cirql Dashboard' personal, I aimed to enhance my UI design skills and deepen my understanding of routing within a React application.",
-        "I utilized React and Tailwind CSS to craft an intuitive dashboard interface that provides users with an organized overview of data and functionalities. The UI components were thoughtfully designed to ensure a seamless user experience.",
-        "Incorporating Google Sign-In Authentication further fortified the project by adding a layer of security and convenience. Users are required to authenticate before accessing certain routes, ensuring the safety of sensitive information.",
-        "The routing system was meticulously implemented to enable smooth navigation between different sections of the dashboard, simulating real-world use cases.",
-        "Through this project, I've gained valuable insights into UI/UX design principles and the implementation of secure and efficient routing in React applications.",
-      ],
-      bullets: [
-        "Created a user-friendly dashboard project using React and Tailwind CSS.",
-        "Implemented Google Sign-In Authentication to ensure secure access to sensitive routes.",
-        "Designed UI components to provide an intuitive and visually pleasing experience.",
-        "Focused on implementing a smooth routing system to simulate real-world use cases.",
-        "Enhanced my skills in UI design, routing, and component architecture.",
-      ],
-    },
-  },
-  {
-    id: "inscript-hindi-typing",
-    companyName: "Inscript Hindi Typing",
-    type: "Personal",
-    category: ["Web Dev", "UI/UX"],
-    shortDescription:
-      "Developed a user-friendly website for Inscript Hindi typing, addressing the need for a simple tool for Hindi writers to convey data digitally.",
-    websiteLink: "https://hindityping.namanbarkiya.xyz",
-    githubLink: "https://github.com/namanbarkiya/inscript-hindi-keyboard",
-    techStack: ["HTML 5", "CSS 3", "Javascript"],
-    startDate: new Date("2022-05-01"),
-    endDate: new Date("2022-06-15"),
-    companyLogoImg: "/projects/hindi-keyboard/logo.png",
-    pagesInfoArr: [
-      {
-        title: "Typing Interface",
-        description: "Minimal and user-friendly Inscript Hindi typing area",
-        imgArr: ["/projects/hindi-keyboard/web_1.png"],
-      },
-      {
-        title: "Copy and Download the file",
-        description:
-          "Export functionality allowing users to copy text or download as a document file",
-        imgArr: [
-          "/projects/hindi-keyboard/web_2.png",
-          "/projects/hindi-keyboard/web_3.png",
-        ],
-      },
-    ],
-    descriptionDetails: {
-      paragraphs: [
-        "The 'Inscript Hindi Typing Website' project emerged from the need to provide a simple and accessible tool for Hindi writers, especially those in digital news and media, who wished to convey data in Hindi.",
-        "Recognizing the challenges posed by complex software in the market, I set out to create a minimalistic typing area that catered to the needs of a vast community of Hindi typists in India.",
-        "The project was designed to address the specific requirements of users familiar with the Inscript keyboard layout, mapping English and Hindi alphabets for seamless typing. The intuitive interface allowed users to effortlessly switch between languages, streamlining the process of content creation.",
-        "Leveraging HTML and CSS, I crafted the website's UI to ensure a user-friendly experience. Additionally, Local Storage was utilized to enable users to save and retrieve their work, enhancing convenience and productivity.",
-        "The website's focus on user experience and simplicity proved to be a key factor in its popularity among Hindi writers. By offering a tool that reduced the barriers to entry, I contributed to the digital empowerment of Hindi typists who previously faced challenges in conveying their message effectively.",
-        "This project marked one of my initial forays into web development and highlighted the transformative potential of technology in addressing real-world challenges.",
-      ],
-      bullets: [
-        "Developed a user-friendly website for Inscript Hindi typing.",
-        "Catered to the needs of Hindi writers in digital news and media.",
-        "Created a minimalistic and intuitive typing interface for the Inscript keyboard layout.",
-        "Mapped English and Hindi alphabets to provide a seamless typing experience.",
-        "Utilized HTML and CSS to design a user-friendly UI.",
-        "Implemented Local Storage to enable users to save and retrieve their work.",
-        "Contributed to the digital empowerment of Hindi typists by offering a simple tool.",
-        "Marked one of my first web development projects, showcasing technology's potential for addressing real-world needs.",
-      ],
-    },
   },
 ];
 
-export const featuredProjects = Projects.slice(0, 3);
+export const featuredProjects = Projects.slice(0, 4);

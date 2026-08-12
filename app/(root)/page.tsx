@@ -8,8 +8,10 @@ import { AnimatedSection } from "@/components/common/animated-section";
 import { AnimatedText } from "@/components/common/animated-text";
 import { ClientPageWrapper } from "@/components/common/client-page-wrapper";
 import { Icons } from "@/components/common/icons";
+import GithubRedirectCard from "@/components/contact/github-redirect-card";
 import ContributionCard from "@/components/contributions/contribution-card";
 import ExperienceCard from "@/components/experience/experience-card";
+import { ContactForm } from "@/components/forms/contact-form";
 import ProjectCard from "@/components/projects/project-card";
 import SkillsCard from "@/components/skills/skills-card";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -254,6 +256,35 @@ export default function IndexPage() {
       <AnimatedSection
         direction="up"
         className="container space-y-6 py-10 my-14"
+        id="skills"
+      >
+        <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center">
+          <AnimatedText
+            as="h2"
+            className="font-heading text-3xl leading-[1.1] sm:text-3xl md:text-6xl"
+          >
+            {pagesConfig.skills.title}
+          </AnimatedText>
+          <AnimatedText
+            as="p"
+            delay={0.2}
+            className="max-w-[85%] leading-normal text-muted-foreground sm:text-lg sm:leading-7"
+          >
+            {pagesConfig.skills.description}
+          </AnimatedText>
+        </div>
+        <SkillsCard skills={featuredSkills} />
+        <AnimatedText delay={0.4} className="flex justify-center">
+          <Link href="/skills">
+            <Button variant={"outline"} className="rounded-xl">
+              <Icons.chevronDown className="mr-2 h-4 w-4" /> View All
+            </Button>
+          </Link>
+        </AnimatedText>
+      </AnimatedSection>
+      <AnimatedSection
+        direction="up"
+        className="container space-y-6 bg-muted py-10 my-14"
         id="blogs"
       >
         <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center">
@@ -293,32 +324,32 @@ export default function IndexPage() {
       </AnimatedSection>
       <AnimatedSection
         direction="up"
-        className="container space-y-6 bg-muted py-10 my-14"
-        id="skills"
+        className="container space-y-6 py-10 my-14"
+        id="contact"
       >
         <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center">
           <AnimatedText
             as="h2"
             className="font-heading text-3xl leading-[1.1] sm:text-3xl md:text-6xl"
           >
-            {pagesConfig.skills.title}
+            {pagesConfig.contact.title}
           </AnimatedText>
           <AnimatedText
             as="p"
             delay={0.2}
             className="max-w-[85%] leading-normal text-muted-foreground sm:text-lg sm:leading-7"
           >
-            {pagesConfig.skills.description}
+            {pagesConfig.contact.description}
           </AnimatedText>
         </div>
-        <SkillsCard skills={featuredSkills} />
-        <AnimatedText delay={0.4} className="flex justify-center">
-          <Link href="/skills">
-            <Button variant={"outline"} className="rounded-xl">
-              <Icons.chevronDown className="mr-2 h-4 w-4" /> View All
-            </Button>
-          </Link>
-        </AnimatedText>
+        <div className="flex flex-col lg:flex-row">
+          <div className="flex-1">
+            <ContactForm />
+          </div>
+          <div className="flex-1 flex justify-end">
+            <GithubRedirectCard />
+          </div>
+        </div>
       </AnimatedSection>
     </ClientPageWrapper>
   );

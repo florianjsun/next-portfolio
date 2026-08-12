@@ -1,0 +1,11 @@
+schema_version: 1
+module_path: app_routes/app_root_config
+title: 应用根布局与站点元数据
+scope:
+    - app/layout.tsx
+    - app/globals.css
+    - app/manifest.ts
+    - app/sitemap.ts
+source_files: []
+depends_on: []
+related_to: []

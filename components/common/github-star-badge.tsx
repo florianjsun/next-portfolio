@@ -50,7 +50,7 @@ export function GitHubStarBadge({ className }: GitHubStarBadgeProps) {
     >
       <span className="hidden items-center gap-2 sm:inline-flex">
         <Icons.gitHub className="h-3.5 w-3.5" />
-        <span className="font-medium">Template</span>
+        <span className="font-medium">Github</span>
         <span className="text-muted-foreground/60">·</span>
       </span>
       <Icons.star className="h-3.5 w-3.5" />

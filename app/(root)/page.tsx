@@ -28,7 +28,7 @@ import profileImg from "@/public/profile-img.jpg";
 export const metadata: Metadata = {
   title: `${pagesConfig.home.metadata.title}`,
   description:
-    "Naman Barkiya - Applied AI Engineer working at the intersection of AI, data, and scalable software systems. Explore my projects, experience, and contributions.",
+    "Sun Jing - 全栈 & AI应用工程师，正在探索如何用AI为传统业务提速。欢迎浏览我的项目、经历与贡献",
   alternates: {
     canonical: siteConfig.url,
   },
@@ -43,7 +43,7 @@ export default function IndexPage() {
     name: siteConfig.authorName,
     url: siteConfig.url,
     image: siteConfig.ogImage,
-    jobTitle: "Applied AI Engineer",
+    jobTitle: "全栈 & AI应用工程师",
     sameAs: [siteConfig.links.github, siteConfig.links.twitter],
   };
 
@@ -51,13 +51,13 @@ export default function IndexPage() {
   const softwareSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    name: "Next.js Portfolio Template",
+    name: "Next.js Portfolio",
     applicationCategory: "DeveloperApplication",
     operatingSystem: "Web",
     offers: {
       "@type": "Offer",
       price: "0",
-      priceCurrency: "USD",
+      priceCurrency: "CNY",
     },
     author: {
       "@type": "Person",
@@ -87,7 +87,7 @@ export default function IndexPage() {
             width={100}
             sizes="100vw"
             className="bg-primary rounded-full mb-0 h-auto md:mb-2 w-[60%] max-w-[16rem] border-8 border-primary"
-            alt="Naman Barkiya - Applied AI Engineer Portfolio"
+            alt="Sun Jing - 全栈 & AI应用工程师 个人网站"
             priority
           />
           <AnimatedText
@@ -95,19 +95,18 @@ export default function IndexPage() {
             delay={0.2}
             className="font-heading text-3xl sm:text-5xl md:text-6xl lg:text-7xl"
           >
-            Naman Barkiya
+            Sun Jing
           </AnimatedText>
           <AnimatedText
             as="h3"
             delay={0.4}
             className="font-heading text-base sm:text-xl md:text-xl lg:text-2xl"
           >
-            Applied AI Engineer
+            全栈 & AI应用工程师
           </AnimatedText>
           <div className="mt-4 max-w-[42rem] text-center">
             <p className="leading-normal text-muted-foreground text-sm sm:text-base">
-              Software engineer working at the intersection of AI, data, and
-              scalable software systems.
+              全栈 & AI应用工程师，正在探索如何用AI为传统业务提速。欢迎浏览我的项目、经历与贡献
             </p>
           </div>
 
@@ -117,9 +116,9 @@ export default function IndexPage() {
                 href={"/resume"}
                 target="_blank"
                 className={cn(buttonVariants({ size: "lg" }))}
-                aria-label="View resume"
+                aria-label="查看简历"
               >
-                <Icons.post className="w-4 h-4 mr-2" /> Resume
+                <Icons.post className="w-4 h-4 mr-2" /> 查看简历
               </Link>
             </AnimatedText>
             <AnimatedText delay={0.8}>
@@ -134,7 +133,7 @@ export default function IndexPage() {
                 )}
                 aria-label="Contact Naman Barkiya"
               >
-                <Icons.contact className="w-4 h-4 mr-2" /> Contact
+                <Icons.contact className="w-4 h-4 mr-2" /> 联系方式
               </Link>
             </AnimatedText>
           </div>

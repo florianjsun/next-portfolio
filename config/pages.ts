@@ -14,72 +14,72 @@ type PagesConfig = {
 
 export const pagesConfig: PagesConfig = {
   home: {
-    title: "Home",
-    description: "Welcome to my portfolio website.",
+    title: "主页",
+    description: "欢迎来到我的个人网站。",
     metadata: {
-      title: "Home",
-      description: "Naman Barkiya's portfolio website.",
+      title: "主页",
+      description: "Sun Jing的个人网站",
     },
   },
   skills: {
-    title: "Skills",
-    description: "Key skills that define my professional identity.",
+    title: "技能",
+    description: "定义我职业身份的核心技能。",
     metadata: {
-      title: "Skills",
+      title: "技能",
       description:
-        "Naman Barkiya's key skills that define his professional identity.",
+        "Sun Jing的核心技能，定义了他的职业身份。",
     },
   },
   projects: {
-    title: "Projects",
-    description: "Showcasing impactful projects and technical achievements.",
+    title: "项目",
+    description: "展示我的项目经验和技术成果。",
     metadata: {
-      title: "Projects",
-      description: "Naman Barkiya's projects in building web applications.",
+      title: "项目",
+      description: "Sun Jing的项目经验和技术成果。",
     },
   },
   contact: {
-    title: "Contact",
-    description: "Let's connect and explore collaborations.",
+    title: "联系",
+    description: "欢迎联系，探索合作机会。",
     metadata: {
-      title: "Contact",
-      description: "Contact Naman Barkiya.",
+      title: "联系",
+      description: "欢迎联系，探索合作机会。",
     },
   },
   contributions: {
-    title: "Contributions",
-    description: "Open-source contributions and community involvement.",
+    title: "开源贡献",
+    description: "开源贡献与社区参与。",
     metadata: {
-      title: "Contributions",
+      title: "开源贡献",
       description:
-        "Naman Barkiya's open-source contributions and community involvement.",
+        "Sun Jing的开源贡献与社区参与。",
     },
   },
   resume: {
-    title: "Resume",
-    description: "Naman Barkiya's resume.",
+    title: "简历",
+    description: "Sun Jing的简历。",
     metadata: {
-      title: "Resume",
-      description: "Naman Barkiya's resume.",
+      title: "简历",
+      description: "Sun Jing的简历。",
     },
   },
   blogs: {
-    title: "Blogs",
+    title: "博客",
     description:
-      "Thoughts on AI, software engineering, and building in public.",
+      "AI、技术、生活等方面的感悟和思考。",
     metadata: {
-      title: "Blogs",
+      title: "博客",
       description:
-        "Naman Barkiya's blog — thoughts on AI, software engineering, and building in public.",
+        "Sun Jing的博客 —— AI、技术、生活等方面的感悟和思考。",
     },
   },
   experience: {
-    title: "Experience",
-    description: "Professional journey and career timeline.",
+    title: "工作经历",
+    description: "职业历程与发展轨迹。",
     metadata: {
-      title: "Experience",
+      title: "工作经历",
       description:
-        "Naman Barkiya's professional journey and experience timeline.",
+        "Sun Jing的职业历程与发展轨迹。",
     },
   },
 };

@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: components
+title: Next.js 作品集站点组件库
+scope:
+    - components/
+source_files: []
+depends_on: []
+related_to: []

@@ -1,27 +1,27 @@
 export const routesConfig: any = {
   mainNav: [
     {
-      title: "Projects",
+      title: "项目",
       href: "/projects",
     },
     {
-      title: "Experience",
+      title: "工作经历",
       href: "/experience",
     },
     {
-      title: "Contributions",
+      title: "开源贡献",
       href: "/contributions",
     },
     {
-      title: "Skills",
+      title: "技能",
       href: "/skills",
     },
     {
-      title: "Blogs",
+      title: "博客",
       href: "/blogs",
     },
     {
-      title: "Contact",
+      title: "联系",
       href: "/contact",
     },
   ],

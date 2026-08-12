@@ -1,0 +1,12 @@
+schema_version: 1
+module_path: app_routes/root_routes
+title: 根路由与营销站点页面（Next.js App Router）
+scope:
+    - app/(root)/
+source_files: []
+depends_on: []
+related_to:
+    - path: components/content_sections
+    - path: components/profile_sections
+    - path: configuration
+    - path: utilities

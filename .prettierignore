@@ -1,0 +1,10 @@
+# Build output and dependencies
+.next/
+node_modules/
+
+# Generated files
+pnpm-lock.yaml
+.qoder/
+
+# Static assets
+public/

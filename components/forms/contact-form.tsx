@@ -32,8 +32,6 @@ const formSchema = z.object({
 export function ContactForm() {
   const storeModal = useModalStore();
 
-  // const [open, setOpen] = useState(false);
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -44,7 +42,6 @@ export function ContactForm() {
     },
   });
 
-  // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const response = await fetch("/api/contact", {
@@ -55,18 +52,25 @@ export function ContactForm() {
         body: JSON.stringify(values),
       });
 
-      form.reset();
-
-      if (response.status === 200) {
-        storeModal.onOpen({
-          title: "Thankyou!",
-          description:
-            "Your message has been received! I appreciate your contact and will get back to you shortly.",
-          icon: Icons.successAnimated,
-        });
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`);
       }
+
+      form.reset();
+      storeModal.onOpen({
+        title: "Thankyou!",
+        description:
+          "Your message has been received! I appreciate your contact and will get back to you shortly.",
+        icon: Icons.successAnimated,
+      });
     } catch (err) {
-      console.log("Err!", err);
+      console.error("Failed to send the contact message", err);
+      storeModal.onOpen({
+        title: "Something went wrong!",
+        description:
+          "Your message could not be sent. Please try again later or reach out through the social links below.",
+        icon: Icons.warning,
+      });
     }
   }
 
@@ -85,9 +89,6 @@ export function ContactForm() {
               <FormControl>
                 <Input placeholder="Enter your name" {...field} />
               </FormControl>
-              {/* <FormDescription>
-                                This is your public display name.
-                            </FormDescription> */}
               <FormMessage />
             </FormItem>
           )}
@@ -127,9 +128,6 @@ export function ContactForm() {
               <FormControl>
                 <Input placeholder="Link for social account" {...field} />
               </FormControl>
-              {/* <FormDescription>
-                                This is your public display name.
-                            </FormDescription> */}
               <FormMessage />
             </FormItem>
           )}

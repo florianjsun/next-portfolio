@@ -1,8 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 
+import { BlogCoverImage } from "@/components/blogs/blog-cover-image";
 import { Icons } from "@/components/common/icons";
-import { BlogMeta } from "@/lib/blogs";
+import type { BlogMeta } from "@/lib/blogs";
 
 interface BlogCardProps {
   blog: BlogMeta;
@@ -26,7 +26,7 @@ export default function BlogCard({ blog }: BlogCardProps) {
         {/* Cover image */}
         {blog.coverImage && (
           <div className="relative w-full h-[180px] flex-shrink-0 overflow-hidden bg-muted">
-            <Image
+            <BlogCoverImage
               src={blog.coverImage}
               alt={blog.title}
               fill

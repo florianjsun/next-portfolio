@@ -3,7 +3,7 @@ import { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
 import { getAllBlogsMeta } from "@/lib/blogs";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = siteConfig.url;
 
   // Main pages
@@ -59,10 +59,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   // Blog post pages — each gets its own sitemap entry with correct date
-  const blogs = getAllBlogsMeta();
+  const blogs = await getAllBlogsMeta();
   const blogRoutes: MetadataRoute.Sitemap = blogs.map((blog) => ({
     url: `${baseUrl}/blogs/${blog.slug}`,
-    lastModified: new Date(blog.date),
+    lastModified: new Date(blog.updatedAt),
     changeFrequency: "yearly" as const,
     priority: 0.7,
   }));

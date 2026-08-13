@@ -7,6 +7,8 @@ import PageContainer from "@/components/common/page-container";
 import { pagesConfig } from "@/config/pages";
 import { siteConfig } from "@/config/site";
 import { getAllBlogsMeta } from "@/lib/blogs";
+import { serializeJsonLd } from "@/lib/json-ld";
+import { toAbsoluteUrl } from "@/lib/urls";
 
 export const metadata: Metadata = {
   title: pagesConfig.blogs.metadata.title,
@@ -38,8 +40,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function BlogsPage() {
-  const blogs = getAllBlogsMeta();
+export default async function BlogsPage() {
+  const blogs = await getAllBlogsMeta();
 
   // CollectionPage + Blog JSON-LD for the listing page
   const blogListSchema = {
@@ -80,7 +82,7 @@ export default function BlogsPage() {
         },
         keywords: blog.tags.join(", "),
         ...(blog.coverImage && {
-          image: `${siteConfig.url}${blog.coverImage}`,
+          image: toAbsoluteUrl(blog.coverImage, siteConfig.url),
         }),
       })),
     },
@@ -111,12 +113,12 @@ export default function BlogsPage() {
       <Script
         id="schema-blog-list"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogListSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(blogListSchema) }}
       />
       <Script
         id="schema-breadcrumb-blogs"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema) }}
       />
       <PageContainer
         title={pagesConfig.blogs.title}

@@ -17,6 +17,7 @@ A modern, responsive, and SEO-optimized **Next.js 16 portfolio template** design
 - **Animations**: Subtle animations for engaging user experience
 - **Analytics Integration**: Ready for Google Analytics tracking
 - **Contact Form**: Functional contact form with validation
+- **Notion-Powered Blog**: Write and publish posts from a Notion database
 - **Open Source**: Free to use and modify for your personal portfolio
 
 ## 🚀 Demo
@@ -39,6 +40,7 @@ https://github.com/user-attachments/assets/fc071310-9d1c-4832-877f-23f9569893d7
 - **Validation**: [zod 4](https://zod.dev/) + [react-hook-form](https://react-hook-form.com/)
 - **Form Handling**: Server actions with validation
 - **Analytics**: Google Analytics + Vercel Analytics
+- **Content**: Notion API with cached, webhook-driven blog updates
 - **Deployment**: [Vercel](https://vercel.com)
 
 ## 🔧 Getting Started
@@ -69,6 +71,88 @@ To get started with your own portfolio website:
 
 5. Open [http://localhost:3000](http://localhost:3000) in your web browser to see the website.
 
+## Notion Blog Setup
+
+Blog pages are loaded from Notion at build time and on demand. The files under
+`content/blogs/` are retained only for the optional one-time migration script;
+the website does not read them at runtime.
+
+1. Create a full-page Notion database named `Blog Posts` with the following
+   properties. Property names are case-sensitive.
+
+   | Property      | Notion Type      | Notes                                     |
+   | ------------- | ---------------- | ----------------------------------------- |
+   | `Title`       | Title            | Post title                                |
+   | `Slug`        | Text             | Unique kebab-case URL slug                |
+   | `Status`      | Status or Select | Options must include `Draft`, `Published` |
+   | `PublishedAt` | Date             | Public publication date                   |
+   | `Description` | Text             | SEO description, up to 600 characters     |
+   | `Tags`        | Multi-select     | Up to 20 tags                             |
+   | `CoverImage`  | Text             | Site path or stable HTTPS URL             |
+   | `ReadingTime` | Number           | Optional; details pages estimate if empty |
+   | `Featured`    | Checkbox         | Makes the post eligible for the home page |
+
+2. Create an
+   [internal Notion connection](https://developers.notion.com/guides/get-started/internal-connections)
+   with **Read content** access. Add the connection to the `Blog Posts`
+   database. Never expose its token to browser code.
+
+3. In the database settings, open **Manage data sources**, use the `•••` menu
+   for the source, and select **Copy data source ID**. This is different from
+   the database ID in the page URL.
+
+4. Put the credentials in `.env.local`:
+
+   ```env
+   NOTION_TOKEN=ntn_...
+   NOTION_DATA_SOURCE_ID=...
+   NOTION_BLOG_REVALIDATE_SECONDS=900
+   ```
+
+5. Create a database page, fill every required property, write the post in its
+   page body, and change `Status` to `Published`. Draft pages are never returned
+   by the site. Slugs must be unique and match
+   `^[a-z0-9]+(?:-[a-z0-9]+)*$`.
+
+### Migrate the included Markdown posts
+
+Preview the idempotent migration with read-only access:
+
+```bash
+pnpm migrate:blogs:notion
+```
+
+Then temporarily grant the connection permission to insert content and create
+only the missing pages by explicitly enabling write mode:
+
+```bash
+pnpm migrate:blogs:notion -- --write
+```
+
+Migrated pages are always created as `Draft`. Review them in Notion, publish
+them, verify the existing `/blogs/<slug>` URLs, and then remove the connection's
+write permission. Existing slugs and local cover-image paths are preserved.
+
+### Automatic updates with a webhook
+
+The fallback cache refreshes every 15 minutes by default. For faster updates,
+create a Notion connection webhook pointing to:
+
+```text
+https://your-domain.example/api/notion-webhook
+```
+
+Subscribe to page and data-source content/property events. During the initial
+handshake, the endpoint writes the one-time verification token to the server
+log. Save it as `NOTION_WEBHOOK_VERIFICATION_TOKEN`, redeploy, and complete the
+verification in Notion. Subsequent deliveries are HMAC-verified before the blog
+cache is invalidated.
+
+Notion-hosted files use signed URLs that expire after about one hour. Use local
+`/public` paths or stable HTTPS object-storage/CDN URLs for `CoverImage` and
+images in article bodies. Temporary Notion-upload URLs are deliberately not
+rendered by the site.
+
 ## 🎨 Customization
 
 Easily personalize your portfolio using the configuration files below:
@@ -80,6 +164,7 @@ Easily personalize your portfolio using the configuration files below:
 | **Projects**       | Highlight your technical projects                      | `config/projects.ts`      |
 | **Experience**     | Add your work and professional experience              | `config/experience.ts`    |
 | **Contributions**  | Display open-source/community contributions            | `config/contributions.ts` |
+| **Blog Content**   | Write and publish posts                                | Notion `Blog Posts`       |
 | **Colors & Theme** | Customize color palette and themes                     | `tailwind.config.js`      |
 
 All configuration files are well-organized and documented for a smooth customization process.

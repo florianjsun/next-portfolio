@@ -9,152 +9,140 @@ export interface skillsInterface {
 
 export const skillsUnsorted: skillsInterface[] = [
   {
-    name: "Next.js",
-    description:
-      "Effortlessly build dynamic apps with routing, layouts, loading UI, and API routes.",
+    name: "Java",
+    description: "扎实掌握 Java SE、集合框架、JMM、并发编程及常用设计模式。",
     rating: 5,
-    icon: Icons.nextjs,
+    icon: Icons.java,
   },
   {
-    name: "React",
+    name: "Spring Boot",
     description:
-      "Craft interactive user interfaces using components, state, props, and virtual DOM.",
+      "使用 Spring、Spring MVC 与 Spring Boot 进行架构设计和后端服务开发。",
     rating: 5,
-    icon: Icons.react,
+    icon: Icons.springBoot,
   },
   {
-    name: "GraphQL",
+    name: "Spring Cloud Alibaba",
     description:
-      "Fetch data precisely with a powerful query language for APIs and runtime execution.",
-    rating: 4,
-    icon: Icons.graphql,
-  },
-  {
-    name: "Nest.js",
-    description:
-      "Create scalable and modular applications with a progressive Node.js framework.",
-    rating: 4,
-    icon: Icons.nestjs,
-  },
-  {
-    name: "express.js",
-    description:
-      "Build web applications and APIs quickly using a fast, unopinionated Node.js framework.",
+      "基于 Spring Cloud Alibaba 实现服务治理、负载均衡、配置与容错管理。",
     rating: 5,
-    icon: Icons.express,
+    icon: Icons.alibabaCloud,
   },
   {
-    name: "Node.js",
+    name: "Spring AI",
     description:
-      "Run JavaScript on the server side, enabling dynamic and responsive applications.",
+      "将 Spring AI 与业务系统集成，实现工具调用、智能问答与多步骤执行。",
     rating: 5,
-    icon: Icons.nodejs,
+    icon: Icons.spring,
   },
   {
-    name: "MongoDB",
+    name: "Agent",
     description:
-      "Store and retrieve data seamlessly with a flexible and scalable NoSQL database.",
+      "掌握 Prompt、RAG、Agent Loop 与 Few-shot，构建可规划和执行的智能体。",
     rating: 5,
-    icon: Icons.mongodb,
+    icon: Icons.aiAgent,
   },
   {
-    name: "Typescript",
+    name: "MCP",
     description:
-      "Enhance JavaScript with static types, making code more understandable and reliable.",
+      "基于 MCP 协议连接业务数据和外部工具，扩展智能体的上下文与执行能力。",
     rating: 5,
-    icon: Icons.typescript,
-  },
-  {
-    name: "Javascript",
-    description:
-      "Create interactive and dynamic web experiences with the versatile scripting language.",
-    rating: 5,
-    icon: Icons.javascript,
-  },
-  {
-    name: "HTML 5",
-    description:
-      "Structure web content beautifully with the latest version of HyperText Markup Language.",
-    rating: 4,
-    icon: Icons.html5,
-  },
-  {
-    name: "CSS 3",
-    description:
-      "Style web pages creatively with the latest iteration of Cascading Style Sheets.",
-    rating: 4,
-    icon: Icons.css3,
-  },
-  {
-    name: "React Native",
-    description:
-      "Develop cross-platform mobile apps using React for consistent and engaging experiences.",
-    rating: 4,
-    icon: Icons.react,
-  },
-  {
-    name: "Angular",
-    description:
-      "Build dynamic web apps with a TypeScript-based open-source framework by Google.",
-    rating: 3,
-    icon: Icons.angular,
-  },
-  {
-    name: "Redux",
-    description:
-      "Manage app state effectively using a predictable and centralized state container.",
-    rating: 4,
-    icon: Icons.redux,
-  },
-  {
-    name: "Socket.io",
-    description:
-      "Enable real-time, bidirectional communication between clients and servers effortlessly.",
-    rating: 3,
-    icon: Icons.socketio,
-  },
-  {
-    name: "Material UI",
-    description:
-      "Create stunning and responsive UIs with a popular React UI framework.",
-    rating: 4,
-    icon: Icons.mui,
-  },
-
-  {
-    name: "Tailwind CSS",
-    description:
-      "Design beautiful, modern websites faster with a utility-first CSS framework.",
-    rating: 5,
-    icon: Icons.tailwindcss,
-  },
-  {
-    name: "AWS",
-    description:
-      "Utilize Amazon Web Services to build and deploy scalable, reliable, and secure applications.",
-    rating: 3,
-    icon: Icons.amazonaws,
-  },
-  {
-    name: "Bootstrap",
-    description:
-      "Quickly create responsive and appealing web designs using a popular CSS framework.",
-    rating: 2,
-    icon: Icons.bootstrap,
+    icon: Icons.mcp,
   },
   {
     name: "MySQL",
     description:
-      "Manage and organize relational databases efficiently for data-driven applications.",
-    rating: 2,
+      "熟悉 InnoDB、事务、索引优化与 MVCC，具备数据库设计和性能调优经验。",
+    rating: 5,
     icon: Icons.mysql,
   },
   {
-    name: "Netlify",
+    name: "Redis",
     description:
-      "Manage and organize relational databases efficiently for data-driven applications.",
-    rating: 4,
-    icon: Icons.netlify,
+      "掌握常用数据结构、持久化与集群方案，优化缓存性能和系统可靠性。",
+    rating: 5,
+    icon: Icons.redis,
+  },
+  {
+    name: "RabbitMQ",
+    description: "理解消息可靠性机制，并使用延迟交换机处理订单支付超时。",
+    rating: 5,
+    icon: Icons.rabbitmq,
+  },
+  {
+    name: "Elasticsearch",
+    description: "用于全文检索与数据分析，并结合 Canal 同步 MySQL 增量数据。",
+    rating: 5,
+    icon: Icons.elasticsearch,
+  },
+  {
+    name: "Netty",
+    description:
+      "基于 Netty 构建高并发、低延迟网络服务，支持多协议物联网设备接入。",
+    rating: 5,
+    icon: Icons.netty,
+  },
+  {
+    name: "Nacos",
+    description: "参与采用 Nacos 的微服务项目，支撑服务注册发现与配置管理。",
+    rating: 5,
+    icon: Icons.nacos,
+  },
+  {
+    name: "Canal",
+    description: "监听 MySQL Binlog 实现增量数据实时同步，保障检索数据一致性。",
+    rating: 5,
+    icon: Icons.canal,
+  },
+  {
+    name: "Kafka",
+    description: "参与采用 Kafka 的共享电单车平台开发，支撑分布式数据流转。",
+    rating: 5,
+    icon: Icons.apacheKafka,
+  },
+  {
+    name: "MQTT",
+    description: "使用 MQTT 等协议统一接入多品牌、多类型物联网设备。",
+    rating: 5,
+    icon: Icons.mqtt,
+  },
+  {
+    name: "WebSocket / Socket.IO",
+    description: "参与采用 WebSocket 与 Socket.IO 的实时双向通信项目开发。",
+    rating: 5,
+    icon: Icons.socketio,
+  },
+
+  {
+    name: "Linux",
+    description: "熟练使用 Linux 命令进行系统维护、故障排查和性能监控。",
+    rating: 5,
+    icon: Icons.linux,
+  },
+  {
+    name: "Vue.js",
+    description:
+      "熟悉 Vue、Element Plus、Ant Design Pro 与 Vben5 等后台开发方案。",
+    rating: 5,
+    icon: Icons.vue,
+  },
+  {
+    name: "InfluxDB",
+    description: "参与采用 InfluxDB 的停车平台开发，支撑时序数据存储与分析。",
+    rating: 5,
+    icon: Icons.influxdb,
+  },
+  {
+    name: "MinIO",
+    description: "参与采用 MinIO 的业务平台开发，支撑对象与文件资源存储。",
+    rating: 5,
+    icon: Icons.minio,
+  },
+  {
+    name: "Kubernetes",
+    description: "参与采用 K8S 部署的微服务项目开发与维护。",
+    rating: 5,
+    icon: Icons.kubernetes,
   },
 ];
 

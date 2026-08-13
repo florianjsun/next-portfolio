@@ -279,7 +279,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 width={768}
                 height={400}
                 className="w-full h-auto rounded-lg border border-border object-cover"
-                priority
+                loading="eager"
               />
             </figure>
           </AnimatedSection>

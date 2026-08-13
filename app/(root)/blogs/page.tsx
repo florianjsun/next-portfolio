@@ -143,7 +143,7 @@ export default async function BlogsPage() {
                 direction="up"
                 className="h-full"
               >
-                <BlogCard blog={blog} />
+                <BlogCard blog={blog} eagerLoadCover={index === 0} />
               </AnimatedSection>
             ))}
           </div>

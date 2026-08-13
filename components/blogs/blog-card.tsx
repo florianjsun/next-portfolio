@@ -6,9 +6,13 @@ import type { BlogMeta } from "@/lib/blogs";
 
 interface BlogCardProps {
   blog: BlogMeta;
+  eagerLoadCover?: boolean;
 }
 
-export default function BlogCard({ blog }: BlogCardProps) {
+export default function BlogCard({
+  blog,
+  eagerLoadCover = false,
+}: BlogCardProps) {
   const formattedDate = new Date(blog.date).toLocaleDateString("en-US", {
     month: "long",
     day: "numeric",
@@ -32,6 +36,7 @@ export default function BlogCard({ blog }: BlogCardProps) {
               fill
               sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
               className="object-cover transition-transform duration-500 group-hover:scale-105"
+              loading={eagerLoadCover ? "eager" : "lazy"}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
           </div>

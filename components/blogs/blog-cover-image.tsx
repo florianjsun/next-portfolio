@@ -11,7 +11,7 @@ interface BlogCoverImageProps {
   width?: number;
   height?: number;
   sizes?: string;
-  priority?: boolean;
+  loading?: "eager" | "lazy";
 }
 
 export function BlogCoverImage({
@@ -22,7 +22,7 @@ export function BlogCoverImage({
   width = 768,
   height = 400,
   sizes,
-  priority = false,
+  loading = "lazy",
 }: BlogCoverImageProps) {
   if (isExternalUrl(src)) {
     return (
@@ -32,8 +32,8 @@ export function BlogCoverImage({
         width={fill ? undefined : width}
         height={fill ? undefined : height}
         sizes={sizes}
-        loading={priority ? "eager" : "lazy"}
-        fetchPriority={priority ? "high" : undefined}
+        loading={loading}
+        fetchPriority={loading === "eager" ? "high" : undefined}
         className={
           fill ? `absolute inset-0 h-full w-full ${className}` : className
         }
@@ -49,7 +49,7 @@ export function BlogCoverImage({
         fill
         sizes={sizes}
         className={className}
-        priority={priority}
+        loading={loading}
       />
     );
   }
@@ -62,7 +62,7 @@ export function BlogCoverImage({
       height={height}
       sizes={sizes}
       className={className}
-      priority={priority}
+      loading={loading}
     />
   );
 }

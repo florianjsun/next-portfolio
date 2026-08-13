@@ -11,7 +11,9 @@ export default function GithubRedirectCard() {
     <Card className="group w-full h-fit max-w-sm overflow-hidden shadow-lg transition-all duration-300 ease-in-out transform hover:scale-102 mt-5">
       <CardContent className="p-8 flex flex-col items-center text-center">
         <div className="mb-6">
-          <Heart className="w-12 h-12 transition-colors duration-300 ease-out text-muted-foreground group-hover:text-red-500" />
+          {/* [.group:hover_&] instead of group-hover keeps parity with the old
+              JS-driven hover on touch devices (no hover media-query gate). */}
+          <Heart className="w-12 h-12 transition-colors duration-300 ease-out text-muted-foreground [.group:hover_&]:text-red-500" />
         </div>
         <h2 className="font-heading text-xl tracking-tight lg:text-3xl duration-300">
           Like this template?
@@ -34,7 +36,7 @@ export default function GithubRedirectCard() {
           <ExternalLink className="w-5 h-5" />
         </Link>
       </CardFooter>
-      <div className="h-1 bg-gradient-to-r from-red-500 to-red-500 transition-all duration-300 ease-out opacity-0 group-hover:opacity-100"></div>
+      <div className="h-1 bg-gradient-to-r from-red-500 to-red-500 transition-all duration-300 ease-out opacity-0 [.group:hover_&]:opacity-100"></div>
     </Card>
   );
 }

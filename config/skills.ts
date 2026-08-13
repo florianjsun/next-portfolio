@@ -1,13 +1,13 @@
 import { Icons } from "@/components/common/icons";
 
-export interface skillsInterface {
+export interface SkillsInterface {
   name: string;
   description: string;
   rating: number;
-  icon: any;
+  icon: React.ComponentType<{ size?: number | string; className?: string }>;
 }
 
-export const skillsUnsorted: skillsInterface[] = [
+export const skillsUnsorted: SkillsInterface[] = [
   {
     name: "Next.js",
     description:

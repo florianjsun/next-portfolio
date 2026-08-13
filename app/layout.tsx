@@ -1,33 +1,21 @@
 import "./globals.css";
 
 import { GoogleAnalytics } from "@next/third-parties/google";
-import { Inter as FontSans } from "next/font/google";
-import localFont from "next/font/local";
+import type { Metadata } from "next";
 import Script from "next/script";
 
 import { Analytics } from "@/components/common/analytics";
 import { ThemeProvider } from "@/components/common/theme-provider";
-import { Toaster } from "@/components/ui/toaster";
 import { siteConfig } from "@/config/site";
+import { fontHeading, fontSans } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 import { ModalProvider } from "@/providers/modal-provider";
-
-const fontSans = FontSans({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
-
-// Font files can be colocated inside of `pages`
-const fontHeading = localFont({
-  src: "../assets/fonts/CalSans-SemiBold.woff2",
-  variable: "--font-cal-sans",
-});
 
 interface RootLayoutProps {
   children: React.ReactNode;
 }
 
-export const metadata = {
+export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
     default: siteConfig.name,
@@ -125,7 +113,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
         >
           {children}
           <Analytics />
-          <Toaster />
           <ModalProvider />
         </ThemeProvider>
         <Script

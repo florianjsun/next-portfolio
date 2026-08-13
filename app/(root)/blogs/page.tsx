@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import Script from "next/script";
 
 import BlogCard from "@/components/blogs/blog-card";
 import { AnimatedSection } from "@/components/common/animated-section";
@@ -108,13 +107,11 @@ export default function BlogsPage() {
 
   return (
     <>
-      <Script
-        id="schema-blog-list"
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogListSchema) }}
       />
-      <Script
-        id="schema-breadcrumb-blogs"
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />

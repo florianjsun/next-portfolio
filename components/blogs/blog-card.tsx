@@ -3,18 +3,14 @@ import Link from "next/link";
 
 import { Icons } from "@/components/common/icons";
 import { BlogMeta } from "@/lib/blogs";
+import { formatDate } from "@/lib/utils";
 
 interface BlogCardProps {
   blog: BlogMeta;
 }
 
 export default function BlogCard({ blog }: BlogCardProps) {
-  const formattedDate = new Date(blog.date).toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
-
+  const formattedDate = formatDate(blog.date);
   const isoDate = new Date(blog.date).toISOString();
 
   return (

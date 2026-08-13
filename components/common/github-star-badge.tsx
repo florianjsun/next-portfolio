@@ -1,39 +1,16 @@
-"use client";
-
 import Link from "next/link";
-import * as React from "react";
 
 import { Icons } from "@/components/common/icons";
 import { siteConfig } from "@/config/site";
+import { getTemplateRepoStars } from "@/lib/github";
 import { cn } from "@/lib/utils";
 
 type GitHubStarBadgeProps = {
   className?: string;
 };
 
-export function GitHubStarBadge({ className }: GitHubStarBadgeProps) {
-  const [stars, setStars] = React.useState<number | null>(null);
-
-  React.useEffect(() => {
-    let cancelled = false;
-
-    async function load() {
-      try {
-        const res = await fetch("/api/github-stars", { cache: "no-store" });
-        if (!res.ok) return;
-        const data = (await res.json()) as { stars?: number | null };
-        if (cancelled) return;
-        setStars(typeof data.stars === "number" ? data.stars : null);
-      } catch {
-        // ignore
-      }
-    }
-
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+export async function GitHubStarBadge({ className }: GitHubStarBadgeProps) {
+  const stars = await getTemplateRepoStars();
 
   return (
     <Link

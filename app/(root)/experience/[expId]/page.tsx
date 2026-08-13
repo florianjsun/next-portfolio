@@ -12,6 +12,7 @@ import ChipContainer from "@/components/ui/chip-container";
 import { ResponsiveTabs } from "@/components/ui/responsive-tabs";
 import { experiences } from "@/config/experience";
 import { siteConfig } from "@/config/site";
+import { getDurationText } from "@/lib/utils";
 
 interface ExperienceDetailPageProps {
   params: Promise<{
@@ -19,21 +20,9 @@ interface ExperienceDetailPageProps {
   }>;
 }
 
-// Helper function to extract year from date
-const getYearFromDate = (date: Date): string => {
-  return new Date(date).getFullYear().toString();
-};
-
-// Helper function to get duration text
-const getDurationText = (
-  startDate: Date,
-  endDate: Date | "Present"
-): string => {
-  const startYear = getYearFromDate(startDate);
-  const endYear =
-    typeof endDate === "string" ? "Present" : getYearFromDate(endDate);
-  return `${startYear} - ${endYear}`;
-};
+export function generateStaticParams() {
+  return experiences.map((experience) => ({ expId: experience.id }));
+}
 
 export async function generateMetadata({
   params,

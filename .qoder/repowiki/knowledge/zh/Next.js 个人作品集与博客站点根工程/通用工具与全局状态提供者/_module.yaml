@@ -1,0 +1,11 @@
+schema_version: 1
+module_path: utilities
+title: 通用工具与全局状态提供者
+scope:
+    - hooks/
+    - lib/
+    - providers/
+source_files: []
+depends_on: []
+related_to:
+    - path: blog_content

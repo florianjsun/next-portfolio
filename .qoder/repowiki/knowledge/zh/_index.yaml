@@ -1,0 +1,163 @@
+# 知识卡导出索引文件
+schema_version: 1
+locale: zh-CN
+branch: master
+nodes_managed: true
+exported_at: "2026-08-13T09:31:08Z"
+modules:
+    "":
+        dir_name: Next.js 个人作品集与博客站点根工程
+        title: Next.js 个人作品集与博客站点根工程
+        scope:
+            - README.md
+            - .gitignore
+            - package.json
+            - next.config.js
+            - tsconfig.json
+            - components.json
+            - eslint.config.mjs
+            - postcss.config.js
+            - .prettierrc
+            - .env.copy
+            - LICENSE
+            - package-lock.json
+        source_files: []
+        children:
+            - app_routes
+            - blog_content
+            - components
+            - configuration
+            - utilities
+        depends_on: []
+        related_to: []
+    app_routes:
+        dir_name: Next.js App Router 个人作品集应用
+        title: Next.js App Router 个人作品集应用
+        scope:
+            - app/
+        source_files: []
+        children:
+            - app_routes/app_root_config
+            - app_routes/root_routes
+        depends_on: []
+        related_to: []
+    app_routes/app_root_config:
+        dir_name: 应用根布局与站点元数据
+        title: 应用根布局与站点元数据
+        scope:
+            - app/layout.tsx
+            - app/globals.css
+            - app/manifest.ts
+            - app/sitemap.ts
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    app_routes/root_routes:
+        dir_name: 根路由与营销站点页面（Next.js App Router）
+        title: 根路由与营销站点页面（Next.js App Router）
+        scope:
+            - app/(root)/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: blog_content
+            - path: components/content_sections
+            - path: components/profile_sections
+            - path: configuration
+    blog_content:
+        dir_name: 博客文章静态内容
+        title: 博客文章静态内容
+        scope:
+            - content/blogs/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: app_routes/root_routes
+            - path: utilities
+    components:
+        dir_name: Next.js 作品集站点组件库
+        title: Next.js 作品集站点组件库
+        scope:
+            - components/
+        source_files: []
+        children:
+            - components/common_widgets
+            - components/content_sections
+            - components/profile_sections
+            - components/ui_primitives
+        depends_on: []
+        related_to: []
+    components/common_widgets:
+        dir_name: 通用 UI 组件与页面布局容器
+        title: 通用 UI 组件与页面布局容器
+        scope:
+            - components/common/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: components/ui_primitives
+            - path: configuration
+    components/content_sections:
+        dir_name: 内容展示卡片组件（博客、贡献与 GitHub 引导）
+        title: 内容展示卡片组件（博客、贡献与 GitHub 引导）
+        scope:
+            - components/blogs/
+            - components/contributions/
+            - components/contact/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: app_routes/root_routes
+            - path: configuration
+    components/profile_sections:
+        dir_name: 工作经历与技能展示组件
+        title: 工作经历与技能展示组件
+        scope:
+            - components/experience/
+            - components/skills/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: app_routes/root_routes
+            - path: configuration
+    components/ui_primitives:
+        dir_name: UI 基础组件库（Radix + Tailwind 原子组件）
+        title: UI 基础组件库（Radix + Tailwind 原子组件）
+        scope:
+            - components/ui/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: components/common_widgets
+    configuration:
+        dir_name: 站点配置与静态内容中心
+        title: 站点配置与静态内容中心
+        scope:
+            - config/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: app_routes/root_routes
+            - path: components/common_widgets
+            - path: components/content_sections
+            - path: components/profile_sections
+    utilities:
+        dir_name: 通用工具与全局状态提供者
+        title: 通用工具与全局状态提供者
+        scope:
+            - hooks/
+            - lib/
+            - providers/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: blog_content

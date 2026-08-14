@@ -1,0 +1,11 @@
+schema_version: 1
+module_path: components/profile_sections
+title: 工作经历与技能展示组件
+scope:
+    - components/experience/
+    - components/skills/
+source_files: []
+depends_on: []
+related_to:
+    - path: app_routes/root_routes
+    - path: configuration

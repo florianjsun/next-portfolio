@@ -8,4 +8,5 @@ scope:
     - app/sitemap.ts
 source_files: []
 depends_on: []
-related_to: []
+related_to:
+    - path: 10c36565-ed23-4bb1-be34-18082b62f9ae/d38e7b65-109d-436e-907d-3fbb205f7273

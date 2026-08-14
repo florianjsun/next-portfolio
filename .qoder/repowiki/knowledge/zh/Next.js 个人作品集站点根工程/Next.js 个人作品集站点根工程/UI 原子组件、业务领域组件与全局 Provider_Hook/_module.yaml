@@ -1,0 +1,12 @@
+schema_version: 1
+module_path: 10c36565-ed23-4bb1-be34-18082b62f9ae/d38e7b65-109d-436e-907d-3fbb205f7273
+title: UI 原子组件、业务领域组件与全局 Provider/Hook
+scope:
+    - components/
+    - hooks/
+    - providers/
+source_files: []
+depends_on: []
+related_to:
+    - path: 10c36565-ed23-4bb1-be34-18082b62f9ae/f15cd55c-51c7-4d42-a355-1fd66ae87136/6ecc8ec9-f64b-43e2-be6c-c91456922e06
+    - path: 10c36565-ed23-4bb1-be34-18082b62f9ae/f15cd55c-51c7-4d42-a355-1fd66ae87136/cf4fa7d8-5735-4e2a-85cd-4821062e0b6e

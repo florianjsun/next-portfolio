@@ -1,0 +1,14 @@
+schema_version: 1
+module_path: 10c36565-ed23-4bb1-be34-18082b62f9ae/f15cd55c-51c7-4d42-a355-1fd66ae87136/cf4fa7d8-5735-4e2a-85cd-4821062e0b6e
+title: 根路由内容展示页面（博客/项目/经历/技能）
+scope:
+    - app/(root)/blogs/
+    - app/(root)/projects/
+    - app/(root)/experience/
+    - app/(root)/skills/
+source_files: []
+depends_on: []
+related_to:
+    - path: 10c36565-ed23-4bb1-be34-18082b62f9ae/5446c25c-8640-4097-99df-a84ebf4e7dda
+    - path: 10c36565-ed23-4bb1-be34-18082b62f9ae/6ea28f09-ce1e-4472-9d45-a939dc8fb43c
+    - path: 10c36565-ed23-4bb1-be34-18082b62f9ae/d38e7b65-109d-436e-907d-3fbb205f7273

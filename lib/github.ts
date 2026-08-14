@@ -1,6 +1,15 @@
+import "server-only";
+
+import { z } from "zod";
+
 import { siteConfig } from "@/config/site";
+import { createRequestTimeoutSignal } from "@/lib/http";
 
 const REVALIDATE_SECONDS = 60 * 60 * 6; // 6 hours
+
+const repositoryStatsSchema = z.object({
+  stargazers_count: z.number().int().nonnegative(),
+});
 
 /** Extracts the "owner/repo" slug from the configured template repo URL. */
 export function getTemplateRepoSlug(): string {
@@ -18,14 +27,13 @@ export async function getTemplateRepoStars(): Promise<number | null> {
         headers: {
           Accept: "application/vnd.github+json",
         },
+        signal: createRequestTimeoutSignal(),
       }
     );
 
     if (!res.ok) return null;
-    const data = (await res.json()) as { stargazers_count?: number };
-    return typeof data.stargazers_count === "number"
-      ? data.stargazers_count
-      : null;
+    const data = repositoryStatsSchema.safeParse(await res.json());
+    return data.success ? data.data.stargazers_count : null;
   } catch {
     return null;
   }

@@ -1,23 +1,25 @@
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 
 import { AnimatedSection } from "@/components/common/animated-section";
 import { Icons } from "@/components/common/icons";
 import { Button } from "@/components/ui/button";
-import { ExperienceInterface } from "@/config/experience";
+import type { ExperienceInterface } from "@/config/experience";
 import { getDurationText } from "@/lib/utils";
 
 interface TimelineProps {
   experiences: ExperienceInterface[];
 }
 
-const Timeline: React.FC<TimelineProps> = ({ experiences }) => {
+export default function Timeline({ experiences }: TimelineProps) {
   // Sort experiences by date (most recent first)
+  const presentTimestamp = Date.now();
   const sortedExperiences = [...experiences].sort((a, b) => {
-    const dateA = a.endDate === "Present" ? new Date() : a.endDate;
-    const dateB = b.endDate === "Present" ? new Date() : b.endDate;
-    return dateB.getTime() - dateA.getTime();
+    const dateA =
+      a.endDate === "Present" ? presentTimestamp : a.endDate.getTime();
+    const dateB =
+      b.endDate === "Present" ? presentTimestamp : b.endDate.getTime();
+    return dateB - dateA;
   });
 
   return (
@@ -63,6 +65,7 @@ const Timeline: React.FC<TimelineProps> = ({ experiences }) => {
                         href={experience.companyUrl}
                         target="_blank"
                         rel="noopener noreferrer"
+                        aria-label={`Visit ${experience.company} website`}
                         className="text-muted-foreground hover:text-foreground transition-colors"
                       >
                         <Icons.externalLink className="w-4 h-4" />
@@ -94,6 +97,4 @@ const Timeline: React.FC<TimelineProps> = ({ experiences }) => {
       ))}
     </div>
   );
-};
-
-export default Timeline;
+}

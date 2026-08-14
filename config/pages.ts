@@ -1,4 +1,4 @@
-import { ValidPages } from "./constants";
+import type { ValidPages } from "@/config/constants";
 
 type PagesConfig = {
   [key in ValidPages]: {
@@ -8,7 +8,6 @@ type PagesConfig = {
       title: string;
       description: string;
     };
-    // featuredDescription: string;
   };
 };
 

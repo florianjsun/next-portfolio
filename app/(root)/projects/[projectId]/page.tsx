@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -8,7 +8,7 @@ import ProjectDescription from "@/components/projects/project-description";
 import { buttonVariants } from "@/components/ui/button";
 import ChipContainer from "@/components/ui/chip-container";
 import CustomTooltip from "@/components/ui/custom-tooltip";
-import { Projects } from "@/config/projects";
+import { projects } from "@/config/projects";
 import { siteConfig } from "@/config/site";
 import { cn, formatDate } from "@/lib/utils";
 import profileImg from "@/public/profile-img.jpg";
@@ -20,14 +20,14 @@ interface ProjectPageProps {
 }
 
 export function generateStaticParams() {
-  return Projects.map((project) => ({ projectId: project.id }));
+  return projects.map((project) => ({ projectId: project.id }));
 }
 
 export async function generateMetadata({
   params,
 }: ProjectPageProps): Promise<Metadata> {
   const { projectId } = await params;
-  const project = Projects.find((val) => val.id === projectId);
+  const project = projects.find((project) => project.id === projectId);
 
   if (!project) {
     return { title: "Project Not Found" };
@@ -44,7 +44,7 @@ export async function generateMetadata({
 
 export default async function Project({ params }: ProjectPageProps) {
   const { projectId } = await params;
-  const project = Projects.find((val) => val.id === projectId);
+  const project = projects.find((project) => project.id === projectId);
   if (!project) {
     redirect("/projects");
   }
@@ -73,14 +73,24 @@ export default async function Project({ params }: ProjectPageProps) {
           <div className="flex items-center">
             {project.githubLink && (
               <CustomTooltip text="Link to the source code.">
-                <Link href={project.githubLink} target="_blank">
+                <Link
+                  href={project.githubLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${project.companyName} source code`}
+                >
                   <Icons.gitHub className="w-6 ml-4 text-muted-foreground hover:text-foreground" />
                 </Link>
               </CustomTooltip>
             )}
             {project.websiteLink && (
               <CustomTooltip text="Please note that some project links may be temporarily unavailable.">
-                <Link href={project.websiteLink} target="_blank">
+                <Link
+                  href={project.websiteLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${project.companyName} website`}
+                >
                   <Icons.externalLink className="w-6 ml-4 text-muted-foreground hover:text-foreground " />
                 </Link>
               </CustomTooltip>
@@ -117,7 +127,7 @@ export default async function Project({ params }: ProjectPageProps) {
         width={720}
         height={405}
         className="my-8 h-auto w-full rounded-md border bg-muted object-contain transition-colors"
-        priority
+        preload
       />
 
       <div className="mb-7 ">

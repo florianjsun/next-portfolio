@@ -1,10 +1,10 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 import PageContainer from "@/components/common/page-container";
 import ProjectCard from "@/components/projects/project-card";
 import { ResponsiveTabs } from "@/components/ui/responsive-tabs";
 import { pagesConfig } from "@/config/pages";
-import { Projects } from "@/config/projects";
+import { projects } from "@/config/projects";
 
 export const metadata: Metadata = {
   title: pagesConfig.projects.metadata.title,
@@ -12,17 +12,23 @@ export const metadata: Metadata = {
 };
 
 const renderContent = (tabVal: string) => {
-  let projectArr = Projects;
+  let projectArr = projects;
   if (tabVal === "personal") {
-    projectArr = projectArr.filter((val) => val.type === "Personal");
+    projectArr = projectArr.filter((project) => project.type === "Personal");
   } else if (tabVal === "professional") {
-    projectArr = projectArr.filter((val) => val.type === "Professional");
+    projectArr = projectArr.filter(
+      (project) => project.type === "Professional"
+    );
   }
 
   return (
     <div className="mx-auto my-4 grid justify-center gap-4 sm:grid-cols-2 xl:grid-cols-4 static items-stretch">
-      {projectArr.map((project) => (
-        <ProjectCard project={project} key={project.id} />
+      {projectArr.map((project, index) => (
+        <ProjectCard
+          project={project}
+          eagerLoadImage={tabVal === "all" && index === 0}
+          key={project.id}
+        />
       ))}
     </div>
   );

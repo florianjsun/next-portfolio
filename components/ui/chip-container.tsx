@@ -1,4 +1,4 @@
-import Chip from "./chip";
+import Chip from "@/components/ui/chip";
 
 interface ChipContainerProps {
   textArr: string[];

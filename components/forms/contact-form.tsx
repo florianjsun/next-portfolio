@@ -1,10 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AlertTriangle } from "lucide-react";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
 
-import { Icons } from "@/components/common/icons";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -17,23 +16,40 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useModalStore } from "@/hooks/use-modal-store";
+import { contactSchema, type ContactFormValues } from "@/lib/contact";
 
-const formSchema = z.object({
-  name: z.string().min(3, {
-    message: "Name must contain at least 3 characters.",
-  }),
-  email: z.email("Please enter a valid email."),
-  message: z.string().min(10, {
-    message: "Please write something more descriptive.",
-  }),
-  social: z.url().optional().or(z.literal("")),
-});
+function SuccessAnimatedIcon() {
+  return (
+    <div className="svg-container">
+      <svg
+        className="ft-green-tick"
+        xmlns="http://www.w3.org/2000/svg"
+        height="5rem"
+        width="5rem"
+        viewBox="0 0 48 48"
+        aria-hidden="true"
+      >
+        <circle className="circle" cx="24" cy="24" r="22" />
+        <path
+          className="tick"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeMiterlimit="10"
+          d="M14 27l5.917 4.917L34 17"
+        />
+      </svg>
+    </div>
+  );
+}
 
 export function ContactForm() {
-  const storeModal = useModalStore();
+  const openModal = useModalStore((state) => state.onOpen);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<ContactFormValues>({
+    resolver: zodResolver(contactSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -42,7 +58,7 @@ export function ContactForm() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: ContactFormValues) {
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
@@ -57,19 +73,19 @@ export function ContactForm() {
       }
 
       form.reset();
-      storeModal.onOpen({
+      openModal({
         title: "Thankyou!",
         description:
           "Your message has been received! I appreciate your contact and will get back to you shortly.",
-        icon: Icons.successAnimated,
+        icon: SuccessAnimatedIcon,
       });
     } catch (err) {
       console.error("Failed to send the contact message", err);
-      storeModal.onOpen({
+      openModal({
         title: "Something went wrong!",
         description:
           "Your message could not be sent. Please try again later or reach out through the social links below.",
-        icon: Icons.warning,
+        icon: AlertTriangle,
       });
     }
   }

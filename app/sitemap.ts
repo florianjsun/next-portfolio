@@ -1,5 +1,7 @@
-import { MetadataRoute } from "next";
+import type { MetadataRoute } from "next";
 
+import { experiences } from "@/config/experience";
+import { projects } from "@/config/projects";
 import { siteConfig } from "@/config/site";
 import { getAllBlogsMeta } from "@/lib/blogs";
 
@@ -67,5 +69,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...routes, ...blogRoutes];
+  const projectRoutes: MetadataRoute.Sitemap = projects.map((project) => ({
+    url: `${baseUrl}/projects/${project.id}`,
+    changeFrequency: "yearly",
+    priority: 0.7,
+  }));
+
+  const experienceRoutes: MetadataRoute.Sitemap = experiences.map(
+    (experience) => ({
+      url: `${baseUrl}/experience/${experience.id}`,
+      changeFrequency: "yearly",
+      priority: 0.6,
+    })
+  );
+
+  return [...routes, ...projectRoutes, ...experienceRoutes, ...blogRoutes];
 }

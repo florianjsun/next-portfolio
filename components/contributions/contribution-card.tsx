@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { Icons } from "@/components/common/icons";
-import { Contribution } from "@/config/contributions";
+import type { Contribution } from "@/config/contributions";
 
 interface ContributionCardProps {
   contributions: Contribution[];

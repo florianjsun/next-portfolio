@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -90,7 +90,7 @@ export default async function IndexPage() {
             sizes="100vw"
             className="mb-0 h-auto w-[60%] max-w-[16rem] rounded-full border-8 border-primary bg-primary shadow-2xl md:mb-2"
             alt="Sun Jing - 全栈 & AI应用工程师 个人网站"
-            priority
+            preload
           />
           <AnimatedText
             as="h1"
@@ -118,6 +118,7 @@ export default async function IndexPage() {
               <Link
                 href={"/resume"}
                 target="_blank"
+                rel="noopener noreferrer"
                 className={cn(buttonVariants({ size: "lg" }))}
                 aria-label="查看简历"
               >
@@ -180,11 +181,11 @@ export default async function IndexPage() {
           </div>
         </div>
         <AnimatedText delay={0.4} className="flex justify-center">
-          <Link href="/projects">
-            <Button variant={"outline"} className="rounded-xl">
+          <Button variant="outline" className="rounded-xl" asChild>
+            <Link href="/projects">
               <Icons.chevronDown className="mr-2 h-4 w-4" /> View All
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </AnimatedText>
       </AnimatedSection>
       <AnimatedSection
@@ -219,11 +220,11 @@ export default async function IndexPage() {
           ))}
         </div>
         <AnimatedText delay={0.4} className="flex justify-center">
-          <Link href="/experience">
-            <Button variant={"outline"} className="rounded-xl">
+          <Button variant="outline" className="rounded-xl" asChild>
+            <Link href="/experience">
               <Icons.chevronDown className="mr-2 h-4 w-4" /> View All
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </AnimatedText>
       </AnimatedSection>
       <AnimatedSection
@@ -248,11 +249,11 @@ export default async function IndexPage() {
         </div>
         <ContributionCard contributions={featuredContributions} />
         <AnimatedText delay={0.4} className="flex justify-center">
-          <Link href="/contributions">
-            <Button variant={"outline"} className="rounded-xl">
+          <Button variant="outline" className="rounded-xl" asChild>
+            <Link href="/contributions">
               <Icons.chevronDown className="mr-2 h-4 w-4" /> View All
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </AnimatedText>
       </AnimatedSection>
       <AnimatedSection
@@ -277,11 +278,11 @@ export default async function IndexPage() {
         </div>
         <SkillsCard skills={featuredSkills} />
         <AnimatedText delay={0.4} className="flex justify-center">
-          <Link href="/skills">
-            <Button variant={"outline"} className="rounded-xl">
+          <Button variant="outline" className="rounded-xl" asChild>
+            <Link href="/skills">
               <Icons.chevronDown className="mr-2 h-4 w-4" /> View All
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </AnimatedText>
       </AnimatedSection>
       <AnimatedSection
@@ -317,11 +318,11 @@ export default async function IndexPage() {
           ))}
         </div>
         <AnimatedText delay={0.4} className="flex justify-center">
-          <Link href="/blogs">
-            <Button variant={"outline"} className="rounded-xl">
+          <Button variant="outline" className="rounded-xl" asChild>
+            <Link href="/blogs">
               <Icons.chevronDown className="mr-2 h-4 w-4" /> View All
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </AnimatedText>
       </AnimatedSection>
       <AnimatedSection

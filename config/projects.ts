@@ -1,4 +1,8 @@
-import { ValidCategory, ValidExpType, ValidSkills } from "./constants";
+import type {
+  ValidCategory,
+  ValidExpType,
+  ValidSkills,
+} from "@/config/constants";
 
 interface ProjectImageInterface {
   src: string;
@@ -63,7 +67,7 @@ export interface ProjectInterface {
   pagesInfoArr: PagesInfoInterface[];
 }
 
-export const Projects: ProjectInterface[] = [
+export const projects: ProjectInterface[] = [
   {
     id: "next-portfolio",
     companyName: "next-portfolio",
@@ -405,4 +409,4 @@ export const Projects: ProjectInterface[] = [
   },
 ];
 
-export const featuredProjects = Projects.slice(0, 4);
+export const featuredProjects = projects.slice(0, 4);

@@ -1,9 +1,12 @@
-import React from "react";
-
-const ProjectDescription: React.FC<{
+interface ProjectDescriptionProps {
   paragraphs: string[];
   bullets: string[];
-}> = ({ paragraphs, bullets }) => {
+}
+
+export default function ProjectDescription({
+  paragraphs,
+  bullets,
+}: ProjectDescriptionProps) {
   return (
     <div>
       {paragraphs.map((paragraph, index) => (
@@ -18,6 +21,4 @@ const ProjectDescription: React.FC<{
       </ul>
     </div>
   );
-};
-
-export default ProjectDescription;
+}

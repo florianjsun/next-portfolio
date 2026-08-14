@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 import PageContainer from "@/components/common/page-container";
 import GithubRedirectCard from "@/components/contact/github-redirect-card";

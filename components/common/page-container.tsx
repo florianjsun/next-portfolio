@@ -1,6 +1,7 @@
 import React from "react";
-import { ClientPageWrapper } from "./client-page-wrapper";
-import PageHeader from "./page-header";
+
+import { ClientPageWrapper } from "@/components/common/client-page-wrapper";
+import PageHeader from "@/components/common/page-header";
 
 interface PageContainerProps {
   title: string;

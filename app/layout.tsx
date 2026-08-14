@@ -88,8 +88,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
   const googleMeasurementId = process.env.NEXT_PUBLIC_GOOGLE_MEASUREMENT_ID;
 
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head />
+    <html lang="zh-CN" suppressHydrationWarning>
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
@@ -107,6 +106,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <Analytics />
           <ModalProvider />
         </ThemeProvider>
+        {googleMeasurementId ? (
+          <GoogleAnalytics gaId={googleMeasurementId} />
+        ) : null}
         <Script
           src="https://convot.xyz/widget.js"
           data-token="3vpr28Va7E8luRq8DMOStAr9tefOCVqifQ28fpp6grrKS4zflNRZQjQpmeu4os_2nuLmmh1DOshndiN5O1vvGg"
@@ -114,9 +116,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
           strategy="afterInteractive"
         />
       </body>
-      {googleMeasurementId ? (
-        <GoogleAnalytics gaId={googleMeasurementId} />
-      ) : null}
     </html>
   );
 }

@@ -1,13 +1,13 @@
 "use client";
 
+import { Menu, X } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { usePathname, useSelectedLayoutSegment } from "next/navigation";
 import * as React from "react";
 
-import { Icons } from "@/components/common/icons";
 import { MobileNav } from "@/components/common/mobile-nav";
-import { NavItem } from "@/config/routes";
+import type { NavItem } from "@/config/routes";
 import { siteConfig } from "@/config/site";
 import { fontNorican } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
@@ -16,6 +16,8 @@ interface MainNavProps {
   items?: NavItem[];
   children?: React.ReactNode;
 }
+
+const MOBILE_NAV_ID = "mobile-navigation";
 
 // Animation variants for the navigation items
 const navItemVariants = {
@@ -33,7 +35,7 @@ const navItemVariants = {
 
 export function MainNav({ items, children }: MainNavProps) {
   const segment = useSelectedLayoutSegment();
-  const [showMobileMenu, setShowMobileMenu] = React.useState<boolean>(false);
+  const [showMobileMenu, setShowMobileMenu] = React.useState(false);
   const pathname = usePathname();
 
   React.useEffect(() => {
@@ -54,8 +56,11 @@ export function MainNav({ items, children }: MainNavProps) {
         </Link>
       </motion.div>
       {items?.length ? (
-        <nav className="hidden gap-6 md:flex items-center">
-          {items?.map((item, index) => (
+        <nav
+          aria-label="Main navigation"
+          className="hidden gap-6 md:flex items-center"
+        >
+          {items.map((item, index) => (
             <motion.div
               key={item.href}
               custom={index}
@@ -67,6 +72,7 @@ export function MainNav({ items, children }: MainNavProps) {
             >
               <Link
                 href={item.disabled ? "#" : item.href}
+                aria-disabled={item.disabled || undefined}
                 className={cn(
                   "flex items-center text-lg font-medium transition-colors hover:text-foreground/80 sm:text-sm",
                   item.href.startsWith(`/${segment}`)
@@ -82,16 +88,21 @@ export function MainNav({ items, children }: MainNavProps) {
         </nav>
       ) : null}
       <motion.button
+        type="button"
+        aria-controls={MOBILE_NAV_ID}
+        aria-expanded={showMobileMenu}
         className="flex items-center space-x-2 md:hidden"
         onClick={() => setShowMobileMenu(!showMobileMenu)}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
-        {showMobileMenu ? <Icons.close /> : <Icons.menu />}
+        {showMobileMenu ? <X /> : <Menu />}
         <span className="font-bold">Menu</span>
       </motion.button>
       {showMobileMenu && items && (
-        <MobileNav items={items}>{children}</MobileNav>
+        <MobileNav id={MOBILE_NAV_ID} items={items}>
+          {children}
+        </MobileNav>
       )}
     </div>
   );

@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -166,6 +166,7 @@ export default async function ExperienceDetailPage({
                             href={experience.companyUrl}
                             target="_blank"
                             rel="noopener noreferrer"
+                            aria-label={`Visit ${experience.company} website`}
                             className="text-muted-foreground hover:text-foreground transition-colors"
                           >
                             <Icons.externalLink className="w-4 h-4" />

@@ -2,13 +2,14 @@ import "server-only";
 
 import { z } from "zod";
 
-import {
+import type {
   Contribution,
-  contributionsConfig,
   PullRequestContribution,
   RepositoryContribution,
 } from "@/config/contributions";
+import { contributionsConfig } from "@/config/contributions";
 import { siteConfig } from "@/config/site";
+import { createRequestTimeoutSignal } from "@/lib/http";
 
 const GITHUB_API_VERSION = "2022-11-28";
 const GITHUB_API_URL = "https://api.github.com";
@@ -70,6 +71,7 @@ async function fetchGitHub(url: URL): Promise<unknown> {
     cache: "force-cache",
     headers: getGitHubHeaders(),
     next: { revalidate: contributionsConfig.revalidateSeconds },
+    signal: createRequestTimeoutSignal(),
   });
 
   if (!response.ok) {

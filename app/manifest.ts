@@ -13,13 +13,13 @@ export default function manifest(): MetadataRoute.Manifest {
     icons: [
       {
         src: "/favicon.ico",
-        sizes: "64x64",
-        type: "image/png",
+        sizes: "150x150",
+        type: "image/x-icon",
       },
       {
         src: "/favicon.ico",
-        sizes: "64x64",
-        type: "image/png",
+        sizes: "150x150",
+        type: "image/x-icon",
         purpose: "maskable",
       },
     ],
@@ -31,7 +31,7 @@ export default function manifest(): MetadataRoute.Manifest {
       "developer",
       "web development",
     ],
-    lang: "en",
+    lang: "zh-CN",
     dir: "ltr",
     scope: "/",
   };

@@ -1,14 +1,21 @@
 import { NextResponse } from "next/server";
-import * as z from "zod";
 
-const contactSchema = z.object({
-  name: z.string().min(1),
-  email: z.string().min(1),
-  message: z.string().min(1),
-  social: z.string().optional(),
-});
+import { contactSchema } from "@/lib/contact";
+import { createRequestTimeoutSignal } from "@/lib/http";
 
 export async function POST(req: Request) {
+  let payload: unknown;
+  try {
+    payload = await req.json();
+  } catch {
+    return new NextResponse("Invalid JSON", { status: 400 });
+  }
+
+  const parsed = contactSchema.safeParse(payload);
+  if (!parsed.success) {
+    return new NextResponse("Invalid form data", { status: 400 });
+  }
+
   const formLink = process.env.GOOGLE_FORM_LINK;
 
   // configure these according to your google form
@@ -30,11 +37,6 @@ export async function POST(req: Request) {
   }
 
   try {
-    const parsed = contactSchema.safeParse(await req.json());
-    if (!parsed.success) {
-      return new NextResponse("Invalid form data", { status: 400 });
-    }
-
     const { name, email, message, social } = parsed.data;
     const formResponseParams = new URLSearchParams({
       [fieldIdName]: name,
@@ -43,7 +45,9 @@ export async function POST(req: Request) {
       [fieldIdSocial]: social ?? "",
     });
 
-    const res = await fetch(`${formLink}/formResponse?${formResponseParams}`);
+    const res = await fetch(`${formLink}/formResponse?${formResponseParams}`, {
+      signal: createRequestTimeoutSignal(),
+    });
     if (!res.ok) {
       return new NextResponse("Failed to submit the form", { status: 502 });
     }

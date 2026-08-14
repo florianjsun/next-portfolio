@@ -7,7 +7,7 @@ interface SocialInterface {
   link: string;
 }
 
-export const SocialLinks: SocialInterface[] = [
+export const socialLinks: SocialInterface[] = [
   {
     name: "Github",
     username: "@florianjsun",

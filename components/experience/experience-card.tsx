@@ -1,17 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 
 import { Icons } from "@/components/common/icons";
 import { Button } from "@/components/ui/button";
-import { ExperienceInterface } from "@/config/experience";
+import type { ExperienceInterface } from "@/config/experience";
 import { getDurationText } from "@/lib/utils";
 
 interface ExperienceCardProps {
   experience: ExperienceInterface;
 }
 
-const ExperienceCard: React.FC<ExperienceCardProps> = ({ experience }) => {
+export default function ExperienceCard({ experience }: ExperienceCardProps) {
   return (
     <div className="group relative overflow-hidden rounded-lg border bg-background p-4 sm:p-6 transition-all duration-300">
       <div className="flex items-start gap-3 sm:gap-4">
@@ -37,6 +36,7 @@ const ExperienceCard: React.FC<ExperienceCardProps> = ({ experience }) => {
                   href={experience.companyUrl}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={`Visit ${experience.company} website`}
                   className="text-muted-foreground hover:text-foreground transition-colors flex-shrink-0 mt-0.5 sm:mt-0"
                 >
                   <Icons.externalLink className="w-4 h-4" />
@@ -89,6 +89,4 @@ const ExperienceCard: React.FC<ExperienceCardProps> = ({ experience }) => {
       </div>
     </div>
   );
-};
-
-export default ExperienceCard;
+}

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 interface AnimatedSectionProps {
   children: ReactNode;
@@ -11,6 +11,13 @@ interface AnimatedSectionProps {
   id?: string;
 }
 
+const directionOffsets = {
+  up: { y: 50 },
+  down: { y: -50 },
+  left: { x: 50 },
+  right: { x: -50 },
+} as const;
+
 export const AnimatedSection = ({
   children,
   className = "",
@@ -18,14 +25,7 @@ export const AnimatedSection = ({
   direction = "up",
   id,
 }: AnimatedSectionProps) => {
-  const directionOffset = {
-    up: { y: 50 },
-    down: { y: -50 },
-    left: { x: 50 },
-    right: { x: -50 },
-  };
-
-  const initialOffset = directionOffset[direction];
+  const initialOffset = directionOffsets[direction];
 
   return (
     <motion.div

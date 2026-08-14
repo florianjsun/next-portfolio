@@ -1,5 +1,5 @@
 import Rating from "@/components/skills/rating";
-import { SkillsInterface } from "@/config/skills";
+import type { SkillsInterface } from "@/config/skills";
 
 interface SkillsCardProps {
   skills: SkillsInterface[];

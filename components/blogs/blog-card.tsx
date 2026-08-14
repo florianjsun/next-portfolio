@@ -1,15 +1,19 @@
-import Image from "next/image";
 import Link from "next/link";
 
+import { BlogCoverImage } from "@/components/blogs/blog-cover-image";
 import { Icons } from "@/components/common/icons";
-import { BlogMeta } from "@/lib/blogs";
+import type { BlogMeta } from "@/lib/blogs";
 import { formatDate } from "@/lib/utils";
 
 interface BlogCardProps {
   blog: BlogMeta;
+  eagerLoadCover?: boolean;
 }
 
-export default function BlogCard({ blog }: BlogCardProps) {
+export default function BlogCard({
+  blog,
+  eagerLoadCover = false,
+}: BlogCardProps) {
   const formattedDate = formatDate(blog.date);
   const isoDate = new Date(blog.date).toISOString();
 
@@ -22,11 +26,13 @@ export default function BlogCard({ blog }: BlogCardProps) {
         {/* Cover image */}
         {blog.coverImage && (
           <div className="relative w-full h-[180px] flex-shrink-0 overflow-hidden bg-muted">
-            <Image
+            <BlogCoverImage
               src={blog.coverImage}
               alt={blog.title}
               fill
+              sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
               className="object-cover transition-transform duration-500 group-hover:scale-105"
+              loading={eagerLoadCover ? "eager" : "lazy"}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
           </div>

@@ -1,8 +1,8 @@
 import { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { BlogCoverImage } from "@/components/blogs/blog-cover-image";
 import { AnimatedSection } from "@/components/common/animated-section";
 import { AnimatedText } from "@/components/common/animated-text";
 import { ClientPageWrapper } from "@/components/common/client-page-wrapper";
@@ -10,6 +10,8 @@ import { Icons } from "@/components/common/icons";
 import { buttonVariants } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
 import { getAllBlogSlugs, getBlogPost } from "@/lib/blogs";
+import { serializeJsonLd } from "@/lib/json-ld";
+import { toAbsoluteUrl } from "@/lib/urls";
 import { cn, formatDate } from "@/lib/utils";
 
 interface BlogPostPageProps {
@@ -17,7 +19,7 @@ interface BlogPostPageProps {
 }
 
 export async function generateStaticParams() {
-  const slugs = getAllBlogSlugs();
+  const slugs = await getAllBlogSlugs();
   return slugs.map((slug) => ({ slug }));
 }
 
@@ -25,72 +27,75 @@ export async function generateMetadata({
   params,
 }: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params;
-  try {
-    const post = await getBlogPost(slug);
-    const ogImage = post.coverImage
-      ? `${siteConfig.url}${post.coverImage}`
-      : siteConfig.ogImage;
+  const post = await getBlogPost(slug);
 
+  if (!post) {
     return {
+      title: "Blog Post Not Found",
+      robots: { index: false, follow: false },
+    };
+  }
+
+  const ogImage = post.coverImage
+    ? toAbsoluteUrl(post.coverImage, siteConfig.url)
+    : siteConfig.ogImage;
+
+  return {
+    title: post.title,
+    description: post.description,
+    authors: [{ name: siteConfig.authorName, url: siteConfig.url }],
+    keywords: post.tags,
+    alternates: {
+      canonical: `${siteConfig.url}/blogs/${slug}`,
+    },
+    openGraph: {
       title: post.title,
       description: post.description,
-      authors: [{ name: siteConfig.authorName, url: siteConfig.url }],
-      keywords: post.tags,
-      alternates: {
-        canonical: `${siteConfig.url}/blogs/${slug}`,
-      },
-      openGraph: {
-        title: post.title,
-        description: post.description,
-        url: `${siteConfig.url}/blogs/${slug}`,
-        siteName: siteConfig.name,
-        type: "article",
-        publishedTime: post.date,
-        modifiedTime: post.date,
-        authors: [siteConfig.authorName],
-        tags: post.tags,
-        images: [
-          {
-            url: ogImage,
-            width: 1200,
-            height: 630,
-            alt: post.title,
-          },
-        ],
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: post.title,
-        description: post.description,
-        images: [ogImage],
-        creator: `@${siteConfig.username}`,
-      },
-      robots: {
-        index: true,
-        follow: true,
-        "max-image-preview": "large" as const,
-        "max-snippet": -1,
-      },
-    };
-  } catch {
-    return { title: "Blog Post Not Found" };
-  }
+      url: `${siteConfig.url}/blogs/${slug}`,
+      siteName: siteConfig.name,
+      type: "article",
+      publishedTime: post.date,
+      modifiedTime: post.updatedAt,
+      authors: [siteConfig.authorName],
+      tags: post.tags,
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.description,
+      images: [ogImage],
+      creator: `@${siteConfig.username}`,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large" as const,
+      "max-snippet": -1,
+    },
+  };
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
 
-  let post;
-  try {
-    post = await getBlogPost(slug);
-  } catch {
+  const post = await getBlogPost(slug);
+  if (!post) {
     notFound();
   }
 
   const formattedDate = formatDate(post.date);
   const isoDate = new Date(post.date).toISOString();
+  const isoUpdatedAt = new Date(post.updatedAt).toISOString();
   const ogImage = post.coverImage
-    ? `${siteConfig.url}${post.coverImage}`
+    ? toAbsoluteUrl(post.coverImage, siteConfig.url)
     : siteConfig.ogImage;
 
   // BlogPosting JSON-LD — the single most important schema for article SEO
@@ -100,7 +105,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     headline: post.title,
     description: post.description,
     datePublished: isoDate,
-    dateModified: isoDate,
+    dateModified: isoUpdatedAt,
     author: {
       "@type": "Person",
       name: siteConfig.authorName,
@@ -161,11 +166,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     <ClientPageWrapper>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(blogPostSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema) }}
       />
 
       <article className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
@@ -260,13 +265,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         {post.coverImage && (
           <AnimatedSection direction="up" delay={0.05}>
             <figure className="mb-10">
-              <Image
+              <BlogCoverImage
                 src={post.coverImage}
                 alt={post.title}
                 width={768}
                 height={400}
                 className="w-full h-auto rounded-lg border border-border object-cover"
-                priority
+                loading="eager"
               />
             </figure>
           </AnimatedSection>

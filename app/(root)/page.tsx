@@ -21,6 +21,7 @@ import { featuredProjects } from "@/config/projects";
 import { siteConfig } from "@/config/site";
 import { featuredSkills } from "@/config/skills";
 import { getFeaturedBlogs } from "@/lib/blogs";
+import { serializeJsonLd } from "@/lib/json-ld";
 import { cn } from "@/lib/utils";
 import profileImg from "@/public/profile-img.jpg";
 
@@ -32,8 +33,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function IndexPage() {
-  const featuredBlogs = getFeaturedBlogs();
+export default async function IndexPage() {
+  const featuredBlogs = await getFeaturedBlogs();
   // Structured data for personal portfolio
   const personSchema = {
     "@context": "https://schema.org",
@@ -68,11 +69,11 @@ export default function IndexPage() {
     <ClientPageWrapper>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(personSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(softwareSchema) }}
       />
 
       <section className="space-y-6 pb-8 pt-6 mb-0 md:pb-12 md:py-20 lg:py-32 h-screen flex items-center">

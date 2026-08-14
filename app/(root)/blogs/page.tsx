@@ -6,6 +6,8 @@ import PageContainer from "@/components/common/page-container";
 import { pagesConfig } from "@/config/pages";
 import { siteConfig } from "@/config/site";
 import { getAllBlogsMeta } from "@/lib/blogs";
+import { serializeJsonLd } from "@/lib/json-ld";
+import { toAbsoluteUrl } from "@/lib/urls";
 
 export const metadata: Metadata = {
   title: pagesConfig.blogs.metadata.title,
@@ -37,8 +39,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function BlogsPage() {
-  const blogs = getAllBlogsMeta();
+export default async function BlogsPage() {
+  const blogs = await getAllBlogsMeta();
 
   // CollectionPage + Blog JSON-LD for the listing page
   const blogListSchema = {
@@ -79,7 +81,7 @@ export default function BlogsPage() {
         },
         keywords: blog.tags.join(", "),
         ...(blog.coverImage && {
-          image: `${siteConfig.url}${blog.coverImage}`,
+          image: toAbsoluteUrl(blog.coverImage, siteConfig.url),
         }),
       })),
     },
@@ -109,11 +111,11 @@ export default function BlogsPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogListSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(blogListSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema) }}
       />
       <PageContainer
         title={pagesConfig.blogs.title}
@@ -138,7 +140,7 @@ export default function BlogsPage() {
                 direction="up"
                 className="h-full"
               >
-                <BlogCard blog={blog} />
+                <BlogCard blog={blog} eagerLoadCover={index === 0} />
               </AnimatedSection>
             ))}
           </div>

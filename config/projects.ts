@@ -144,14 +144,14 @@ export const Projects: ProjectInterface[] = [
     descriptionDetails: {
       paragraphs: [
         "next-portfolio 是我基于 namanbarkiya 的 minimal-next-portfolio 进行二次开发的开源个人网站。项目使用 Next.js App Router 构建，围绕中文个人品牌展示重新整理了导航、首页内容、项目数据和站点配置。",
-        "网站集中呈现个人简介、项目、工作经历、技能、开源贡献、技术博客和联系方式。项目、经历与技能由 TypeScript 配置驱动，博客则由 Markdown 文件生成，便于持续维护和扩展内容。",
+        "网站集中呈现个人简介、项目、工作经历、技能、开源贡献、技术博客和联系方式。项目、经历与技能由 TypeScript 配置驱动，博客则以 Notion 作为内容源，便于在云端持续写作、发布和维护。",
         "在展示层之外，我还补充了多主题系统、页面动效、响应式项目图库、联系表单、分析工具和完整的 SEO 元数据，使网站同时具备作品展示、内容发布与个人检索入口三类能力。",
       ],
       bullets: [
         "基于 Next.js 16、React 19、TypeScript 6 与 Tailwind CSS 4 完成 App Router 架构升级，并使用 pnpm 管理依赖与构建流程。",
         "将项目、工作经历、技能和开源贡献抽离为类型化配置，减少页面组件与个人内容之间的耦合。",
         "重构项目模块，支持项目分类筛选、动态详情路由、多段说明、图片来源标注和响应式多图画廊。",
-        "使用 gray-matter 与 remark 解析 Markdown/GFM 博客，生成文章列表、静态详情路由、标签和阅读信息。",
+        "接入 Notion API 与 Webhook 同步博客，安全渲染增强 Markdown，并生成文章列表、详情路由、标签和阅读信息。",
         "通过 Motion 提供页面和滚动动效，并基于 next-themes 实现七套视觉主题及系统主题模式。",
         "完善 canonical、Open Graph、Twitter Card、robots、动态 sitemap，以及 Person、SoftwareApplication、BlogPosting 和 BreadcrumbList JSON-LD。",
         "使用 React Hook Form 与 Zod 校验联系表单，并通过 Next.js Route Handler 将内容提交到可配置的 Google Form。",

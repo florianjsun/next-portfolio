@@ -1,13 +1,13 @@
 import { Icons } from "@/components/common/icons";
 
-export interface skillsInterface {
+export interface SkillsInterface {
   name: string;
   description: string;
   rating: number;
-  icon: any;
+  icon: React.ComponentType<{ size?: number | string; className?: string }>;
 }
 
-export const skillsUnsorted: skillsInterface[] = [
+export const skillsUnsorted: SkillsInterface[] = [
   {
     name: "Java",
     description: "扎实掌握 Java SE、集合框架、JMM、并发编程及常用设计模式。",

@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import Script from "next/script";
 
 import { BlogCoverImage } from "@/components/blogs/blog-cover-image";
 import { AnimatedSection } from "@/components/common/animated-section";
@@ -13,7 +12,7 @@ import { siteConfig } from "@/config/site";
 import { getAllBlogSlugs, getBlogPost } from "@/lib/blogs";
 import { serializeJsonLd } from "@/lib/json-ld";
 import { toAbsoluteUrl } from "@/lib/urls";
-import { cn } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -92,12 +91,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     notFound();
   }
 
-  const formattedDate = new Date(post.date).toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
-
+  const formattedDate = formatDate(post.date);
   const isoDate = new Date(post.date).toISOString();
   const isoUpdatedAt = new Date(post.updatedAt).toISOString();
   const ogImage = post.coverImage
@@ -170,13 +164,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <ClientPageWrapper>
-      <Script
-        id="schema-blog-post"
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(blogPostSchema) }}
       />
-      <Script
-        id="schema-breadcrumb-post"
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema) }}
       />

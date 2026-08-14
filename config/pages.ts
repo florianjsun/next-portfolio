@@ -26,8 +26,7 @@ export const pagesConfig: PagesConfig = {
     description: "定义我职业身份的核心技能。",
     metadata: {
       title: "技能",
-      description:
-        "Sun Jing的核心技能，定义了他的职业身份。",
+      description: "Sun Jing的核心技能，定义了他的职业身份。",
     },
   },
   projects: {
@@ -51,8 +50,7 @@ export const pagesConfig: PagesConfig = {
     description: "开源贡献与社区参与。",
     metadata: {
       title: "开源贡献",
-      description:
-        "Sun Jing的开源贡献与社区参与。",
+      description: "Sun Jing的开源贡献与社区参与。",
     },
   },
   resume: {
@@ -65,12 +63,10 @@ export const pagesConfig: PagesConfig = {
   },
   blogs: {
     title: "博客",
-    description:
-      "AI、技术、生活等方面的感悟和思考。",
+    description: "AI、技术、生活等方面的感悟和思考。",
     metadata: {
       title: "博客",
-      description:
-        "Sun Jing的博客 —— AI、技术、生活等方面的感悟和思考。",
+      description: "Sun Jing的博客 —— AI、技术、生活等方面的感悟和思考。",
     },
   },
   experience: {
@@ -78,8 +74,7 @@ export const pagesConfig: PagesConfig = {
     description: "职业历程与发展轨迹。",
     metadata: {
       title: "工作经历",
-      description:
-        "Sun Jing的职业历程与发展轨迹。",
+      description: "Sun Jing的职业历程与发展轨迹。",
     },
   },
 };

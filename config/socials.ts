@@ -3,7 +3,7 @@ import { Icons } from "@/components/common/icons";
 interface SocialInterface {
   name: string;
   username: string;
-  icon: any;
+  icon: React.ComponentType<{ className?: string }>;
   link: string;
 }
 

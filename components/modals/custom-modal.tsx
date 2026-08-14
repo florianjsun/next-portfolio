@@ -14,7 +14,7 @@ export const CustomModal = () => {
       onClose={modalStore.onClose}
     >
       <div className="flex flex-col justify-center items-center gap-3 md:flex-row pb-2">
-        <modalStore.icon />
+        {modalStore.icon ? <modalStore.icon /> : null}
         <div className="flex flex-col justify-center items-center md:items-start">
           <h1 className="font-heading text-2xl sm:text-3xl md:text-3xl lg:text-4xl">
             {modalStore.title}

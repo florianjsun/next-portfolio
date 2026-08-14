@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import Script from "next/script";
 
 import BlogCard from "@/components/blogs/blog-card";
 import { AnimatedSection } from "@/components/common/animated-section";
@@ -27,9 +26,8 @@ import { cn } from "@/lib/utils";
 import profileImg from "@/public/profile-img.jpg";
 
 export const metadata: Metadata = {
-  title: `${pagesConfig.home.metadata.title}`,
-  description:
-    "Sun Jing - 全栈 & AI应用工程师，正在探索如何用AI为传统业务提速。欢迎浏览我的项目、经历与贡献",
+  title: pagesConfig.home.metadata.title,
+  description: siteConfig.description,
   alternates: {
     canonical: siteConfig.url,
   },
@@ -69,13 +67,11 @@ export default async function IndexPage() {
 
   return (
     <ClientPageWrapper>
-      <Script
-        id="schema-person"
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(personSchema) }}
       />
-      <Script
-        id="schema-software"
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(softwareSchema) }}
       />
@@ -166,14 +162,14 @@ export default async function IndexPage() {
         </div>
         <div className="w-full">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 w-full items-stretch">
-            {featuredProjects.map((exp, index) => (
+            {featuredProjects.map((project, index) => (
               <AnimatedSection
-                key={exp.id}
+                key={project.id}
                 delay={0.1 * (index + 1)}
                 direction="up"
                 className="h-full w-full min-w-0"
               >
-                <ProjectCard project={exp} />
+                <ProjectCard project={project} />
               </AnimatedSection>
             ))}
           </div>

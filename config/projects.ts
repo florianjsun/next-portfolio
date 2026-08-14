@@ -58,7 +58,7 @@ export interface ProjectInterface {
   techStack: ProjectTechnology[];
   startDate: Date;
   endDate: Date;
-  companyLogoImg: any;
+  companyLogoImg: string;
   descriptionDetails: DescriptionDetailsInterface;
   pagesInfoArr: PagesInfoInterface[];
 }

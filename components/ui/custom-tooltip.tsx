@@ -11,7 +11,7 @@ import {
 interface CustomTooltipProps {
   children: React.ReactNode;
   text: string;
-  icon?: any;
+  icon?: React.ComponentType<{ className?: string }>;
 }
 
 export default function CustomTooltip({

@@ -1,10 +1,10 @@
 import Link from "next/link";
 
 import { Icons } from "@/components/common/icons";
-import { contributionsInterface } from "@/config/contributions";
+import { ContributionsInterface } from "@/config/contributions";
 
 interface ContributionCardProps {
-  contributions: contributionsInterface[];
+  contributions: ContributionsInterface[];
 }
 
 export default function ContributionCard({
@@ -12,11 +12,11 @@ export default function ContributionCard({
 }: ContributionCardProps) {
   return (
     <div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 lg:grid-cols-3 items-stretch">
-      {contributions.map((contribution, id) => (
+      {contributions.map((contribution) => (
         <Link
           href={contribution.link}
           target="_blank"
-          key={id}
+          key={contribution.link}
           className="w-full min-w-0 h-full"
         >
           <div className="relative rounded-lg border bg-background p-2 hover:bg-accent hover:text-accent-foreground transition-colors w-full h-full flex flex-col">
@@ -42,7 +42,7 @@ export default function ContributionCard({
               </div>
               <div className="space-y-3 sm:space-y-4 min-w-0">
                 <p className="text-xs sm:text-sm text-muted-foreground line-clamp-3 break-words">
-                  {contribution.contibutionDescription}
+                  {contribution.contributionDescription}
                 </p>
                 <p className="text-xs sm:text-sm text-muted-foreground flex space-x-2 items-center min-w-0">
                   <Icons.gitOrgBuilding

@@ -10,15 +10,13 @@ export const metadata: Metadata = {
   description: pagesConfig.contributions.metadata.description,
 };
 
-export default function ContributonsPage() {
+export default function ContributionsPage() {
   return (
     <PageContainer
       title={pagesConfig.contributions.title}
       description={pagesConfig.contributions.description}
     >
-      <ContributionCard
-        contributions={contributionsUnsorted}
-      />
+      <ContributionCard contributions={contributionsUnsorted} />
     </PageContainer>
   );
 }

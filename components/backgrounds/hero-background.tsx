@@ -50,6 +50,7 @@ export function HeroBackground() {
         />
       ) : null}
       <div className="hero-liquid-overlay absolute inset-0" />
+      <div className="hero-liquid-edges absolute inset-0" />
     </div>
   );
 }

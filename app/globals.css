@@ -233,6 +233,22 @@
     );
 }
 
+.hero-liquid-edges {
+  background:
+    linear-gradient(
+      to bottom,
+      hsl(var(--background)),
+      hsl(var(--background) / 0.4) 12%,
+      transparent 24%
+    ),
+    linear-gradient(
+      to top,
+      hsl(var(--background)),
+      hsl(var(--background) / 0.45) 14%,
+      transparent 34%
+    );
+}
+
 .hero-liquid-content {
   text-shadow: 0 1px 18px hsl(var(--background) / 0.9);
 }

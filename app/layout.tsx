@@ -101,15 +101,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           attribute="class"
           defaultTheme="system"
           enableSystem
-          themes={[
-            "light",
-            "dark",
-            "retro",
-            "cyberpunk",
-            "paper",
-            "aurora",
-            "synthwave",
-          ]}
+          themes={["light", "dark"]}
         >
           {children}
           <Analytics />

@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
+import { HeroBackground } from "@/components/backgrounds/hero-background";
 import BlogCard from "@/components/blogs/blog-card";
 import { AnimatedSection } from "@/components/common/animated-section";
 import { AnimatedText } from "@/components/common/animated-text";
@@ -79,14 +80,15 @@ export default async function IndexPage() {
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(softwareSchema) }}
       />
 
-      <section className="space-y-6 pb-8 pt-6 mb-0 md:pb-12 md:py-20 lg:py-32 h-screen flex items-center">
-        <div className="container flex max-w-[64rem] flex-col items-center gap-4 text-center -mt-20">
+      <section className="relative left-1/2 isolate flex min-h-[calc(100svh-5rem)] w-screen -translate-x-1/2 items-center overflow-hidden py-12 md:py-16">
+        <HeroBackground />
+        <div className="hero-liquid-content container relative z-10 flex max-w-[64rem] flex-col items-center gap-4 text-center md:-mt-8">
           <Image
             src={profileImg}
             height={100}
             width={100}
             sizes="100vw"
-            className="bg-primary rounded-full mb-0 h-auto md:mb-2 w-[60%] max-w-[16rem] border-8 border-primary"
+            className="mb-0 h-auto w-[60%] max-w-[16rem] rounded-full border-8 border-primary bg-primary shadow-2xl md:mb-2"
             alt="Sun Jing - 全栈 & AI应用工程师 个人网站"
             priority
           />

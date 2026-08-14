@@ -12,7 +12,7 @@ interface ExperienceCardProps {
 
 export default function ExperienceCard({ experience }: ExperienceCardProps) {
   return (
-    <div className="group relative overflow-hidden rounded-lg border bg-background p-4 sm:p-6 transition-all duration-300">
+    <div className="group relative flex h-full flex-col overflow-hidden rounded-lg border bg-background p-4 sm:p-6 transition-all duration-300">
       <div className="flex items-start gap-3 sm:gap-4">
         {experience.logo && (
           <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg border-2 border-border overflow-hidden bg-white flex-shrink-0">
@@ -57,24 +57,26 @@ export default function ExperienceCard({ experience }: ExperienceCardProps) {
           <p className="mt-2 sm:mt-3 text-sm text-muted-foreground line-clamp-2">
             {experience.description[0]}
           </p>
-          <div className="mt-3 sm:mt-4 flex flex-wrap gap-1">
-            {experience.skills.slice(0, 2).map((skill, index) => (
-              <span
-                key={index}
-                className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-muted text-muted-foreground"
-              >
-                {skill}
-              </span>
-            ))}
-            {experience.skills.length > 2 && (
-              <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-muted text-muted-foreground">
-                +{experience.skills.length - 2} more
-              </span>
-            )}
-          </div>
+          {experience.skills.length > 0 && (
+            <div className="mt-3 sm:mt-4 flex flex-wrap gap-1">
+              {experience.skills.slice(0, 2).map((skill, index) => (
+                <span
+                  key={index}
+                  className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-muted text-muted-foreground"
+                >
+                  {skill}
+                </span>
+              ))}
+              {experience.skills.length > 2 && (
+                <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-muted text-muted-foreground">
+                  +{experience.skills.length - 2} more
+                </span>
+              )}
+            </div>
+          )}
         </div>
       </div>
-      <div className="mt-3 sm:mt-4 flex justify-end">
+      <div className="mt-auto pt-3 sm:pt-4 flex justify-end">
         <Button
           variant="outline"
           size="sm"

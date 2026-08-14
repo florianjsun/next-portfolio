@@ -1,0 +1,11 @@
+schema_version: 1
+module_path: 10c36565-ed23-4bb1-be34-18082b62f9ae/f15cd55c-51c7-4d42-a355-1fd66ae87136/cf4fa7d8-5735-4e2a-85cd-4821062e0b6e
+title: 内容型页面路由（博客、项目、经历、技能）
+scope:
+    - app/(root)/blogs/
+    - app/(root)/projects/
+    - app/(root)/experience/
+    - app/(root)/skills/
+source_files: []
+depends_on: []
+related_to: []

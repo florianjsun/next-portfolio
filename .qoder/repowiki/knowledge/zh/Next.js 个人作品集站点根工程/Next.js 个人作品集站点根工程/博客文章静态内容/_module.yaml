@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: 10c36565-ed23-4bb1-be34-18082b62f9ae/6ea28f09-ce1e-4472-9d45-a939dc8fb43c
+title: 博客文章静态内容
+scope:
+    - content/blogs/
+source_files: []
+depends_on: []
+related_to: []

@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: 10c36565-ed23-4bb1-be34-18082b62f9ae/5446c25c-8640-4097-99df-a84ebf4e7dda
+title: 站点配置与静态内容数据源
+scope:
+    - config/
+source_files: []
+depends_on: []
+related_to: []

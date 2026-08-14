@@ -1,0 +1,21 @@
+schema_version: 1
+module_path: 10c36565-ed23-4bb1-be34-18082b62f9ae
+title: Next.js 个人作品集站点根工程
+scope:
+    - README.md
+    - .gitignore
+    - .prettierrc
+    - eslint.config.mjs
+    - next.config.js
+    - postcss.config.js
+    - tsconfig.json
+    - package.json
+    - pnpm-workspace.yaml
+    - components.json
+    - AGENTS.md
+    - .env.copy
+    - LICENSE
+    - pnpm-lock.yaml
+source_files: []
+depends_on: []
+related_to: []

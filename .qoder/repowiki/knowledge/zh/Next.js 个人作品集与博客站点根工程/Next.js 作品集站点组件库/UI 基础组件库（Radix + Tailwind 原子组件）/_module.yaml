@@ -1,9 +1,0 @@
-schema_version: 1
-module_path: components/ui_primitives
-title: UI 基础组件库（Radix + Tailwind 原子组件）
-scope:
-    - components/ui/
-source_files: []
-depends_on: []
-related_to:
-    - path: components/common_widgets

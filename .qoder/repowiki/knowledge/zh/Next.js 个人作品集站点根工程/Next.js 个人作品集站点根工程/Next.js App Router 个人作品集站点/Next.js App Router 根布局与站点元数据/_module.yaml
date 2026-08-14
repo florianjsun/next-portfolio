@@ -1,0 +1,11 @@
+schema_version: 1
+module_path: 10c36565-ed23-4bb1-be34-18082b62f9ae/f15cd55c-51c7-4d42-a355-1fd66ae87136/6ecc8ec9-f64b-43e2-be6c-c91456922e06
+title: Next.js App Router 根布局与站点元数据
+scope:
+    - app/layout.tsx
+    - app/globals.css
+    - app/manifest.ts
+    - app/sitemap.ts
+source_files: []
+depends_on: []
+related_to: []

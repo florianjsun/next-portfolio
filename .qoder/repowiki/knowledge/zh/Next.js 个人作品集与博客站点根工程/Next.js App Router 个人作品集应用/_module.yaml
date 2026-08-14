@@ -1,6 +1,6 @@
 schema_version: 1
 module_path: app_routes
-title: Next.js App Router 应用路由层
+title: Next.js App Router 个人作品集应用
 scope:
     - app/
 source_files: []

@@ -6,7 +6,7 @@ scope:
 source_files: []
 depends_on: []
 related_to:
+    - path: blog_content
     - path: components/content_sections
     - path: components/profile_sections
     - path: configuration
-    - path: utilities

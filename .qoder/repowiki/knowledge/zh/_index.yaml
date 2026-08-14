@@ -3,11 +3,11 @@ schema_version: 1
 locale: zh-CN
 branch: master
 nodes_managed: true
-exported_at: "2026-08-12T09:44:59Z"
+exported_at: "2026-08-13T09:31:08Z"
 modules:
     "":
-        dir_name: Next.js 个人作品集站点根工程
-        title: Next.js 个人作品集站点根工程
+        dir_name: Next.js 个人作品集与博客站点根工程
+        title: Next.js 个人作品集与博客站点根工程
         scope:
             - README.md
             - .gitignore
@@ -31,8 +31,8 @@ modules:
         depends_on: []
         related_to: []
     app_routes:
-        dir_name: Next.js App Router 应用路由层
-        title: Next.js App Router 应用路由层
+        dir_name: Next.js App Router 个人作品集应用
+        title: Next.js App Router 个人作品集应用
         scope:
             - app/
         source_files: []
@@ -62,10 +62,10 @@ modules:
         children: []
         depends_on: []
         related_to:
+            - path: blog_content
             - path: components/content_sections
             - path: components/profile_sections
             - path: configuration
-            - path: utilities
     blog_content:
         dir_name: 博客文章静态内容
         title: 博客文章静态内容
@@ -75,7 +75,8 @@ modules:
         children: []
         depends_on: []
         related_to:
-            - path: components/content_sections
+            - path: app_routes/root_routes
+            - path: utilities
     components:
         dir_name: Next.js 作品集站点组件库
         title: Next.js 作品集站点组件库
@@ -97,7 +98,9 @@ modules:
         source_files: []
         children: []
         depends_on: []
-        related_to: []
+        related_to:
+            - path: components/ui_primitives
+            - path: configuration
     components/content_sections:
         dir_name: 内容展示卡片组件（博客、贡献与 GitHub 引导）
         title: 内容展示卡片组件（博客、贡献与 GitHub 引导）
@@ -110,7 +113,6 @@ modules:
         depends_on: []
         related_to:
             - path: app_routes/root_routes
-            - path: blog_content
             - path: configuration
     components/profile_sections:
         dir_name: 工作经历与技能展示组件
@@ -123,6 +125,7 @@ modules:
         depends_on: []
         related_to:
             - path: app_routes/root_routes
+            - path: configuration
     components/ui_primitives:
         dir_name: UI 基础组件库（Radix + Tailwind 原子组件）
         title: UI 基础组件库（Radix + Tailwind 原子组件）
@@ -131,10 +134,11 @@ modules:
         source_files: []
         children: []
         depends_on: []
-        related_to: []
+        related_to:
+            - path: components/common_widgets
     configuration:
-        dir_name: 站点配置与静态数据
-        title: 站点配置与静态数据
+        dir_name: 站点配置与静态内容中心
+        title: 站点配置与静态内容中心
         scope:
             - config/
         source_files: []
@@ -142,7 +146,9 @@ modules:
         depends_on: []
         related_to:
             - path: app_routes/root_routes
+            - path: components/common_widgets
             - path: components/content_sections
+            - path: components/profile_sections
     utilities:
         dir_name: 通用工具与全局状态提供者
         title: 通用工具与全局状态提供者
@@ -154,4 +160,4 @@ modules:
         children: []
         depends_on: []
         related_to:
-            - path: app_routes/root_routes
+            - path: blog_content

@@ -6,4 +6,5 @@ scope:
 source_files: []
 depends_on: []
 related_to:
-    - path: components/content_sections
+    - path: app_routes/root_routes
+    - path: utilities

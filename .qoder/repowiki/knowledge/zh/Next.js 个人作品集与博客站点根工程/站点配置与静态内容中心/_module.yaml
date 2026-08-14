@@ -1,10 +1,12 @@
 schema_version: 1
 module_path: configuration
-title: 站点配置与静态数据
+title: 站点配置与静态内容中心
 scope:
     - config/
 source_files: []
 depends_on: []
 related_to:
     - path: app_routes/root_routes
+    - path: components/common_widgets
     - path: components/content_sections
+    - path: components/profile_sections

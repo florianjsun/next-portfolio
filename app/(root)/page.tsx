@@ -14,13 +14,13 @@ import { ContactForm } from "@/components/forms/contact-form";
 import ProjectCard from "@/components/projects/project-card";
 import SkillsCard from "@/components/skills/skills-card";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { featuredContributions } from "@/config/contributions";
 import { experiences } from "@/config/experience";
 import { pagesConfig } from "@/config/pages";
 import { featuredProjects } from "@/config/projects";
 import { siteConfig } from "@/config/site";
 import { featuredSkills } from "@/config/skills";
 import { getFeaturedBlogs } from "@/lib/blogs";
+import { getFeaturedGithubContributions } from "@/lib/github-contributions";
 import { serializeJsonLd } from "@/lib/json-ld";
 import { cn } from "@/lib/utils";
 import profileImg from "@/public/profile-img.jpg";
@@ -34,7 +34,10 @@ export const metadata: Metadata = {
 };
 
 export default async function IndexPage() {
-  const featuredBlogs = await getFeaturedBlogs();
+  const [featuredBlogs, featuredContributions] = await Promise.all([
+    getFeaturedBlogs(),
+    getFeaturedGithubContributions(),
+  ]);
   // Structured data for personal portfolio
   const personSchema = {
     "@context": "https://schema.org",

@@ -142,11 +142,17 @@ Easily personalize your portfolio using the configuration files below:
 | **Skills**         | Add or modify the technologies and skills you showcase | `config/skills.ts`        |
 | **Projects**       | Highlight your technical projects                      | `config/projects.ts`      |
 | **Experience**     | Add your work and professional experience              | `config/experience.ts`    |
-| **Contributions**  | Display open-source/community contributions            | `config/contributions.ts` |
+| **Contributions**  | Configure GitHub contribution display limits           | `config/contributions.ts` |
 | **Blog Content**   | Write and publish posts                                | Notion `Blog Posts`       |
 | **Colors & Theme** | Customize color palette and themes                     | `tailwind.config.js`      |
 
 All configuration files are well-organized and documented for a smooth customization process.
+
+The contributions section loads all public repositories and public pull requests
+from the GitHub username configured by `GITHUB_USERNAME` (falling back to
+`config/site.ts`). `GITHUB_TOKEN` is optional for public data, but setting a
+server-only token is recommended to increase GitHub API rate limits. Results are
+cached for six hours.
 
 ## 🌟 Features In Detail
 

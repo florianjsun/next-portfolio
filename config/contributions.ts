@@ -1,47 +1,34 @@
-export interface ContributionsInterface {
+export type ContributionType = "repository" | "pull-request";
+
+interface ContributionBase {
+  id: string;
+  type: ContributionType;
   repo: string;
   contributionDescription: string;
   repoOwner: string;
   link: string;
+  updatedAt: string;
 }
 
-export const contributionsUnsorted: ContributionsInterface[] = [
-  {
-    repo: "minimal-next-portfolio",
-    contributionDescription:
-      "Open-source Next.js portfolio template. Trusted and forked by developers worldwide (130+ GitHub stars).",
-    repoOwner: "namanbarkiya",
-    link: "https://github.com/namanbarkiya/minimal-next-portfolio",
-  },
-  {
-    repo: "niya-saas-template",
-    contributionDescription:
-      "Modern Next.js SaaS template. Production-ready starter for devs and AI startups (30+ GitHub stars).",
-    repoOwner: "namanbarkiya",
-    link: "https://github.com/namanbarkiya/niya-saas-template",
-  },
-  {
-    repo: "autogen",
-    contributionDescription:
-      "Improved the gallery component to showcase the community work.",
-    repoOwner: "Microsoft",
-    link: "https://github.com/microsoft/autogen/pull/1445",
-  },
-  {
-    repo: "creativecommons",
-    contributionDescription:
-      "Closed Issue: Fixed navbar issue on the main website of creative common.",
-    repoOwner: "Creative Commons",
-    link: "https://github.com/creativecommons/creativecommons.github.io-source/pull/738",
-  },
-  {
-    repo: "creativecommons",
-    contributionDescription:
-      "Added section for 'Other Opportunities' on main page.",
-    repoOwner: "Creative Commons",
-    link: "https://github.com/creativecommons/creativecommons.github.io-source/pull/719",
-  },
-];
+export interface RepositoryContribution extends ContributionBase {
+  type: "repository";
+  stars: number;
+  language: string | null;
+  isFork: boolean;
+  archived: boolean;
+}
 
-export const featuredContributions: ContributionsInterface[] =
-  contributionsUnsorted.slice(0, 3);
+export interface PullRequestContribution extends ContributionBase {
+  type: "pull-request";
+  number: number;
+  status: "open" | "closed" | "merged";
+}
+
+export type Contribution = RepositoryContribution | PullRequestContribution;
+
+export const contributionsConfig = {
+  featuredLimit: 3,
+  featuredRepositoryLimit: 2,
+  pullRequestLimit: 10,
+  revalidateSeconds: 60 * 60 * 6,
+} as const;

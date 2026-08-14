@@ -2,16 +2,33 @@ import { verifyWebhookSignature } from "@notionhq/client";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
-import { BLOG_CACHE_TAG } from "@/lib/blogs";
+import { BLOG_CACHE_TAG } from "@/lib/blog-cache";
+import { readRequestBody } from "@/lib/http";
 
 export const runtime = "nodejs";
+
+const MAX_WEBHOOK_BODY_BYTES = 256 * 1024;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
 export async function POST(request: Request) {
-  const rawBody = await request.text();
+  const contentType = request.headers.get("content-type") ?? "";
+  if (!/^application\/json(?:\s*;|$)/i.test(contentType)) {
+    return NextResponse.json(
+      { error: "Content-Type must be application/json" },
+      { status: 415 }
+    );
+  }
+
+  const rawBody = await readRequestBody(request, MAX_WEBHOOK_BODY_BYTES);
+  if (rawBody === null) {
+    return NextResponse.json(
+      { error: "Request body is too large" },
+      { status: 413 }
+    );
+  }
 
   let payload: unknown;
   try {
@@ -41,10 +58,19 @@ export async function POST(request: Request) {
       );
     }
 
-    console.info(
-      "Notion webhook verification token received. Store it as " +
-        `NOTION_WEBHOOK_VERIFICATION_TOKEN: ${verificationToken}`
-    );
+    if (process.env.NOTION_WEBHOOK_LOG_VERIFICATION_TOKEN === "true") {
+      console.info(
+        "Notion webhook verification token received. Store it as " +
+          `NOTION_WEBHOOK_VERIFICATION_TOKEN: ${verificationToken}`
+      );
+    } else {
+      console.info(
+        "Notion webhook verification token received but not logged. " +
+          "Temporarily enable NOTION_WEBHOOK_LOG_VERIFICATION_TOKEN " +
+          "during the initial handshake if no protected request inspector " +
+          "is available."
+      );
+    }
 
     return NextResponse.json({ ok: true });
   }
@@ -56,11 +82,16 @@ export async function POST(request: Request) {
     );
   }
 
-  const signatureIsValid = await verifyWebhookSignature({
-    body: rawBody,
-    signature: request.headers.get("x-notion-signature"),
-    verificationToken: configuredVerificationToken,
-  });
+  let signatureIsValid = false;
+  try {
+    signatureIsValid = await verifyWebhookSignature({
+      body: rawBody,
+      signature: request.headers.get("x-notion-signature"),
+      verificationToken: configuredVerificationToken,
+    });
+  } catch {
+    signatureIsValid = false;
+  }
 
   if (!signatureIsValid) {
     return NextResponse.json({ error: "Invalid signature" }, { status: 401 });

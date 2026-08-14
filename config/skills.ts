@@ -3,11 +3,11 @@ import { Icons } from "@/components/common/icons";
 export interface SkillsInterface {
   name: string;
   description: string;
-  rating: number;
+  rating: 0 | 1 | 2 | 3 | 4 | 5;
   icon: React.ComponentType<{ size?: number | string; className?: string }>;
 }
 
-export const skillsUnsorted: SkillsInterface[] = [
+const skillsUnsorted: SkillsInterface[] = [
   {
     name: "Java",
     description: "扎实掌握 Java SE、集合框架、JMM、并发编程及常用设计模式。",

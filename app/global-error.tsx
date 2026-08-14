@@ -4,10 +4,10 @@ import { useEffect } from "react";
 
 interface GlobalErrorProps {
   error: Error & { digest?: string };
-  retry: () => void;
+  reset: () => void;
 }
 
-export default function GlobalError({ error, retry }: GlobalErrorProps) {
+export default function GlobalError({ error, reset }: GlobalErrorProps) {
   useEffect(() => {
     console.error("[global] Unhandled application error", error);
   }, [error]);
@@ -33,7 +33,7 @@ export default function GlobalError({ error, retry }: GlobalErrorProps) {
           <p>请稍后重试。如果问题持续存在，请刷新页面。</p>
           <button
             type="button"
-            onClick={retry}
+            onClick={reset}
             style={{ cursor: "pointer", padding: "0.625rem 1rem" }}
           >
             重试

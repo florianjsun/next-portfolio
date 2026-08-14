@@ -1,14 +1,14 @@
-import type { Metadata } from "next";
-
 import PageContainer from "@/components/common/page-container";
 import ContributionCard from "@/components/contributions/contribution-card";
 import { pagesConfig } from "@/config/pages";
 import { getGithubContributions } from "@/lib/github-contributions";
+import { createPageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: pagesConfig.contributions.metadata.title,
   description: pagesConfig.contributions.metadata.description,
-};
+  path: "/contributions",
+});
 
 export default async function ContributionsPage() {
   const contributions = await getGithubContributions();

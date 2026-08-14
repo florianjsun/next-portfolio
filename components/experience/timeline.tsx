@@ -13,12 +13,9 @@ interface TimelineProps {
 
 export default function Timeline({ experiences }: TimelineProps) {
   // Sort experiences by date (most recent first)
-  const presentTimestamp = Date.now();
   const sortedExperiences = [...experiences].sort((a, b) => {
-    const dateA =
-      a.endDate === "Present" ? presentTimestamp : a.endDate.getTime();
-    const dateB =
-      b.endDate === "Present" ? presentTimestamp : b.endDate.getTime();
+    const dateA = a.endDate === "Present" ? Infinity : a.endDate.getTime();
+    const dateB = b.endDate === "Present" ? Infinity : b.endDate.getTime();
     return dateB - dateA;
   });
 

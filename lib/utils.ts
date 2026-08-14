@@ -11,6 +11,7 @@ export function formatDate(input: string | number | Date): string {
     month: "long",
     day: "numeric",
     year: "numeric",
+    timeZone: "UTC",
   });
 }
 
@@ -19,10 +20,10 @@ export function getDurationText(
   startDate: Date,
   endDate: Date | "Present"
 ): string {
-  const startYear = new Date(startDate).getFullYear().toString();
+  const startYear = startDate.getUTCFullYear().toString();
   const endYear =
     typeof endDate === "string"
       ? "Present"
-      : new Date(endDate).getFullYear().toString();
+      : endDate.getUTCFullYear().toString();
   return `${startYear} - ${endYear}`;
 }

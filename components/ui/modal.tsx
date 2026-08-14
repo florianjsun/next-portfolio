@@ -28,9 +28,11 @@ export const Modal: React.FC<ModalProps> = (props) => {
   return (
     <Dialog open={props.isOpen} onOpenChange={onChange}>
       <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{props.title}</DialogTitle>
-          <DialogDescription>{props.description}</DialogDescription>
+        <DialogHeader className="h-1.5">
+          <DialogTitle className="sr-only">{props.title}</DialogTitle>
+          <DialogDescription className="sr-only">
+            {props.description}
+          </DialogDescription>
         </DialogHeader>
         <div>{props.children}</div>
       </DialogContent>

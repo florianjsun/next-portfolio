@@ -10,6 +10,7 @@ import ChipContainer from "@/components/ui/chip-container";
 import CustomTooltip from "@/components/ui/custom-tooltip";
 import { projects } from "@/config/projects";
 import { siteConfig } from "@/config/site";
+import { createPageMetadata } from "@/lib/metadata";
 import { cn, formatDate } from "@/lib/utils";
 import profileImg from "@/public/profile-img.jpg";
 
@@ -33,13 +34,11 @@ export async function generateMetadata({
     return { title: "Project Not Found" };
   }
 
-  return {
+  return createPageMetadata({
     title: project.companyName,
     description: project.shortDescription,
-    alternates: {
-      canonical: `${siteConfig.url}/projects/${projectId}`,
-    },
-  };
+    path: `/projects/${project.id}`,
+  });
 }
 
 export default async function Project({ params }: ProjectPageProps) {
@@ -70,7 +69,7 @@ export default async function Project({ params }: ProjectPageProps) {
         </time>
         <h1 className="flex items-center justify-between mt-2 font-heading text-4xl leading-tight lg:text-5xl">
           {project.companyName}
-          <div className="flex items-center">
+          <span className="flex items-center">
             {project.githubLink && (
               <CustomTooltip text="Link to the source code.">
                 <Link
@@ -95,7 +94,7 @@ export default async function Project({ params }: ProjectPageProps) {
                 </Link>
               </CustomTooltip>
             )}
-          </div>
+          </span>
         </h1>
         <ChipContainer textArr={project.category} />
         <div className="mt-4 flex space-x-4">

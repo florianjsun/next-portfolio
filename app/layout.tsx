@@ -9,7 +9,6 @@ import { ThemeProvider } from "@/components/common/theme-provider";
 import { siteConfig } from "@/config/site";
 import { fontHeading, fontSans } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
-import { ModalProvider } from "@/providers/modal-provider";
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -65,10 +64,6 @@ export const metadata: Metadata = {
     shortcut: siteConfig.logoIcon,
     apple: siteConfig.logoIcon,
   },
-  manifest: `${siteConfig.url}/site.webmanifest`,
-  alternates: {
-    canonical: siteConfig.url,
-  },
   robots: {
     index: true,
     follow: true,
@@ -104,7 +99,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
         >
           {children}
           <Analytics />
-          <ModalProvider />
         </ThemeProvider>
         {googleMeasurementId ? (
           <GoogleAnalytics gaId={googleMeasurementId} />

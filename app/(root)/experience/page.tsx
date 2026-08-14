@@ -1,12 +1,10 @@
-import type { Metadata } from "next";
-
 import PageContainer from "@/components/common/page-container";
 import Timeline from "@/components/experience/timeline";
 import { experiences } from "@/config/experience";
 import { pagesConfig } from "@/config/pages";
-import { siteConfig } from "@/config/site";
+import { createPageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: `${pagesConfig.experience.metadata.title} | Professional Experience Timeline`,
   description: `${pagesConfig.experience.metadata.description} Explore my professional journey and career milestones in software development.`,
   keywords: [
@@ -16,10 +14,8 @@ export const metadata: Metadata = {
     "developer portfolio",
     "work experience",
   ],
-  alternates: {
-    canonical: `${siteConfig.url}/experience`,
-  },
-};
+  path: "/experience",
+});
 
 export default function ExperiencePage() {
   return (

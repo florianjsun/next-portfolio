@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import ChipContainer from "@/components/ui/chip-container";
 import { ResponsiveTabs } from "@/components/ui/responsive-tabs";
 import { experiences } from "@/config/experience";
-import { siteConfig } from "@/config/site";
+import { createPageMetadata } from "@/lib/metadata";
 import { getDurationText } from "@/lib/utils";
 
 interface ExperienceDetailPageProps {
@@ -36,13 +36,11 @@ export async function generateMetadata({
     };
   }
 
-  return {
+  return createPageMetadata({
     title: `${experience.position} at ${experience.company} | Experience`,
     description: `Detailed information about my role as ${experience.position} at ${experience.company}.`,
-    alternates: {
-      canonical: `${siteConfig.url}/experience/${expId}`,
-    },
-  };
+    path: `/experience/${experience.id}`,
+  });
 }
 
 export default async function ExperienceDetailPage({

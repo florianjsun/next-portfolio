@@ -7,7 +7,7 @@ export interface ExperienceInterface {
   location: string;
   startDate: Date;
   endDate: Date | "Present";
-  description: string[];
+  description: [string, ...string[]];
   achievements: string[];
   skills: ValidSkills[];
   companyUrl?: string;

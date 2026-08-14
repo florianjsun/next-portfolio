@@ -1,12 +1,26 @@
 import { NextResponse } from "next/server";
 
 import { contactSchema } from "@/lib/contact";
-import { createRequestTimeoutSignal } from "@/lib/http";
+import { createRequestTimeoutSignal, readRequestBody } from "@/lib/http";
+
+const MAX_CONTACT_BODY_BYTES = 16 * 1024;
 
 export async function POST(req: Request) {
+  const contentType = req.headers.get("content-type") ?? "";
+  if (!/^application\/json(?:\s*;|$)/i.test(contentType)) {
+    return new NextResponse("Content-Type must be application/json", {
+      status: 415,
+    });
+  }
+
+  const rawBody = await readRequestBody(req, MAX_CONTACT_BODY_BYTES);
+  if (rawBody === null) {
+    return new NextResponse("Request body is too large", { status: 413 });
+  }
+
   let payload: unknown;
   try {
-    payload = await req.json();
+    payload = JSON.parse(rawBody);
   } catch {
     return new NextResponse("Invalid JSON", { status: 400 });
   }
@@ -45,7 +59,12 @@ export async function POST(req: Request) {
       [fieldIdSocial]: social ?? "",
     });
 
-    const res = await fetch(`${formLink}/formResponse?${formResponseParams}`, {
+    const res = await fetch(`${formLink}/formResponse`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: formResponseParams,
       signal: createRequestTimeoutSignal(),
     });
     if (!res.ok) {

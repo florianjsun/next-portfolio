@@ -33,14 +33,35 @@ const navItemVariants = {
   }),
 };
 
+function MobileNavigationControl({ items, children }: MainNavProps) {
+  const [showMobileMenu, setShowMobileMenu] = React.useState(false);
+
+  return (
+    <>
+      <motion.button
+        type="button"
+        aria-controls={MOBILE_NAV_ID}
+        aria-expanded={showMobileMenu}
+        className="flex items-center space-x-2 md:hidden"
+        onClick={() => setShowMobileMenu((isOpen) => !isOpen)}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        {showMobileMenu ? <X /> : <Menu />}
+        <span className="font-bold">Menu</span>
+      </motion.button>
+      {showMobileMenu && items ? (
+        <MobileNav id={MOBILE_NAV_ID} items={items}>
+          {children}
+        </MobileNav>
+      ) : null}
+    </>
+  );
+}
+
 export function MainNav({ items, children }: MainNavProps) {
   const segment = useSelectedLayoutSegment();
-  const [showMobileMenu, setShowMobileMenu] = React.useState(false);
   const pathname = usePathname();
-
-  React.useEffect(() => {
-    setShowMobileMenu(false);
-  }, [pathname]);
 
   return (
     <div className="flex gap-6 md:gap-10">
@@ -69,6 +90,7 @@ export function MainNav({ items, children }: MainNavProps) {
               variants={navItemVariants}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              tabIndex={-1}
             >
               <Link
                 href={item.disabled ? "#" : item.href}
@@ -87,23 +109,9 @@ export function MainNav({ items, children }: MainNavProps) {
           ))}
         </nav>
       ) : null}
-      <motion.button
-        type="button"
-        aria-controls={MOBILE_NAV_ID}
-        aria-expanded={showMobileMenu}
-        className="flex items-center space-x-2 md:hidden"
-        onClick={() => setShowMobileMenu(!showMobileMenu)}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        {showMobileMenu ? <X /> : <Menu />}
-        <span className="font-bold">Menu</span>
-      </motion.button>
-      {showMobileMenu && items && (
-        <MobileNav id={MOBILE_NAV_ID} items={items}>
-          {children}
-        </MobileNav>
-      )}
+      <MobileNavigationControl key={pathname} items={items}>
+        {children}
+      </MobileNavigationControl>
     </div>
   );
 }

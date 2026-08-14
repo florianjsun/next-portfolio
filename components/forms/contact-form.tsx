@@ -2,8 +2,11 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertTriangle } from "lucide-react";
+import type { ElementType } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
+import { CustomModal } from "@/components/modals/custom-modal";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,8 +18,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useModalStore } from "@/hooks/use-modal-store";
 import { contactSchema, type ContactFormValues } from "@/lib/contact";
+
+interface ModalData {
+  title: string;
+  description: string;
+  icon: ElementType;
+}
 
 function SuccessAnimatedIcon() {
   return (
@@ -46,7 +54,13 @@ function SuccessAnimatedIcon() {
 }
 
 export function ContactForm() {
-  const openModal = useModalStore((state) => state.onOpen);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalData, setModalData] = useState<ModalData | null>(null);
+
+  const openModal = (data: ModalData) => {
+    setModalData(data);
+    setIsModalOpen(true);
+  };
 
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactSchema),
@@ -91,65 +105,74 @@ export function ContactForm() {
   }
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 min-w-full"
-      >
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter your name" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter your email" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="message"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Message</FormLabel>
-              <FormControl>
-                <Textarea placeholder="Enter your message" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="social"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Social (optional)</FormLabel>
-              <FormControl>
-                <Input placeholder="Link for social account" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit">Submit</Button>
-      </form>
-    </Form>
+    <>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-8 min-w-full"
+        >
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter your name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter your email" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="message"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Message</FormLabel>
+                <FormControl>
+                  <Textarea placeholder="Enter your message" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="social"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Social (optional)</FormLabel>
+                <FormControl>
+                  <Input placeholder="Link for social account" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit">Submit</Button>
+        </form>
+      </Form>
+      <CustomModal
+        title={modalData?.title ?? ""}
+        description={modalData?.description ?? ""}
+        icon={modalData?.icon ?? null}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+    </>
   );
 }

@@ -87,7 +87,7 @@ export default async function IndexPage() {
             src={profileImg}
             height={100}
             width={100}
-            sizes="100vw"
+            sizes="(max-width: 426px) 60vw, 256px"
             className="mb-0 h-auto w-[60%] max-w-[16rem] rounded-full border-8 border-primary bg-primary shadow-2xl md:mb-2"
             alt="Sun Jing - 全栈 & AI应用工程师 个人网站"
             preload

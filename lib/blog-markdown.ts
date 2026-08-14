@@ -151,7 +151,7 @@ function renderTable(element: ParseElement, depth: number): string {
   ];
   const hasHeader = getAttribute(element, "header-row") === "true";
   const header = hasHeader
-    ? pad(rows[0])
+    ? pad(rows[0]!)
     : Array.from({ length: width }, () => "");
   const body = hasHeader ? rows.slice(1).map(pad) : rows.map(pad);
   const formatRow = (row: string[]) => `| ${row.join(" | ")} |`;

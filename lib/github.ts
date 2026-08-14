@@ -1,5 +1,6 @@
 import "server-only";
 
+import { cache } from "react";
 import { z } from "zod";
 
 import { siteConfig } from "@/config/site";
@@ -18,7 +19,7 @@ export function getTemplateRepoSlug(): string {
 }
 
 /** Fetches the template repo star count, cached and revalidated every 6 hours. */
-export async function getTemplateRepoStars(): Promise<number | null> {
+export const getTemplateRepoStars = cache(async (): Promise<number | null> => {
   try {
     const res = await fetch(
       `https://api.github.com/repos/${getTemplateRepoSlug()}`,
@@ -37,4 +38,4 @@ export async function getTemplateRepoStars(): Promise<number | null> {
   } catch {
     return null;
   }
-}
+});

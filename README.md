@@ -122,10 +122,13 @@ https://your-domain.example/api/notion-webhook
 ```
 
 Subscribe to page and data-source content/property events. During the initial
-handshake, the endpoint writes the one-time verification token to the server
-log. Save it as `NOTION_WEBHOOK_VERIFICATION_TOKEN`, redeploy, and complete the
-verification in Notion. Subsequent deliveries are HMAC-verified before the blog
-cache is invalidated.
+handshake, retrieve the one-time verification token from a protected request
+inspector. If your platform has no protected inspector, temporarily set
+`NOTION_WEBHOOK_LOG_VERIFICATION_TOKEN=true`, resend the token, copy it from the
+server log, and immediately disable that flag. Save the token as
+`NOTION_WEBHOOK_VERIFICATION_TOKEN`, redeploy, and complete the verification in
+Notion. Subsequent deliveries are HMAC-verified before the blog cache is
+invalidated.
 
 Notion-hosted files use signed URLs that expire after about one hour. Use local
 `/public` paths or stable HTTPS object-storage/CDN URLs for `CoverImage` and

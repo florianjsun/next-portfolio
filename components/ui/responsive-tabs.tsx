@@ -31,12 +31,16 @@ export function ResponsiveTabs({
   className,
 }: ResponsiveTabsProps) {
   const [activeTab, setActiveTab] = React.useState(
-    defaultValue || items[0]?.value
+    defaultValue ?? items[0]?.value ?? ""
   );
   const activeItem = items.find((item) => item.value === activeTab);
 
   return (
-    <div className={cn("w-full", className)}>
+    <Tabs
+      value={activeTab}
+      onValueChange={setActiveTab}
+      className={cn("w-full", className)}
+    >
       {/* Mobile: Dropdown */}
       <div className="md:hidden mb-4">
         <DropdownMenu>
@@ -65,24 +69,18 @@ export function ResponsiveTabs({
 
       {/* Desktop: Tabs */}
       <div className="hidden md:block">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
-            {items.map((item) => (
-              <TabsTrigger key={item.value} value={item.value}>
-                {item.label}
-              </TabsTrigger>
-            ))}
-          </TabsList>
+        <TabsList className="grid w-full grid-cols-3">
           {items.map((item) => (
-            <TabsContent key={item.value} value={item.value}>
-              {item.content}
-            </TabsContent>
+            <TabsTrigger key={item.value} value={item.value}>
+              {item.label}
+            </TabsTrigger>
           ))}
-        </Tabs>
+        </TabsList>
       </div>
 
-      {/* Mobile: Content */}
-      <div className="md:hidden">{activeItem?.content}</div>
-    </div>
+      <TabsContent value={activeTab} className="mt-0 md:mt-2">
+        {activeItem?.content}
+      </TabsContent>
+    </Tabs>
   );
 }

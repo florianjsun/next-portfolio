@@ -9,12 +9,11 @@ import {
   type QueryDataSourceParameters,
 } from "@notionhq/client";
 import { unstable_cache } from "next/cache";
+import { cache } from "react";
 import { z } from "zod";
 
-import { renderBlogMarkdown } from "@/lib/blog-markdown";
+import { BLOG_CACHE_TAG } from "@/lib/blog-cache";
 import { isStableContentUrl } from "@/lib/content-urls";
-
-export const BLOG_CACHE_TAG = "notion-blogs";
 
 const NOTION_API_VERSION = "2026-03-11";
 const DEFAULT_REVALIDATE_SECONDS = 900;
@@ -317,7 +316,10 @@ async function getStatusPropertyType(
   }
 
   const statusProperty = properties.Status;
-  if (statusProperty.type !== "status" && statusProperty.type !== "select") {
+  if (
+    !statusProperty ||
+    (statusProperty.type !== "status" && statusProperty.type !== "select")
+  ) {
     throw new Error("Notion data source property Status is invalid");
   }
 
@@ -449,6 +451,7 @@ async function loadBlogPost(
       );
     }
 
+    const { renderBlogMarkdown } = await import("@/lib/blog-markdown");
     const contentHtml = await renderBlogMarkdown(response.markdown);
 
     return {
@@ -499,35 +502,37 @@ export async function getAllBlogsMeta(): Promise<BlogMeta[]> {
   return records.map(toBlogMeta);
 }
 
-export async function getBlogPost(slug: string): Promise<BlogPost | null> {
-  if (!SLUG_PATTERN.test(slug) || slug.length > 96) {
-    return null;
+export const getBlogPost = cache(
+  async (slug: string): Promise<BlogPost | null> => {
+    if (!SLUG_PATTERN.test(slug) || slug.length > 96) {
+      return null;
+    }
+
+    const records = await getPublishedBlogRecords();
+    const record = records.find((item) => item.slug === slug);
+
+    if (!record) {
+      return null;
+    }
+
+    const cachedContent = await getCachedBlogPost(
+      record.slug,
+      record.notionPageId,
+      record.updatedAt,
+      getNotionConfig()?.dataSourceId ?? ""
+    );
+
+    if (!cachedContent) {
+      return null;
+    }
+
+    return {
+      ...toBlogMeta(record),
+      ...cachedContent,
+      readingTime: record.readingTime ?? cachedContent.readingTime,
+    };
   }
-
-  const records = await getPublishedBlogRecords();
-  const record = records.find((item) => item.slug === slug);
-
-  if (!record) {
-    return null;
-  }
-
-  const cachedContent = await getCachedBlogPost(
-    record.slug,
-    record.notionPageId,
-    record.updatedAt,
-    getNotionConfig()?.dataSourceId ?? ""
-  );
-
-  if (!cachedContent) {
-    return null;
-  }
-
-  return {
-    ...toBlogMeta(record),
-    ...cachedContent,
-    readingTime: record.readingTime ?? cachedContent.readingTime,
-  };
-}
+);
 
 export async function getFeaturedBlogs(): Promise<BlogMeta[]> {
   const all = await getAllBlogsMeta();

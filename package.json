@@ -8,7 +8,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "migrate:blogs:notion": "node scripts/migrate-blogs-to-notion.mjs",
     "test:blog-markdown": "node scripts/test-blog-markdown.mjs"
   },
   "dependencies": {
@@ -25,7 +24,6 @@
     "@vercel/analytics": "^2.0.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "gray-matter": "^4.0.3",
     "lucide-react": "^1.31.0",
     "motion": "^13.1.0",
     "next": "^16.3.0",
@@ -57,7 +55,6 @@
     "@types/node": "^24",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
-    "dotenv": "^17.4.2",
     "esbuild": "^0.28.2",
     "eslint": "^10.8.1",
     "eslint-config-next": "16.3.0",

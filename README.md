@@ -73,9 +73,7 @@ To get started with your own portfolio website:
 
 ## Notion Blog Setup
 
-Blog pages are loaded from Notion at build time and on demand. The files under
-`content/blogs/` are retained only for the optional one-time migration script;
-the website does not read them at runtime.
+Blog pages are loaded from Notion at build time and on demand.
 
 1. Create a full-page Notion database named `Blog Posts` with the following
    properties. Property names are case-sensitive.
@@ -113,25 +111,6 @@ the website does not read them at runtime.
    page body, and change `Status` to `Published`. Draft pages are never returned
    by the site. Slugs must be unique and match
    `^[a-z0-9]+(?:-[a-z0-9]+)*$`.
-
-### Migrate the included Markdown posts
-
-Preview the idempotent migration with read-only access:
-
-```bash
-pnpm migrate:blogs:notion
-```
-
-Then temporarily grant the connection permission to insert content and create
-only the missing pages by explicitly enabling write mode:
-
-```bash
-pnpm migrate:blogs:notion -- --write
-```
-
-Migrated pages are always created as `Draft`. Review them in Notion, publish
-them, verify the existing `/blogs/<slug>` URLs, and then remove the connection's
-write permission. Existing slugs and local cover-image paths are preserved.
 
 ### Automatic updates with a webhook
 

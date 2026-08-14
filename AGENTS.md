@@ -7,9 +7,9 @@ This is a Next.js 16 App Router portfolio. Route pages and layouts live in
 use folders such as `[slug]`, and API handlers live in `app/api/`. Reusable UI
 is organized under `components/`: keep primitives in `ui/`, shared site pieces
 in `common/`, and feature components in folders such as `projects/` or `blogs/`.
-Typed portfolio data belongs in `config/`, Markdown posts in `content/blogs/`,
-and shared logic in `lib/`, `hooks/`, or `providers/`. Put URL-served images in
-`public/`; local font files are in `assets/fonts/`.
+Typed portfolio data belongs in `config/`, blog posts are loaded from Notion,
+and shared logic lives in `lib/`, `hooks/`, or `providers/`. Put URL-served
+images in `public/`; local font files are in `assets/fonts/`.
 
 ## Build, Test, and Development Commands
 

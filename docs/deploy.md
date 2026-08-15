@@ -33,6 +33,8 @@ Notion / GitHub / Google Forms
 | `compose.yml`                     | 构建参数、构建期 secret、运行环境、健康检查、日志轮转        |
 | `deploy/nginx.conf.example`       | Nginx 反代模板（含 Cloudflare 真实 IP 还原）                 |
 | `deploy/update-cloudflare-ips.sh` | 生成 `set_real_ip_from` 白名单，建议配每周定时任务           |
+| `deploy/deploy-portfolio.sh`      | CI 通过 SSH 调用的部署脚本：构建、健康检查、失败自动回滚     |
+| `.github/workflows/ci.yml`        | 质量检查 + 合并到 `master` 后自动部署                        |
 | `next.config.js`                  | `output: "standalone"`，生成 `.next/standalone`              |
 | `.env.copy`                       | 环境变量清单                                                 |
 
@@ -324,9 +326,115 @@ verification token：
 封面和正文图片不要用 Notion 临时上传地址（大约 1 小时过期）。用
 `/public` 本地路径或对象存储 / CDN 的稳定 HTTPS 地址。
 
+## 6. CI/CD 自动部署
+
+`.github/workflows/ci.yml` 一个工作流承担两件事：
+
+1. `quality` —— 每个 push 和 PR 都跑：装依赖、`pnpm audit --prod`、`pnpm check`、
+   `pnpm build`。
+2. `deploy` —— 只在 `master` 的 push 且 `quality` 全绿时跑：SSH 到服务器，让它
+   构建并发布 **CI 刚刚验证过的那个 commit**。
+
+镜像在服务器上构建，而不是在 GitHub 上构建再推镜像仓库。这么选的原因是博客和
+sitemap 是构建期从 Notion 预渲染的，谁构建谁就得拿到 `NOTION_TOKEN`；放在服务器
+构建可以让所有密钥只存在于服务器的 `.env` 里，GitHub 侧一个业务密钥都不需要。
+代价是构建期间会占用服务器 CPU 约 1～2 分钟。
+
+### 6.1 部署为什么带上 commit sha
+
+CI 发过去的请求是 `deploy <40 位 sha>`，不是「拉最新的 master」。这样即使在 CI
+跑完到部署之间又有人推了新提交，上线的仍然是通过了检查的那个版本。
+
+### 6.2 服务器侧一次性配置
+
+装部署脚本（必须放在仓库外面：脚本自己会执行 `git reset --hard`，放在仓库里会被
+运行中的自己覆盖）：
+
+```bash
+sudo install -o root -g root -m 0755 \
+  ~/next-portfolio/deploy/deploy-portfolio.sh /usr/local/bin/deploy-portfolio.sh
+```
+
+本机生成一把**专用**部署密钥（不要复用你自己的密钥）：
+
+```bash
+ssh-keygen -t ed25519 -N "" -C github-actions-deploy -f ./id_deploy
+```
+
+把公钥写进服务器的 `~/.ssh/authorized_keys`，并且**锁定到部署脚本**：
+
+```
+command="/usr/local/bin/deploy-portfolio.sh",restrict ssh-ed25519 AAAA...== github-actions-deploy
+```
+
+这一行是整套 CI/CD 的安全核心。`ubuntu` 有免密 sudo，而 `docker` 组本身等价于
+root，所以一把不受限的密钥泄露就等于服务器失守。加上 `command=` 后，这把密钥无论
+被要求执行什么，sshd 都只会运行部署脚本；脚本再用正则把入参限制成一个 40 位
+十六进制 sha。`restrict` 顺带关掉 PTY、端口转发、agent 转发和 X11。
+
+验证限制生效（都应该被拒绝，退出码 64）：
+
+```bash
+ssh -i ./id_deploy ubuntu@<IP> "whoami"
+ssh -i ./id_deploy ubuntu@<IP> "cat ~/next-portfolio/.env"
+ssh -i ./id_deploy ubuntu@<IP> "deploy abc123; cat /etc/shadow"
+```
+
+### 6.3 GitHub secrets
+
+在 Settings → Secrets and variables → Actions 配置四个：
+
+| Secret               | 值                                          |
+| -------------------- | ------------------------------------------- |
+| `DEPLOY_SSH_KEY`     | `id_deploy` 私钥全文（无口令）              |
+| `DEPLOY_KNOWN_HOSTS` | `ssh-keyscan <IP>` 的输出，用于固定主机密钥 |
+| `DEPLOY_HOST`        | 服务器 IP                                   |
+| `DEPLOY_USER`        | `ubuntu`                                    |
+
+命令行版本：
+
+```bash
+gh secret set DEPLOY_SSH_KEY < ./id_deploy
+ssh-keyscan <IP> | gh secret set DEPLOY_KNOWN_HOSTS
+gh secret set DEPLOY_HOST --body "<IP>"
+gh secret set DEPLOY_USER --body "ubuntu"
+```
+
+服务器 IP 之所以也放 secret，是因为域名走 Cloudflare 代理，源站 IP 不该出现在仓库
+文件里。`DEPLOY_KNOWN_HOSTS` 让工作流用 `StrictHostKeyChecking=yes`：万一 DNS 或
+IP 被劫持，连接会直接失败而不是把私钥送给假服务器。
+
+设好之后本机就可以删掉 `id_deploy` 了。轮换密钥＝重复 6.2 生成新的一把、替换
+`authorized_keys` 里那一行、重新 `gh secret set DEPLOY_SSH_KEY`。
+
+### 6.4 部署脚本做了什么
+
+按顺序：`flock` 串行化（防止两次部署互相踩）→ 记下当前 commit 和当前镜像 ID →
+按 sha 浅拉取并 `git reset --hard` → `docker compose build` → 给镜像打上短 sha
+标签 → `docker compose up -d` → 轮询容器健康状态（最多 180 秒）→ `curl`
+`127.0.0.1:3000` 冒烟 → 清理只留最近 3 个版本标签。
+
+两种失败各有对策：
+
+- **构建失败**：此时还没碰运行中的容器，脚本把仓库 reset 回原 commit 就退出，
+  线上完全不受影响。
+- **新容器起不来 / 健康检查不过**：脚本打印容器日志，把 `latest` 标签重新指回
+  之前那个镜像 ID、仓库 reset 回原 commit、重新 `up -d`，然后以非零码退出让 CI
+  变红。
+
+服务器上的 `~/deploy-portfolio.log` 有完整历史。
+
+### 6.5 并发
+
+工作流层的 `cancel-in-progress` 只对非 `master` 分支生效，否则连续两次 push 会把
+正在部署的那次 job 中途掐掉。`deploy` job 另有自己的并发组且不允许取消，多次部署
+排队执行；服务器侧的 `flock` 是第二道保险。
+
 ## 更新
 
-代码或 `NEXT_PUBLIC_*` 有变化：
+正常流程是合并到 `master`，剩下的交给上面的 CI/CD。
+
+需要手动部署时（比如只改了服务端环境变量）：
 
 ```bash
 cd next-portfolio
@@ -345,27 +453,25 @@ docker compose up -d
 
 ## 回滚
 
-每次 `docker compose build` 都会覆盖 `next-portfolio:latest`。上线前先打标签：
+部署当场失败的情况由部署脚本自动回滚，见 6.4，不用手工干预。
+
+需要人工回滚的是「部署成功但改动本身有问题」。首选走正常流程，让 CI 重新验证：
 
 ```bash
-docker tag next-portfolio:latest next-portfolio:$(date +%Y%m%d-%H%M)
+git revert <commit>
+git push
 ```
 
-回滚到某个标签：
+要立刻恢复、来不及等 CI 时，直接切镜像标签（脚本保留了最近 3 个短 sha 标签）：
 
 ```bash
-docker tag next-portfolio:20260815-1100 next-portfolio:latest
+docker images next-portfolio
+docker tag next-portfolio:<短 sha> next-portfolio:latest
 docker compose up -d
 ```
 
-Git 回滚后再重新构建也可以：
-
-```bash
-git log --oneline
-git checkout <commit>
-docker compose build
-docker compose up -d
-```
+注意这只换了运行的镜像，服务器上的仓库仍停在新 commit；记得随后用 `git revert`
+把代码也对齐，否则下一次部署的日志会对不上。
 
 ## 本机构建、服务器只运行
 

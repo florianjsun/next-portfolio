@@ -10,7 +10,9 @@ permissions:
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Superseding a pull request run is free, but cancelling a master run could
+  # kill the deploy job midway and leave production half-released.
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 
 jobs:
   quality:
@@ -40,3 +42,46 @@ jobs:
 
       - name: Build production application
         run: pnpm build
+
+  deploy:
+    name: Deploy to production
+    needs: quality
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: production
+      url: https://portfolio.sunnao.wtf
+    # Queue deploys instead of cancelling them; a half-applied release is worse
+    # than a slightly stale one.
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
+    steps:
+      # No checkout: the server builds from its own clone. This job only needs
+      # to tell it which commit to deploy.
+      - name: Deploy over SSH
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          GIT_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          install -d -m 700 ~/.ssh
+          # Strip CR: a secret uploaded from Windows carries CRLF, which makes
+          # OpenSSH reject the key as malformed.
+          printf '%s\n' "$DEPLOY_SSH_KEY" | tr -d '\r' > ~/.ssh/id_deploy
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" | tr -d '\r' > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/id_deploy ~/.ssh/known_hosts
+
+          # The host key is pinned, so a hijacked DNS/IP cannot collect the key.
+          # The server pins this key to the deploy script, so the request below
+          # is the only thing it is allowed to do.
+          ssh -i ~/.ssh/id_deploy \
+              -o IdentitiesOnly=yes \
+              -o StrictHostKeyChecking=yes \
+              -o ConnectTimeout=20 \
+              "${DEPLOY_USER}@${DEPLOY_HOST}" "deploy ${GIT_SHA}"

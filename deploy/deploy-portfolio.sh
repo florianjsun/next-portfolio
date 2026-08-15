@@ -78,18 +78,29 @@ log "checked out $(git log --oneline -1)"
 # A build failure must not touch the running container, so this happens before
 # anything is swapped. Restore the checkout so the tree keeps matching the
 # image that is actually serving traffic.
+#
+# Build output is captured per run rather than appended straight to the shared
+# log: on failure the whole thing is echoed so the caller sees the actual
+# compiler error. Tailing a fixed number of lines is not enough, because Docker
+# adds ~25 lines of its own wrapper after the real error.
 log "building image"
-if ! docker compose build >>"$LOG_FILE" 2>&1; then
-  tail -40 "$LOG_FILE"
+BUILD_LOG="$(mktemp)"
+if ! docker compose build >"$BUILD_LOG" 2>&1; then
+  tee -a "$LOG_FILE" < "$BUILD_LOG"
+  rm -f "$BUILD_LOG"
   git reset --hard "$PREVIOUS_SHA" --quiet || true
   fail "docker compose build failed; running container left untouched"
 fi
+cat "$BUILD_LOG" >>"$LOG_FILE"
+rm -f "$BUILD_LOG"
 docker tag "${CONTAINER}:latest" "${CONTAINER}:$(git rev-parse --short HEAD)"
 log "built and tagged ${CONTAINER}:$(git rev-parse --short HEAD)"
 
 # --------------------------------------------------------------- release -----
 log "starting new container"
-docker compose up -d >>"$LOG_FILE" 2>&1 || fail "docker compose up failed"
+# Not redirected: the output is two lines, and if it fails the reason has to
+# reach the caller rather than only the server-side log.
+docker compose up -d 2>&1 | tee -a "$LOG_FILE" || fail "docker compose up failed"
 
 log "waiting for healthcheck (timeout ${HEALTH_TIMEOUT}s)"
 STATE=unknown

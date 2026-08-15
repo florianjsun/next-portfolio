@@ -1,0 +1,30 @@
+# Copy to /etc/nginx/sites-available/next-portfolio and enable the site.
+# Replace example.com with your domain, then issue a certificate with:
+#   sudo certbot --nginx -d example.com -d www.example.com
+
+upstream next_portfolio {
+    server 127.0.0.1:3000;
+    keepalive 64;
+}
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name example.com www.example.com;
+
+    client_max_body_size 1m;
+
+    location / {
+        proxy_pass http://next_portfolio;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_read_timeout 60s;
+    }
+}

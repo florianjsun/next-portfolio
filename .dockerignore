@@ -1,0 +1,80 @@
+# Dependencies (installed inside Docker)
+node_modules/
+.pnpm-store/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Next.js and other build outputs
+.next/
+out/
+dist/
+build/
+.vercel/
+
+# Tests and local scripts not needed to build the app
+coverage/
+scripts/
+
+# Local development and editor files
+.git/
+.gitignore
+.gitattributes
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.log
+
+# Environment files must never enter the image
+.env
+.env*.local
+.env.development
+.env.test
+.env.production.local
+
+# Docker and deploy files are not part of the build context
+Dockerfile*
+.dockerignore
+compose.yaml
+compose.yml
+docker-compose*.yaml
+docker-compose*.yml
+deploy/
+
+# Documentation and generated wiki
+*.md
+docs/
+information/
+.qoder/
+
+# CI
+.github/
+
+# Caches and generated metadata
+.cache/
+.eslintcache
+.swc/
+.turbo/
+.tmp/
+.temp/
+*.tsbuildinfo
+next-env.d.ts
+
+# Tooling configs not required by `next build`
+.editorconfig
+.prettierrc*
+prettier.config.*
+.eslintrc*
+eslint.config.*
+.prettierignore
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editor / agent metadata
+.cursor/
+AGENTS.md

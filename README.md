@@ -201,9 +201,25 @@ This project is open source and available under the [MIT License](LICENSE).
 - Built by [Naman Barkiya](https://github.com/namanbarkiya)
 - Icons from [Lucide](https://lucide.dev/)
 
-## 💻 Deploy on Vercel
+## 💻 Deploy
 
-The easiest way to deploy your portfolio is using [Vercel](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme), the platform from the creators of Next.js.
+### Cloud server (Docker)
+
+Self-host on a Linux VPS with Docker Compose, Nginx, and HTTPS. See
+[docs/deploy.md](docs/deploy.md) for the full guide.
+
+```bash
+cp .env.copy .env
+docker compose build
+docker compose up -d
+```
+
+The container listens on `127.0.0.1:3000`. Put Nginx in front and issue a
+certificate with Certbot, as described in the deploy guide.
+
+### Vercel
+
+The easiest hosted option is [Vercel](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme).
 
 Check out the [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 

@@ -26,14 +26,15 @@ Notion / GitHub / Google Forms
 
 ## 仓库里的部署文件
 
-| 文件                        | 作用                                                         |
-| --------------------------- | ------------------------------------------------------------ |
-| `Dockerfile`                | 多阶段构建：安装依赖、`pnpm build`、只拷贝 standalone 运行时 |
-| `.dockerignore`             | 缩小构建上下文，并阻止 `.env` 进入镜像                       |
-| `compose.yml`               | 构建参数、运行环境、健康检查、日志轮转                       |
-| `deploy/nginx.conf.example` | Nginx 反代模板                                               |
-| `next.config.js`            | `output: "standalone"`，生成 `.next/standalone`              |
-| `.env.copy`                 | 环境变量清单                                                 |
+| 文件                              | 作用                                                         |
+| --------------------------------- | ------------------------------------------------------------ |
+| `Dockerfile`                      | 多阶段构建：安装依赖、`pnpm build`、只拷贝 standalone 运行时 |
+| `.dockerignore`                   | 缩小构建上下文，并阻止 `.env` 进入镜像                       |
+| `compose.yml`                     | 构建参数、构建期 secret、运行环境、健康检查、日志轮转        |
+| `deploy/nginx.conf.example`       | Nginx 反代模板（含 Cloudflare 真实 IP 还原）                 |
+| `deploy/update-cloudflare-ips.sh` | 生成 `set_real_ip_from` 白名单，建议配每周定时任务           |
+| `next.config.js`                  | `output: "standalone"`，生成 `.next/standalone`              |
+| `.env.copy`                       | 环境变量清单                                                 |
 
 ## 服务器要求
 
@@ -211,42 +212,91 @@ docker compose logs -f web
 ## 4. Nginx 反代和 HTTPS
 
 ```bash
-sudo apt-get install -y nginx certbot python3-certbot-nginx
-sudo cp deploy/nginx.conf.example /etc/nginx/sites-available/next-portfolio
-sudo nano /etc/nginx/sites-available/next-portfolio
+sudo apt-get install -y nginx certbot
 ```
 
-把 `example.com` 换成你的域名，然后启用站点：
+### 4.1 还原访客真实 IP（走 Cloudflare 时必做）
+
+Cloudflare 代理后，Nginx 看到的 `$remote_addr` 是 CF 边缘节点，日志和限流全都
+失真。用仓库里的脚本生成 `set_real_ip_from` 白名单：
 
 ```bash
+sudo install -m 0755 deploy/update-cloudflare-ips.sh \
+  /usr/local/sbin/update-cloudflare-ips.sh
+sudo mkdir -p /etc/nginx/snippets
+sudo /usr/local/sbin/update-cloudflare-ips.sh
+```
+
+CF 的网段会变，挂个每周定时任务：
+
+```bash
+sudo systemctl edit --force --full cloudflare-ips.service
+# [Service] Type=oneshot / ExecStart=/usr/local/sbin/update-cloudflare-ips.sh
+sudo systemctl edit --force --full cloudflare-ips.timer
+# [Timer] OnCalendar=weekly / Persistent=true  +  [Install] WantedBy=timers.target
+sudo systemctl enable --now cloudflare-ips.timer
+```
+
+### 4.2 先放一张自签证书
+
+橙色云开着时，CF 用哪个端口回源取决于它的 SSL/TLS 模式：Flexible 走 `80`，
+Full 走 `443`。**Full 模式下源站还没有证书，ACME 校验会拿到 526 而失败。**
+先放一张自签证书让 `443` 能握手，签完再换掉：
+
+```bash
+sudo mkdir -p /etc/nginx/ssl /var/www/certbot
+sudo openssl req -x509 -nodes -newkey rsa:2048 -days 3650 \
+  -keyout /etc/nginx/ssl/placeholder.key \
+  -out /etc/nginx/ssl/placeholder.crt -subj "/CN=example.com"
+```
+
+### 4.3 启用站点
+
+```bash
+sudo cp deploy/nginx.conf.example /etc/nginx/sites-available/next-portfolio
+sudo nano /etc/nginx/sites-available/next-portfolio   # 改 example.com
 sudo ln -sf /etc/nginx/sites-available/next-portfolio \
   /etc/nginx/sites-enabled/next-portfolio
 sudo rm -f /etc/nginx/sites-enabled/default
-sudo nginx -t
-sudo systemctl reload nginx
+sudo nginx -t && sudo systemctl reload nginx
 ```
 
-域名已解析到这台机器后签发证书：
+证书还没签发前，把两处 `ssl_certificate*` 先指向 `placeholder.*`。
+
+### 4.4 签发证书
+
+`webroot` 方式**不需要关掉橙色云**：ACME 请求会经 CF 回源到
+`/.well-known/acme-challenge/`，模板里 `80` 和 `443` 都开了这个位置。
 
 ```bash
-sudo certbot --nginx -d example.com -d www.example.com
+sudo certbot certonly --webroot -w /var/www/certbot -d example.com \
+  --email you@example.com --agree-tos --no-eff-email \
+  --deploy-hook 'systemctl reload nginx'
 ```
 
-Certbot 会改 Nginx 配置并加上自动续期。检查：
+签完把**站点 server 块**的 `ssl_certificate*` 换成
+`/etc/letsencrypt/live/example.com/{fullchain,privkey}.pem`，
+catch-all 块继续用自签证书，然后 `sudo nginx -t && sudo systemctl reload nginx`。
+
+验证续期：
 
 ```bash
-sudo systemctl status certbot.timer
+sudo systemctl list-timers certbot.timer
 sudo certbot renew --dry-run
 ```
 
-浏览器打开 `https://example.com`，确认首页、技能、项目、经历、贡献、博客、联系表单都能打开。
+### 4.5 Cloudflare 侧设置
 
-### 使用 Cloudflare
-
-- 第一次用 Certbot 时，DNS 代理先设为 **仅 DNS**（灰云），签完再开橙色云
-- SSL/TLS 模式用 **Full (strict)**
-- 若改用 Cloudflare 源站证书，不要再走 Let's Encrypt，源站证书仍指向
+- 源站证书有效后，SSL/TLS 模式设为 **Full (strict)**
+- 打开 **Always Use HTTPS**
+- 模板对未知 Host 直接 `return 444`，且 catch-all 只挂自签证书，避免扫描源站
+  IP 时从证书里读出真实域名
+- 想彻底挡住绕过 CF 的直连，把 `80/443` 只放行给
+  <https://www.cloudflare.com/ips/> 的网段（代价是关掉橙色云站点即不可访问）
+- 若改用 Cloudflare 源站证书，就不要再走 Let's Encrypt，源站证书仍指向
   `127.0.0.1:3000` 的 Nginx
+
+浏览器打开 `https://example.com`，确认首页、技能、项目、经历、贡献、博客、联系表单都能打开。
 
 ## 5. Notion Webhook
 

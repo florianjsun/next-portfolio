@@ -55,11 +55,16 @@ Notion / GitHub / Google Forms
 cp .env.copy .env
 ```
 
-`.env` 不要提交到 Git。Compose 会用它做两件事：
+`.env` 不要提交到 Git。Compose 会用它做三件事：
 
 1. **构建参数**：`NEXT_PUBLIC_*` 在 `next build` 时写入前端包。改了这些值必须重新
    `docker compose build`。
-2. **运行时注入**：服务端密钥（Notion、GitHub、Google Forms）只在容器启动时读取，不必写进镜像。
+2. **构建期密钥**：博客列表、博客详情的静态参数和 `sitemap.xml` 都是预渲染的，
+   所以 `next build` 必须能读到 `NOTION_TOKEN` / `NOTION_DATA_SOURCE_ID`，否则
+   镜像里会烤进一个空博客列表，且要等 ISR 过期（6 小时）才会自愈。`.env` 通过
+   BuildKit secret 挂进构建阶段，不会留在镜像层里。**因此 `.env` 必须存在才能
+   `docker compose build`。**
+3. **运行时注入**：服务端密钥（Notion、GitHub、Google Forms）在容器启动时读取。
 
 | 变量                                    | 阶段 | 说明                                     |
 | --------------------------------------- | ---- | ---------------------------------------- |
@@ -373,6 +378,15 @@ docker compose logs web
 **博客为空，或构建/运行报 Notion 配置不完整**
 
 `NOTION_TOKEN` 和 `NOTION_DATA_SOURCE_ID` 必须同时有或同时空。只填一个会抛错。两个都空时博客功能关闭，站点仍可访问。
+
+博客页返回 200 但一篇文章都没有，先确认这两点：
+
+1. 构建时 `.env` 就已经写好了 Notion 变量。它们只在运行时才有的话，
+   `next build` 会预渲染出空列表并烤进镜像。补好 `.env` 后重新
+   `docker compose build && docker compose up -d`。
+2. Notion 里文章的 `Status` 是 `Published` 而不是 `Draft`，且
+   `Title`/`Slug`/`PublishedAt`/`Description`/`Tags`/`CoverImage`/`ReadingTime`/`Featured`
+   九个属性齐全、类型正确。缺一个都会被跳过。
 
 **联系表单 500**
 

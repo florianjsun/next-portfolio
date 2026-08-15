@@ -38,7 +38,15 @@ ENV NEXT_PUBLIC_GOOGLE_MEASUREMENT_ID=$NEXT_PUBLIC_GOOGLE_MEASUREMENT_ID
 ENV NEXT_PUBLIC_GOOGLE_VERIFICATION=$NEXT_PUBLIC_GOOGLE_VERIFICATION
 ENV NEXT_PUBLIC_RESUME_LINK=$NEXT_PUBLIC_RESUME_LINK
 
-RUN corepack enable pnpm && pnpm build
+# Blog pages, their static params and sitemap entries are prerendered, so the
+# Notion credentials have to exist during `next build` or the published posts are
+# baked out as empty for the lifetime of the image. They are mounted as a
+# BuildKit secret rather than an ARG so they never land in an image layer.
+RUN --mount=type=secret,id=build_env \
+  if [ -f /run/secrets/build_env ]; then \
+    set -a; . /run/secrets/build_env; set +a; \
+  fi; \
+  corepack enable pnpm && pnpm build
 
 FROM node:${NODE_VERSION} AS runner
 WORKDIR /app

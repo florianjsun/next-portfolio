@@ -8,6 +8,8 @@ services:
         NEXT_PUBLIC_GOOGLE_MEASUREMENT_ID: ${NEXT_PUBLIC_GOOGLE_MEASUREMENT_ID:-}
         NEXT_PUBLIC_GOOGLE_VERIFICATION: ${NEXT_PUBLIC_GOOGLE_VERIFICATION:-}
         NEXT_PUBLIC_RESUME_LINK: ${NEXT_PUBLIC_RESUME_LINK:-}
+      secrets:
+        - build_env
     image: next-portfolio:latest
     container_name: next-portfolio
     env_file:
@@ -37,3 +39,9 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+
+# Exposed to `next build` only, so prerendered blog pages and the sitemap are
+# complete. Never copied into the image.
+secrets:
+  build_env:
+    file: .env

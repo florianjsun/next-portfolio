@@ -55,31 +55,31 @@ pnpm dev
 
 常用命令：
 
-| 命令 | 作用 |
-| --- | --- |
-| `pnpm dev` | 开发服务器 |
-| `pnpm lint` | ESLint |
-| `pnpm build` | 生产构建 |
-| `pnpm start` | 运行构建产物 |
+| 命令         | 作用                                         |
+| ------------ | -------------------------------------------- |
+| `pnpm dev`   | 开发服务器                                   |
+| `pnpm lint`  | ESLint                                       |
+| `pnpm build` | 生产构建                                     |
+| `pnpm start` | 运行构建产物                                 |
 | `pnpm check` | lint、类型检查、博客 Markdown 测试、Prettier |
 
 ## 环境变量
 
 从 `.env.copy` 复制后按需填写。以 `NEXT_PUBLIC_` 开头的值会打进前端包，不要放密钥。
 
-| 变量 | 说明 |
-| --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | 对外域名；空则用 `config/site.ts` 的默认值 |
-| `NEXT_PUBLIC_GOOGLE_MEASUREMENT_ID` | Google Analytics，可空 |
-| `NEXT_PUBLIC_GOOGLE_VERIFICATION` | Search Console 验证，可空 |
-| `NEXT_PUBLIC_RESUME_LINK` | `/resume` 跳转地址，可空 |
-| `NOTION_TOKEN` / `NOTION_DATA_SOURCE_ID` | 博客数据源，必须成对出现或同时为空 |
-| `NOTION_BLOG_REVALIDATE_SECONDS` | 博客缓存秒数，默认 `900` |
-| `NOTION_WEBHOOK_VERIFICATION_TOKEN` | Webhook HMAC 校验 |
-| `FORMSUBMIT_ID` | FormSubmit 激活哈希；空则用代码里的默认值 |
-| `GOOGLE_FORM_*` | 五项都填时改走 Google Forms |
-| `GITHUB_USERNAME` | 贡献页用户名；缺省用 `config/site.ts` |
-| `GITHUB_TOKEN` | 可选，提高 GitHub API 限额 |
+| 变量                                     | 说明                                       |
+| ---------------------------------------- | ------------------------------------------ |
+| `NEXT_PUBLIC_SITE_URL`                   | 对外域名；空则用 `config/site.ts` 的默认值 |
+| `NEXT_PUBLIC_GOOGLE_MEASUREMENT_ID`      | Google Analytics，可空                     |
+| `NEXT_PUBLIC_GOOGLE_VERIFICATION`        | Search Console 验证，可空                  |
+| `NEXT_PUBLIC_RESUME_LINK`                | `/resume` 跳转地址，可空                   |
+| `NOTION_TOKEN` / `NOTION_DATA_SOURCE_ID` | 博客数据源，必须成对出现或同时为空         |
+| `NOTION_BLOG_REVALIDATE_SECONDS`         | 博客缓存秒数，默认 `900`                   |
+| `NOTION_WEBHOOK_VERIFICATION_TOKEN`      | Webhook HMAC 校验                          |
+| `FORMSUBMIT_ID`                          | FormSubmit 激活哈希；空则用代码里的默认值  |
+| `GOOGLE_FORM_*`                          | 五项都填时改走 Google Forms                |
+| `GITHUB_USERNAME`                        | 贡献页用户名；缺省用 `config/site.ts`      |
+| `GITHUB_TOKEN`                           | 可选，提高 GitHub API 限额                 |
 
 Docker 构建时，`NEXT_PUBLIC_*` 和 Notion 凭证会参与预渲染。改了这些值需要重新 `docker compose build`。细节见 [docs/deploy.md](docs/deploy.md)。
 
@@ -89,17 +89,17 @@ Docker 构建时，`NEXT_PUBLIC_*` 和 Notion 凭证会参与预渲染。改了�
 
 1. 建一个全页数据库，名称建议为 `Blog Posts`，并包含下列属性（名称区分大小写）：
 
-   | 属性 | Notion 类型 | 说明 |
-   | --- | --- | --- |
-   | `Title` | Title | 标题 |
-   | `Slug` | Text | 唯一 kebab-case slug |
-   | `Status` | Status 或 Select | 须包含 `Draft`、`Published` |
-   | `PublishedAt` | Date | 发布日期 |
-   | `Description` | Text | SEO 描述，最多 600 字 |
-   | `Tags` | Multi-select | 最多 20 个 |
-   | `CoverImage` | Text | 站点路径或稳定 HTTPS 地址 |
-   | `ReadingTime` | Number | 可选；详情页会在缺失时估算 |
-   | `Featured` | Checkbox | 是否出现在首页 |
+   | 属性          | Notion 类型      | 说明                        |
+   | ------------- | ---------------- | --------------------------- |
+   | `Title`       | Title            | 标题                        |
+   | `Slug`        | Text             | 唯一 kebab-case slug        |
+   | `Status`      | Status 或 Select | 须包含 `Draft`、`Published` |
+   | `PublishedAt` | Date             | 发布日期                    |
+   | `Description` | Text             | SEO 描述，最多 600 字       |
+   | `Tags`        | Multi-select     | 最多 20 个                  |
+   | `CoverImage`  | Text             | 站点路径或稳定 HTTPS 地址   |
+   | `ReadingTime` | Number           | 可选；详情页会在缺失时估算  |
+   | `Featured`    | Checkbox         | 是否出现在首页              |
 
 2. 创建 Notion [内部集成](https://developers.notion.com/guides/get-started/internal-connections)，授予 **Read content**，并把它加到该数据库。Token 不要暴露给浏览器。
 
@@ -131,18 +131,18 @@ https://portfolio.sunnao.wtf/api/notion-webhook
 
 个人内容集中在 `config/`，改配置即可，不必先改页面组件。
 
-| 内容 | 文件 |
-| --- | --- |
-| 姓名、简介、社交链接、站点 URL | `config/site.ts` |
-| 导航 | `config/routes.ts` |
-| 页面文案与 metadata | `config/pages.ts` |
-| 技能 | `config/skills.ts` |
-| 项目 | `config/projects.ts` |
-| 工作经历 | `config/experience.ts` |
-| 贡献列表条数与缓存 | `config/contributions.ts` |
-| 页脚社交图标 | `config/socials.ts` |
-| 博客正文 | Notion `Blog Posts` |
-| 颜色与明暗主题 | `app/globals.css`（Tailwind v4，没有 `tailwind.config.js`） |
+| 内容                           | 文件                                                        |
+| ------------------------------ | ----------------------------------------------------------- |
+| 姓名、简介、社交链接、站点 URL | `config/site.ts`                                            |
+| 导航                           | `config/routes.ts`                                          |
+| 页面文案与 metadata            | `config/pages.ts`                                           |
+| 技能                           | `config/skills.ts`                                          |
+| 项目                           | `config/projects.ts`                                        |
+| 工作经历                       | `config/experience.ts`                                      |
+| 贡献列表条数与缓存             | `config/contributions.ts`                                   |
+| 页脚社交图标                   | `config/socials.ts`                                         |
+| 博客正文                       | Notion `Blog Posts`                                         |
+| 颜色与明暗主题                 | `app/globals.css`（Tailwind v4，没有 `tailwind.config.js`） |
 
 贡献页读取 `GITHUB_USERNAME`（缺省为 `config/site.ts` 里的用户名）的公开仓库和公开 PR。结果缓存六小时。
 

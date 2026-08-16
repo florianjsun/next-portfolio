@@ -103,9 +103,8 @@ export function ContactForm() {
 
       form.reset();
       openModal({
-        title: "Thankyou!",
-        description:
-          "Your message has been received! I appreciate your contact and will get back to you shortly.",
+        title: "已收到",
+        description: "感谢你的留言，我会尽快回复。",
         icon: SuccessAnimatedIcon,
       });
     } catch (err) {

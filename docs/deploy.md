@@ -69,22 +69,22 @@ cp .env.copy .env
    `docker compose build`。**
 3. **运行时注入**：服务端密钥（Notion、GitHub、联系表单）在容器启动时读取。
 
-| 变量                                    | 阶段 | 说明                                      |
-| --------------------------------------- | ---- | ----------------------------------------- |
-| `NEXT_PUBLIC_SITE_URL`                  | 构建 | 对外域名，空则用 `config/site.ts` 默认值  |
-| `NEXT_PUBLIC_GOOGLE_MEASUREMENT_ID`     | 构建 | Google Analytics，可空                    |
-| `NEXT_PUBLIC_GOOGLE_VERIFICATION`       | 构建 | Search Console 验证，可空                 |
-| `NEXT_PUBLIC_RESUME_LINK`               | 构建 | `/resume` 跳转地址，可空                  |
-| `NOTION_TOKEN`                          | 运行 | Notion 内部集成 token（`ntn_...`）        |
-| `NOTION_DATA_SOURCE_ID`                 | 运行 | 博客数据源 ID，必须和 token 成对出现      |
-| `NOTION_BLOG_REVALIDATE_SECONDS`        | 运行 | 博客缓存秒数，默认 `900`                  |
-| `NOTION_WEBHOOK_VERIFICATION_TOKEN`     | 运行 | Webhook 校验，上线后再填                  |
-| `NOTION_WEBHOOK_LOG_VERIFICATION_TOKEN` | 运行 | 仅首次握手临时设为 `true`                 |
-| `FORMSUBMIT_ID`                         | 运行 | FormSubmit 激活哈希，空则用代码默认值     |
-| `GOOGLE_FORM_LINK`                      | 运行 | 可选，改走 Google Forms                   |
-| `GOOGLE_FORM_FIELD_ID_*`                | 运行 | 仅在使用 Google Forms 时需要              |
-| `GITHUB_USERNAME`                       | 运行 | 贡献页用户名，缺省用 `config/site.ts`     |
-| `GITHUB_TOKEN`                          | 运行 | 可选，提高 GitHub API 限额                |
+| 变量                                    | 阶段 | 说明                                     |
+| --------------------------------------- | ---- | ---------------------------------------- |
+| `NEXT_PUBLIC_SITE_URL`                  | 构建 | 对外域名，空则用 `config/site.ts` 默认值 |
+| `NEXT_PUBLIC_GOOGLE_MEASUREMENT_ID`     | 构建 | Google Analytics，可空                   |
+| `NEXT_PUBLIC_GOOGLE_VERIFICATION`       | 构建 | Search Console 验证，可空                |
+| `NEXT_PUBLIC_RESUME_LINK`               | 构建 | `/resume` 跳转地址，可空                 |
+| `NOTION_TOKEN`                          | 运行 | Notion 内部集成 token（`ntn_...`）       |
+| `NOTION_DATA_SOURCE_ID`                 | 运行 | 博客数据源 ID，必须和 token 成对出现     |
+| `NOTION_BLOG_REVALIDATE_SECONDS`        | 运行 | 博客缓存秒数，默认 `900`                 |
+| `NOTION_WEBHOOK_VERIFICATION_TOKEN`     | 运行 | Webhook 校验，上线后再填                 |
+| `NOTION_WEBHOOK_LOG_VERIFICATION_TOKEN` | 运行 | 仅首次握手临时设为 `true`                |
+| `FORMSUBMIT_ID`                         | 运行 | FormSubmit 激活哈希，空则用代码默认值    |
+| `GOOGLE_FORM_LINK`                      | 运行 | 可选，改走 Google Forms                  |
+| `GOOGLE_FORM_FIELD_ID_*`                | 运行 | 仅在使用 Google Forms 时需要             |
+| `GITHUB_USERNAME`                       | 运行 | 贡献页用户名，缺省用 `config/site.ts`    |
+| `GITHUB_TOKEN`                          | 运行 | 可选，提高 GitHub API 限额               |
 
 `NEXT_PUBLIC_*` 会出现在浏览器里，不要放密钥。
 

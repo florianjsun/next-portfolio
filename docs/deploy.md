@@ -18,7 +18,7 @@ Nginx（证书、反代）
 Docker 容器 next-portfolio
   │  node server.js
   ▼
-Notion / GitHub / Google Forms
+Notion / GitHub / email inbox
 ```
 
 容器只监听本机 `127.0.0.1:3000`，不直接暴露到公网。公网只开放
@@ -67,23 +67,24 @@ cp .env.copy .env
    镜像里会烤进一个空博客列表，且要等 ISR 过期（6 小时）才会自愈。`.env` 通过
    BuildKit secret 挂进构建阶段，不会留在镜像层里。**因此 `.env` 必须存在才能
    `docker compose build`。**
-3. **运行时注入**：服务端密钥（Notion、GitHub、Google Forms）在容器启动时读取。
+3. **运行时注入**：服务端密钥（Notion、GitHub、联系表单）在容器启动时读取。
 
-| 变量                                    | 阶段 | 说明                                     |
-| --------------------------------------- | ---- | ---------------------------------------- |
-| `NEXT_PUBLIC_SITE_URL`                  | 构建 | 对外域名，空则用 `config/site.ts` 默认值 |
-| `NEXT_PUBLIC_GOOGLE_MEASUREMENT_ID`     | 构建 | Google Analytics，可空                   |
-| `NEXT_PUBLIC_GOOGLE_VERIFICATION`       | 构建 | Search Console 验证，可空                |
-| `NEXT_PUBLIC_RESUME_LINK`               | 构建 | `/resume` 跳转地址，可空                 |
-| `NOTION_TOKEN`                          | 运行 | Notion 内部集成 token（`ntn_...`）       |
-| `NOTION_DATA_SOURCE_ID`                 | 运行 | 博客数据源 ID，必须和 token 成对出现     |
-| `NOTION_BLOG_REVALIDATE_SECONDS`        | 运行 | 博客缓存秒数，默认 `900`                 |
-| `NOTION_WEBHOOK_VERIFICATION_TOKEN`     | 运行 | Webhook 校验，上线后再填                 |
-| `NOTION_WEBHOOK_LOG_VERIFICATION_TOKEN` | 运行 | 仅首次握手临时设为 `true`                |
-| `GOOGLE_FORM_LINK`                      | 运行 | 联系表单转发地址                         |
-| `GOOGLE_FORM_FIELD_ID_*`                | 运行 | 表单字段 ID                              |
-| `GITHUB_USERNAME`                       | 运行 | 贡献页用户名，缺省用 `config/site.ts`    |
-| `GITHUB_TOKEN`                          | 运行 | 可选，提高 GitHub API 限额               |
+| 变量                                    | 阶段 | 说明                                      |
+| --------------------------------------- | ---- | ----------------------------------------- |
+| `NEXT_PUBLIC_SITE_URL`                  | 构建 | 对外域名，空则用 `config/site.ts` 默认值  |
+| `NEXT_PUBLIC_GOOGLE_MEASUREMENT_ID`     | 构建 | Google Analytics，可空                    |
+| `NEXT_PUBLIC_GOOGLE_VERIFICATION`       | 构建 | Search Console 验证，可空                 |
+| `NEXT_PUBLIC_RESUME_LINK`               | 构建 | `/resume` 跳转地址，可空                  |
+| `NOTION_TOKEN`                          | 运行 | Notion 内部集成 token（`ntn_...`）        |
+| `NOTION_DATA_SOURCE_ID`                 | 运行 | 博客数据源 ID，必须和 token 成对出现      |
+| `NOTION_BLOG_REVALIDATE_SECONDS`        | 运行 | 博客缓存秒数，默认 `900`                  |
+| `NOTION_WEBHOOK_VERIFICATION_TOKEN`     | 运行 | Webhook 校验，上线后再填                  |
+| `NOTION_WEBHOOK_LOG_VERIFICATION_TOKEN` | 运行 | 仅首次握手临时设为 `true`                 |
+| `FORMSUBMIT_ID`                         | 运行 | FormSubmit 激活哈希，空则用代码默认值     |
+| `GOOGLE_FORM_LINK`                      | 运行 | 可选，改走 Google Forms                   |
+| `GOOGLE_FORM_FIELD_ID_*`                | 运行 | 仅在使用 Google Forms 时需要              |
+| `GITHUB_USERNAME`                       | 运行 | 贡献页用户名，缺省用 `config/site.ts`     |
+| `GITHUB_TOKEN`                          | 运行 | 可选，提高 GitHub API 限额                |
 
 `NEXT_PUBLIC_*` 会出现在浏览器里，不要放密钥。
 
@@ -545,12 +546,15 @@ docker compose logs web
    `Title`/`Slug`/`PublishedAt`/`Description`/`Tags`/`CoverImage`/`ReadingTime`/`Featured`
    九个属性齐全、类型正确。缺一个都会被跳过。
 
-**联系表单 500**
+**联系表单失败**
 
-检查全部 `GOOGLE_FORM_*` 是否写入容器：
+默认经 FormSubmit 发到站点邮箱。激活信里的随机字符串对应
+`FORMSUBMIT_ID`（已内置默认值）。
+
+如果改走 Google Forms，再检查全部 `GOOGLE_FORM_*` 是否写入容器：
 
 ```bash
-docker compose exec web printenv | grep GOOGLE_FORM
+docker compose exec web printenv | grep -E "FORMSUBMIT_ID|GOOGLE_FORM"
 ```
 
 **Webhook 401 / 503**

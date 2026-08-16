@@ -19,6 +19,7 @@ export const siteConfig = {
   name: "Sun Jing - Java & AI应用工程师",
   authorName: "Sun Jing",
   username: "florianjsun",
+  email: "florianjsun@gmail.com",
   description:
     "Sun Jing - 全栈 & AI应用工程师，正在探索如何用AI为传统业务提速。欢迎浏览我的项目、经历与贡献",
   url: resolveSiteUrl(),

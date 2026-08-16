@@ -1,8 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertTriangle } from "lucide-react";
-import type { ElementType } from "react";
+import type { BaseSyntheticEvent, ElementType } from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -18,7 +17,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { contactSchema, type ContactFormValues } from "@/lib/contact";
+import {
+  buildContactMailtoUrl,
+  contactSchema,
+  type ContactFormValues,
+} from "@/lib/contact";
 
 interface ModalData {
   title: string;
@@ -53,6 +56,12 @@ function SuccessAnimatedIcon() {
   );
 }
 
+function readHoneypot(event?: BaseSyntheticEvent): string {
+  const formElement = event?.currentTarget;
+  if (!(formElement instanceof HTMLFormElement)) return "";
+  return String(new FormData(formElement).get("website") ?? "");
+}
+
 export function ContactForm() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState<ModalData | null>(null);
@@ -72,14 +81,20 @@ export function ContactForm() {
     },
   });
 
-  async function onSubmit(values: ContactFormValues) {
+  async function onSubmit(
+    values: ContactFormValues,
+    event?: BaseSyntheticEvent
+  ) {
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          ...values,
+          website: readHoneypot(event),
+        }),
       });
 
       if (!response.ok) {
@@ -95,12 +110,8 @@ export function ContactForm() {
       });
     } catch (err) {
       console.error("Failed to send the contact message", err);
-      openModal({
-        title: "Something went wrong!",
-        description:
-          "Your message could not be sent. Please try again later or reach out through the social links below.",
-        icon: AlertTriangle,
-      });
+      // Opens the visitor's mail client; not a page navigation.
+      window.location.assign(buildContactMailtoUrl(values));
     }
   }
 
@@ -109,7 +120,7 @@ export function ContactForm() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 min-w-full"
+          className="relative space-y-8 min-w-full"
         >
           <FormField
             control={form.control}
@@ -163,7 +174,22 @@ export function ContactForm() {
               </FormItem>
             )}
           />
-          <Button type="submit">Submit</Button>
+          <div
+            className="absolute -left-[9999px] h-0 w-0 overflow-hidden"
+            aria-hidden="true"
+          >
+            <label htmlFor="contact-website">Website</label>
+            <input
+              id="contact-website"
+              type="text"
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+            />
+          </div>
+          <Button type="submit" disabled={form.formState.isSubmitting}>
+            {form.formState.isSubmitting ? "Sending..." : "Submit"}
+          </Button>
         </form>
       </Form>
       <CustomModal

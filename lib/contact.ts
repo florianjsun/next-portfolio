@@ -1,5 +1,7 @@
 import * as z from "zod/mini";
 
+import { siteConfig } from "@/config/site";
+
 export const contactSchema = z.object({
   name: z.string().check(
     z.minLength(3, {
@@ -33,3 +35,17 @@ export const contactSchema = z.object({
 });
 
 export type ContactFormValues = z.infer<typeof contactSchema>;
+
+export function buildContactMailtoUrl(values: ContactFormValues): string {
+  const lines = [
+    `Name: ${values.name}`,
+    `Email: ${values.email}`,
+    values.social ? `Social: ${values.social}` : null,
+    "",
+    values.message,
+  ].filter((line): line is string => line !== null);
+
+  const subject = encodeURIComponent(`Portfolio contact from ${values.name}`);
+  const body = encodeURIComponent(lines.join("\n"));
+  return `mailto:${siteConfig.email}?subject=${subject}&body=${body}`;
+}

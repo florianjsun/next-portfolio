@@ -1,4 +1,5 @@
 import { Icons } from "@/components/common/icons";
+import { siteConfig } from "@/config/site";
 
 interface SocialInterface {
   name: string;
@@ -30,6 +31,6 @@ export const socialLinks: SocialInterface[] = [
     name: "Gmail",
     username: "florianjsun",
     icon: Icons.gmail,
-    link: "mailto:florianjsun@gmail.com",
+    link: `mailto:${siteConfig.email}`,
   },
 ];

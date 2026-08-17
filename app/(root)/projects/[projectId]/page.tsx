@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import { Icons } from "@/components/common/icons";
 import ProjectDescription from "@/components/projects/project-description";
@@ -31,7 +31,10 @@ export async function generateMetadata({
   const project = projects.find((project) => project.id === projectId);
 
   if (!project) {
-    return { title: "Project Not Found" };
+    return {
+      title: "Project Not Found",
+      robots: { index: false, follow: false },
+    };
   }
 
   return createPageMetadata({
@@ -45,7 +48,7 @@ export default async function Project({ params }: ProjectPageProps) {
   const { projectId } = await params;
   const project = projects.find((project) => project.id === projectId);
   if (!project) {
-    redirect("/projects");
+    notFound();
   }
 
   return (
@@ -111,7 +114,7 @@ export default async function Project({ params }: ProjectPageProps) {
             />
 
             <div className="flex-1 text-left leading-tight">
-              <p className="font-medium">Florian Sun</p>
+              <p className="font-medium">{siteConfig.authorName}</p>
               <p className="text-[12px] text-muted-foreground">
                 @{siteConfig.username}
               </p>

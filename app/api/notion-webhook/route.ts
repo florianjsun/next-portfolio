@@ -98,8 +98,11 @@ export async function POST(request: Request) {
   }
 
   revalidateTag(BLOG_CACHE_TAG, { expire: 0 });
-  revalidatePath("/");
-  revalidatePath("/blogs");
+  // Layout type invalidates nested pages, including /blogs/[slug].
+  // Root layout also clears the Client Cache for the marketing routes.
+  revalidatePath("/", "layout");
+  revalidatePath("/blogs", "layout");
+  revalidatePath("/blogs/[slug]", "page");
   revalidatePath("/sitemap.xml");
 
   return NextResponse.json({ ok: true });

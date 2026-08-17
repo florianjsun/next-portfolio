@@ -13,8 +13,10 @@
     "lint": "eslint . --max-warnings=0",
     "typecheck": "next typegen && tsc --noEmit",
     "format:check": "prettier --check .",
-    "check": "pnpm lint && pnpm typecheck && pnpm test:blog-markdown && pnpm format:check",
-    "test:blog-markdown": "node scripts/test-blog-markdown.mjs"
+    "check": "pnpm lint && pnpm typecheck && pnpm test:blog-markdown && pnpm test:blog-resilience && pnpm test:contact-delivery && pnpm format:check",
+    "test:blog-markdown": "node scripts/test-blog-markdown.mjs",
+    "test:blog-resilience": "node scripts/test-blog-resilience.mjs",
+    "test:contact-delivery": "node scripts/test-contact-delivery.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.7.1",

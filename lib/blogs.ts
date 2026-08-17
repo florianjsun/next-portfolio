@@ -87,6 +87,7 @@ const notionBlogRecordSchema = z.object({
 
 let notionClient: Client | undefined;
 let didWarnAboutMissingConfig = false;
+let didWarnAboutIncompleteConfig = false;
 
 function getRevalidateSeconds(): number {
   const value = Number(process.env.NOTION_BLOG_REVALIDATE_SECONDS);
@@ -95,7 +96,7 @@ function getRevalidateSeconds(): number {
     : DEFAULT_REVALIDATE_SECONDS;
 }
 
-function getNotionConfig(): NotionConfig | null {
+export function getNotionConfig(): NotionConfig | null {
   const token = process.env.NOTION_TOKEN?.trim();
   const dataSourceId = process.env.NOTION_DATA_SOURCE_ID?.trim();
 
@@ -110,10 +111,14 @@ function getNotionConfig(): NotionConfig | null {
   }
 
   if (!token || !dataSourceId) {
-    throw new Error(
-      "Notion blog configuration is incomplete: NOTION_TOKEN and " +
-        "NOTION_DATA_SOURCE_ID must be set together"
-    );
+    if (!didWarnAboutIncompleteConfig) {
+      console.warn(
+        "Notion blog is disabled: NOTION_TOKEN and " +
+          "NOTION_DATA_SOURCE_ID must both be set"
+      );
+      didWarnAboutIncompleteConfig = true;
+    }
+    return null;
   }
 
   return { token, dataSourceId };
@@ -251,36 +256,64 @@ function getCheckboxProperty(page: PageObjectResponse): boolean {
   return property.checkbox;
 }
 
-function mapNotionPage(page: PageObjectResponse): NotionBlogRecord {
-  if (getStatusProperty(page) !== "Published") {
-    throw new Error(
-      `Notion query returned non-published page ${page.id}; check Status`
-    );
+export function tryMapPublishedBlogRecord(
+  page: PageObjectResponse
+): NotionBlogRecord | null {
+  try {
+    if (getStatusProperty(page) !== "Published") {
+      console.warn(`Skipping unpublished Notion blog page ${page.id}`);
+      return null;
+    }
+
+    const coverImage = getTextProperty(page, "CoverImage") || undefined;
+    const candidate = {
+      notionPageId: page.id,
+      slug: getTextProperty(page, "Slug"),
+      title: getTextProperty(page, "Title"),
+      date: getDateProperty(page),
+      updatedAt: page.last_edited_time,
+      description: getTextProperty(page, "Description"),
+      tags: getTagsProperty(page),
+      coverImage,
+      readingTime: getNumberProperty(page),
+      featured: getCheckboxProperty(page),
+    };
+
+    const parsed = notionBlogRecordSchema.safeParse(candidate);
+
+    if (!parsed.success) {
+      console.warn(
+        `Skipping invalid Notion blog page ${page.id}:`,
+        z.prettifyError(parsed.error)
+      );
+      return null;
+    }
+
+    return parsed.data;
+  } catch (error) {
+    console.warn(`Skipping invalid Notion blog page ${page.id}`, error);
+    return null;
+  }
+}
+
+export function uniquePublishedBlogRecords<T extends { slug: string }>(
+  records: readonly T[]
+): T[] {
+  const seen = new Set<string>();
+  const unique: T[] = [];
+
+  for (const record of records) {
+    if (seen.has(record.slug)) {
+      console.warn(
+        `Skipping duplicate published Notion blog slug: ${record.slug}`
+      );
+      continue;
+    }
+    seen.add(record.slug);
+    unique.push(record);
   }
 
-  const coverImage = getTextProperty(page, "CoverImage") || undefined;
-  const candidate = {
-    notionPageId: page.id,
-    slug: getTextProperty(page, "Slug"),
-    title: getTextProperty(page, "Title"),
-    date: getDateProperty(page),
-    updatedAt: page.last_edited_time,
-    description: getTextProperty(page, "Description"),
-    tags: getTagsProperty(page),
-    coverImage,
-    readingTime: getNumberProperty(page),
-    featured: getCheckboxProperty(page),
-  };
-
-  const parsed = notionBlogRecordSchema.safeParse(candidate);
-
-  if (!parsed.success) {
-    throw new Error(
-      `Invalid Notion blog page ${page.id}: ${z.prettifyError(parsed.error)}`
-    );
-  }
-
-  return parsed.data;
+  return unique;
 }
 
 async function getStatusPropertyType(
@@ -339,66 +372,73 @@ async function getStatusPropertyType(
 async function loadPublishedBlogRecords(
   dataSourceId: string
 ): Promise<NotionBlogRecord[]> {
-  const config = getNotionConfig();
-  if (!config || config.dataSourceId !== dataSourceId) {
-    throw new Error("Notion blog data source configuration changed");
-  }
-
-  const client = getNotionClient(config);
-  const statusPropertyType = await getStatusPropertyType(
-    client,
-    config.dataSourceId
-  );
-  const filter: NonNullable<QueryDataSourceParameters["filter"]> =
-    statusPropertyType === "status"
-      ? {
-          property: "Status",
-          status: { equals: "Published" },
-        }
-      : {
-          property: "Status",
-          select: { equals: "Published" },
-        };
-
   const records: NotionBlogRecord[] = [];
-  let startCursor: string | null | undefined;
 
-  do {
-    const response = await client.dataSources.query({
-      data_source_id: config.dataSourceId,
-      filter,
-      sorts: [{ property: "PublishedAt", direction: "descending" }],
-      filter_properties: [...PROPERTY_NAMES],
-      page_size: 100,
-      result_type: "page",
-      start_cursor: startCursor,
-    });
+  try {
+    const config = getNotionConfig();
+    if (!config || config.dataSourceId !== dataSourceId) {
+      console.warn(
+        "Notion blog is unavailable: data source configuration is " +
+          "missing or changed"
+      );
+      return [];
+    }
 
-    for (const result of response.results) {
-      if (!isFullPage(result)) {
-        throw new Error(
-          `Notion returned an incomplete blog page response for ${result.id}`
-        );
+    const client = getNotionClient(config);
+    const statusPropertyType = await getStatusPropertyType(
+      client,
+      config.dataSourceId
+    );
+    const filter: NonNullable<QueryDataSourceParameters["filter"]> =
+      statusPropertyType === "status"
+        ? {
+            property: "Status",
+            status: { equals: "Published" },
+          }
+        : {
+            property: "Status",
+            select: { equals: "Published" },
+          };
+
+    let startCursor: string | null | undefined;
+
+    do {
+      const response = await client.dataSources.query({
+        data_source_id: config.dataSourceId,
+        filter,
+        sorts: [{ property: "PublishedAt", direction: "descending" }],
+        filter_properties: [...PROPERTY_NAMES],
+        page_size: 100,
+        result_type: "page",
+        start_cursor: startCursor,
+      });
+
+      for (const result of response.results) {
+        if (!isFullPage(result)) {
+          console.warn(
+            `Skipping incomplete Notion blog page response ${result.id}`
+          );
+          continue;
+        }
+
+        const record = tryMapPublishedBlogRecord(result);
+        if (record) {
+          records.push(record);
+        }
       }
-      records.push(mapNotionPage(result));
-    }
 
-    if (response.request_status?.type === "incomplete") {
-      throw new Error("Notion blog query reached its result limit");
-    }
+      if (response.request_status?.type === "incomplete") {
+        console.warn("Notion blog query reached its result limit");
+        break;
+      }
 
-    startCursor = response.has_more ? response.next_cursor : undefined;
-  } while (startCursor);
-
-  const slugs = new Set<string>();
-  for (const record of records) {
-    if (slugs.has(record.slug)) {
-      throw new Error(`Duplicate published Notion blog slug: ${record.slug}`);
-    }
-    slugs.add(record.slug);
+      startCursor = response.has_more ? response.next_cursor : undefined;
+    } while (startCursor);
+  } catch (error) {
+    console.error("Failed to load published Notion blog records", error);
   }
 
-  return records.sort(
+  return uniquePublishedBlogRecords(records).sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
 }
@@ -413,12 +453,17 @@ const getCachedPublishedBlogRecords = unstable_cache(
 );
 
 async function getPublishedBlogRecords(): Promise<NotionBlogRecord[]> {
-  const config = getNotionConfig();
-  if (!config) {
+  try {
+    const config = getNotionConfig();
+    if (!config) {
+      return [];
+    }
+
+    return await getCachedPublishedBlogRecords(config.dataSourceId);
+  } catch (error) {
+    console.error("Failed to load published Notion blog records", error);
     return [];
   }
-
-  return getCachedPublishedBlogRecords(config.dataSourceId);
 }
 
 async function loadBlogPost(
@@ -429,7 +474,11 @@ async function loadBlogPost(
 ): Promise<{ contentHtml: string; readingTime: number } | null> {
   const config = getNotionConfig();
   if (!config || config.dataSourceId !== dataSourceId) {
-    throw new Error("Notion blog data source configuration changed");
+    console.warn(
+      "Notion blog is unavailable: data source configuration is " +
+        "missing or changed"
+    );
+    return null;
   }
 
   try {
@@ -439,9 +488,10 @@ async function loadBlogPost(
     });
 
     if (response.truncated) {
-      throw new Error(
+      console.warn(
         `Notion truncated blog page ${notionPageId}; reduce its size`
       );
+      return null;
     }
 
     if (response.unknown_block_ids.length > 0) {
@@ -465,7 +515,11 @@ async function loadBlogPost(
     ) {
       return null;
     }
-    throw error;
+    console.error(
+      `Failed to load Notion blog page ${notionPageId} (${slug})`,
+      error
+    );
+    return null;
   }
 }
 
@@ -492,52 +546,73 @@ function toBlogMeta(record: NotionBlogRecord): BlogMeta {
   };
 }
 
+async function withBlogFallback<T>(
+  fallback: T,
+  context: string,
+  loader: () => Promise<T>
+): Promise<T> {
+  try {
+    return await loader();
+  } catch (error) {
+    console.error(`Failed to load Notion blogs (${context})`, error);
+    return fallback;
+  }
+}
+
 export async function getAllBlogSlugs(): Promise<string[]> {
-  const records = await getPublishedBlogRecords();
-  return records.map((record) => record.slug);
+  return withBlogFallback([], "slugs", async () => {
+    const records = await getPublishedBlogRecords();
+    return records.map((record) => record.slug);
+  });
 }
 
 export async function getAllBlogsMeta(): Promise<BlogMeta[]> {
-  const records = await getPublishedBlogRecords();
-  return records.map(toBlogMeta);
+  return withBlogFallback([], "metadata", async () => {
+    const records = await getPublishedBlogRecords();
+    return records.map(toBlogMeta);
+  });
 }
 
 export const getBlogPost = cache(
   async (slug: string): Promise<BlogPost | null> => {
-    if (!SLUG_PATTERN.test(slug) || slug.length > 96) {
-      return null;
-    }
+    return withBlogFallback(null, `post ${slug}`, async () => {
+      if (!SLUG_PATTERN.test(slug) || slug.length > 96) {
+        return null;
+      }
 
-    const records = await getPublishedBlogRecords();
-    const record = records.find((item) => item.slug === slug);
+      const records = await getPublishedBlogRecords();
+      const record = records.find((item) => item.slug === slug);
 
-    if (!record) {
-      return null;
-    }
+      if (!record) {
+        return null;
+      }
 
-    const cachedContent = await getCachedBlogPost(
-      record.slug,
-      record.notionPageId,
-      record.updatedAt,
-      getNotionConfig()?.dataSourceId ?? ""
-    );
+      const cachedContent = await getCachedBlogPost(
+        record.slug,
+        record.notionPageId,
+        record.updatedAt,
+        getNotionConfig()?.dataSourceId ?? ""
+      );
 
-    if (!cachedContent) {
-      return null;
-    }
+      if (!cachedContent) {
+        return null;
+      }
 
-    return {
-      ...toBlogMeta(record),
-      ...cachedContent,
-      readingTime: record.readingTime ?? cachedContent.readingTime,
-    };
+      return {
+        ...toBlogMeta(record),
+        ...cachedContent,
+        readingTime: record.readingTime ?? cachedContent.readingTime,
+      };
+    });
   }
 );
 
 export async function getFeaturedBlogs(): Promise<BlogMeta[]> {
-  const all = await getAllBlogsMeta();
-  const featured = all.filter((blog) => blog.featured);
-  return featured.length > 0 ? featured.slice(0, 3) : all.slice(0, 3);
+  return withBlogFallback([], "featured", async () => {
+    const all = await getAllBlogsMeta();
+    const featured = all.filter((blog) => blog.featured);
+    return featured.length > 0 ? featured.slice(0, 3) : all.slice(0, 3);
+  });
 }
 
 export function estimateReadingTime(content: string): number {

@@ -81,6 +81,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   const googleMeasurementId = process.env.NEXT_PUBLIC_GOOGLE_MEASUREMENT_ID;
+  const convotToken = process.env.NEXT_PUBLIC_CONVOT_TOKEN?.trim();
+  const convotApiUrl = process.env.NEXT_PUBLIC_CONVOT_API_URL?.trim();
 
   return (
     <html lang="zh-CN" suppressHydrationWarning>
@@ -103,12 +105,14 @@ export default function RootLayout({ children }: RootLayoutProps) {
         {googleMeasurementId ? (
           <GoogleAnalytics gaId={googleMeasurementId} />
         ) : null}
-        <Script
-          src="https://convot.xyz/widget.js"
-          data-token="3vpr28Va7E8luRq8DMOStAr9tefOCVqifQ28fpp6grrKS4zflNRZQjQpmeu4os_2nuLmmh1DOshndiN5O1vvGg"
-          data-api-url="https://api.convot.xyz"
-          strategy="afterInteractive"
-        />
+        {convotToken ? (
+          <Script
+            src="https://convot.xyz/widget.js"
+            data-token={convotToken}
+            data-api-url={convotApiUrl}
+            strategy="afterInteractive"
+          />
+        ) : null}
       </body>
     </html>
   );

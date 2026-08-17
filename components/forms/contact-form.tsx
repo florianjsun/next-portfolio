@@ -27,6 +27,8 @@ interface ModalData {
   title: string;
   description: string;
   icon: ElementType;
+  actionLabel?: string;
+  actionValues?: ContactFormValues;
 }
 
 function SuccessAnimatedIcon() {
@@ -54,6 +56,57 @@ function SuccessAnimatedIcon() {
       </svg>
     </div>
   );
+}
+
+function ErrorIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height="5rem"
+      width="5rem"
+      viewBox="0 0 48 48"
+      aria-hidden="true"
+    >
+      <circle
+        cx="24"
+        cy="24"
+        r="22"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="3"
+      />
+      <path
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="4"
+        strokeLinecap="round"
+        d="M16 16l16 16M32 16L16 32"
+      />
+    </svg>
+  );
+}
+
+function getErrorModalData(
+  status: number | null,
+  values: ContactFormValues
+): ModalData {
+  if (status === 429) {
+    return {
+      title: "请稍后再试",
+      description: "提交过于频繁，请稍后再试。",
+      icon: ErrorIcon,
+      actionLabel: "改用邮件发送",
+      actionValues: values,
+    };
+  }
+
+  return {
+    title: "发送失败",
+    description: "留言未能送达，请稍后重试。",
+    icon: ErrorIcon,
+    actionLabel: "改用邮件发送",
+    actionValues: values,
+  };
 }
 
 function readHoneypot(event?: BaseSyntheticEvent): string {
@@ -98,7 +151,8 @@ export function ContactForm() {
       });
 
       if (!response.ok) {
-        throw new Error(`Request failed with status ${response.status}`);
+        openModal(getErrorModalData(response.status, values));
+        return;
       }
 
       form.reset();
@@ -109,8 +163,7 @@ export function ContactForm() {
       });
     } catch (err) {
       console.error("Failed to send the contact message", err);
-      // Opens the visitor's mail client; not a page navigation.
-      window.location.assign(buildContactMailtoUrl(values));
+      openModal(getErrorModalData(null, values));
     }
   }
 
@@ -197,6 +250,17 @@ export function ContactForm() {
         icon={modalData?.icon ?? null}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        actionLabel={modalData?.actionLabel}
+        onAction={
+          modalData?.actionValues
+            ? () => {
+                const mailtoValues = modalData.actionValues;
+                if (!mailtoValues) return;
+                setIsModalOpen(false);
+                window.location.assign(buildContactMailtoUrl(mailtoValues));
+              }
+            : undefined
+        }
       />
     </>
   );

@@ -50,18 +50,13 @@ export default async function IndexPage() {
     sameAs: [siteConfig.links.github, siteConfig.links.twitter],
   };
 
-  // Structured data for website as a software application (template)
-  const softwareSchema = {
+  const websiteSchema = {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: "Next.js Portfolio",
-    applicationCategory: "DeveloperApplication",
-    operatingSystem: "Web",
-    offers: {
-      "@type": "Offer",
-      price: "0",
-      priceCurrency: "CNY",
-    },
+    "@type": "WebSite",
+    name: siteConfig.name,
+    url: siteConfig.url,
+    description: siteConfig.description,
+    inLanguage: "zh-CN",
     author: {
       "@type": "Person",
       name: siteConfig.authorName,
@@ -77,7 +72,7 @@ export default async function IndexPage() {
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(softwareSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(websiteSchema) }}
       />
 
       <section className="relative left-1/2 isolate flex min-h-[calc(100svh-5rem)] w-screen -translate-x-1/2 items-center overflow-hidden py-12 md:py-16">

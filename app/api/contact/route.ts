@@ -4,6 +4,7 @@ import { contactSchema } from "@/lib/contact";
 import {
   deliverContactMessage,
   getClientIp,
+  isAllowedContactOrigin,
   isContactRateLimited,
   readHoneypot,
   stripHoneypot,
@@ -13,6 +14,10 @@ import { readRequestBody } from "@/lib/http";
 const MAX_CONTACT_BODY_BYTES = 16 * 1024;
 
 export async function POST(req: Request) {
+  if (!isAllowedContactOrigin(req)) {
+    return new NextResponse("Forbidden", { status: 403 });
+  }
+
   const contentType = req.headers.get("content-type") ?? "";
   if (!/^application\/json(?:\s*;|$)/i.test(contentType)) {
     return new NextResponse("Content-Type must be application/json", {

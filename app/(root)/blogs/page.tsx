@@ -49,6 +49,7 @@ export default async function BlogsPage() {
     name: `${siteConfig.authorName} — Blog`,
     description: pagesConfig.blogs.metadata.description,
     url: `${siteConfig.url}/blogs`,
+    inLanguage: "zh-CN",
     isPartOf: {
       "@type": "WebSite",
       name: siteConfig.name,
@@ -64,6 +65,7 @@ export default async function BlogsPage() {
       name: `${siteConfig.authorName}'s Blog`,
       description: pagesConfig.blogs.metadata.description,
       url: `${siteConfig.url}/blogs`,
+      inLanguage: "zh-CN",
       author: {
         "@type": "Person",
         name: siteConfig.authorName,

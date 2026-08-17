@@ -128,7 +128,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     ...(post.readingTime && {
       timeRequired: `PT${post.readingTime}M`,
     }),
-    inLanguage: "en-US",
+    inLanguage: "zh-CN",
     isPartOf: {
       "@type": "Blog",
       name: `${siteConfig.authorName}'s Blog`,

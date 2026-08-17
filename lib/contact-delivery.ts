@@ -8,9 +8,7 @@ const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
 const RATE_LIMIT_MAX = 5;
 const recentSubmissions = new Map<string, number[]>();
 
-// FormSubmit activation hash for portfolio.sunnao.wtf/contact.
-// Hides the inbox address from the submission URL.
-const DEFAULT_FORMSUBMIT_ID = "ea503ee8e4fc2b83da9810f70d0861a7";
+const LOCAL_DEV_HOSTS = new Set(["localhost", "127.0.0.1", "::1"]);
 
 type GoogleFormConfig = {
   formLink: string;
@@ -20,31 +18,86 @@ type GoogleFormConfig = {
   fieldIdSocial: string;
 };
 
-function getFormSubmitId(): string {
-  return process.env.FORMSUBMIT_ID?.trim() || DEFAULT_FORMSUBMIT_ID;
+function getFormSubmitId(): string | null {
+  const id = process.env.FORMSUBMIT_ID?.trim();
+  return id || null;
+}
+
+function isLocalDevOrigin(origin: string): boolean {
+  let url: URL;
+  try {
+    url = new URL(origin);
+  } catch {
+    return false;
+  }
+
+  if (url.protocol !== "http:" && url.protocol !== "https:") {
+    return false;
+  }
+
+  const host = url.hostname.replace(/^\[|\]$/g, "");
+  return LOCAL_DEV_HOSTS.has(host);
+}
+
+function readTrustedOrigin(value: string): string | null {
+  try {
+    const origin = new URL(value).origin;
+    return origin === "null" ? null : origin;
+  } catch {
+    return null;
+  }
+}
+
+export function isAllowedContactOrigin(request: Request): boolean {
+  const originHeader = request.headers.get("origin")?.trim();
+  const refererHeader = request.headers.get("referer")?.trim();
+  const rawOrigin = originHeader || refererHeader;
+  if (!rawOrigin) return false;
+
+  const requestOrigin = readTrustedOrigin(rawOrigin);
+  if (!requestOrigin) return false;
+
+  let siteOrigin: string;
+  try {
+    siteOrigin = new URL(siteConfig.url).origin;
+  } catch {
+    siteOrigin = siteConfig.url;
+  }
+
+  return requestOrigin === siteOrigin || isLocalDevOrigin(requestOrigin);
 }
 
 export function getClientIp(request: Request): string {
-  const cfIp = request.headers.get("cf-connecting-ip")?.trim();
-  if (cfIp) return cfIp;
-
-  const forwarded = request.headers.get("x-forwarded-for");
-  if (forwarded) {
-    const first = forwarded.split(",")[0]?.trim();
-    if (first) return first;
-  }
-
-  return request.headers.get("x-real-ip")?.trim() || "unknown";
+  return request.headers.get("cf-connecting-ip")?.trim() || "unknown";
 }
 
-export function isContactRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const recent = (recentSubmissions.get(ip) ?? []).filter(
-    (timestamp) => now - timestamp < RATE_LIMIT_WINDOW_MS
-  );
+export function resetContactRateLimits(): void {
+  recentSubmissions.clear();
+}
 
+export function getContactRateLimitSize(): number {
+  return recentSubmissions.size;
+}
+
+function pruneContactRateLimits(now: number): void {
+  for (const [ip, timestamps] of recentSubmissions) {
+    const recent = timestamps.filter(
+      (timestamp) => now - timestamp < RATE_LIMIT_WINDOW_MS
+    );
+
+    if (recent.length === 0) {
+      recentSubmissions.delete(ip);
+    } else if (recent.length !== timestamps.length) {
+      recentSubmissions.set(ip, recent);
+    }
+  }
+}
+
+export function isContactRateLimited(ip: string, now = Date.now()): boolean {
+  pruneContactRateLimits(now);
+
+  const recent = recentSubmissions.get(ip) ?? [];
   if (recent.length >= RATE_LIMIT_MAX) {
-    recentSubmissions.set(ip, recent);
     return true;
   }
 
@@ -131,6 +184,13 @@ function isTruthySuccess(value: unknown): boolean {
   return value === true || value === "true";
 }
 
+export function isSuccessfulGoogleFormResponse(response: {
+  ok: boolean;
+  status: number;
+}): boolean {
+  return response.ok || response.status === 302 || response.status === 303;
+}
+
 async function deliverViaGoogleForm(
   values: ContactFormValues,
   config: GoogleFormConfig
@@ -150,18 +210,20 @@ async function deliverViaGoogleForm(
     redirect: "manual",
   });
 
-  // Google often answers 401 / 302 for a successful formResponse POST.
-  if (response.ok || response.status === 401 || response.status === 302) {
+  if (isSuccessfulGoogleFormResponse(response)) {
     return;
   }
 
   throw new Error(`Google Form submission failed (${response.status})`);
 }
 
-async function deliverViaFormSubmit(values: ContactFormValues): Promise<void> {
+async function deliverViaFormSubmit(
+  values: ContactFormValues,
+  formSubmitId: string
+): Promise<void> {
   const origin = siteConfig.url;
   const response = await fetch(
-    `https://formsubmit.co/ajax/${encodeURIComponent(getFormSubmitId())}`,
+    `https://formsubmit.co/ajax/${encodeURIComponent(formSubmitId)}`,
     {
       method: "POST",
       headers: {
@@ -202,5 +264,12 @@ export async function deliverContactMessage(
     return;
   }
 
-  await deliverViaFormSubmit(values);
+  const formSubmitId = getFormSubmitId();
+  if (!formSubmitId) {
+    throw new Error(
+      "Contact delivery is not configured. Set FORMSUBMIT_ID or a complete Google Form config."
+    );
+  }
+
+  await deliverViaFormSubmit(values, formSubmitId);
 }

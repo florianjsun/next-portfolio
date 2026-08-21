@@ -19,7 +19,7 @@
     "test:contact-delivery": "node scripts/test-contact-delivery.mjs"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.7.1",
+    "@hookform/resolvers": "^5.9.1",
     "@next/third-parties": "16.3.1",
     "@notionhq/client": "^5.25.2",
     "@radix-ui/react-dialog": "^1.1.23",
